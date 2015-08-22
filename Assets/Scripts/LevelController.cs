@@ -104,6 +104,22 @@ public class LevelController : MonoBehaviour {
 		Util.dt_scale = dt_scale;
 
 		if (m_currentMode == LevelControllerMode.GamePlay) {
+			if (m_playerControlledFootballer != null) {
+				Main.GameCamera.SetTargetPos(m_playerControlledFootballer.transform.position);
+				if (Input.GetKey(KeyCode.Z)) {
+					Main.GameCamera.SetTargetZoom(600);
+				} else {
+					Main.GameCamera.SetTargetZoom(400);
+				}
+				Main.GameCamera.SetManualOffset(new Vector3(200,0,0));
+
+			} else {
+				Main.GameCamera.SetTargetPos(this.GetMousePoint());
+				Main.GameCamera.SetTargetZoom(600);
+				Main.GameCamera.SetManualOffset(new Vector3(0,0,0));
+			}
+
+
 			mouse_target_anim_speed = 2.0f;
 			m_mouseTargetIcon.SetActive(true);
 			Vector3 mouse_pt = this.GetMousePoint();
@@ -127,11 +143,22 @@ public class LevelController : MonoBehaviour {
 				}
 				m_currentMode = LevelControllerMode.Timeout;
 				m_timeoutSelectedFootballer = null;
+
 			}
 
 
 		} else if (m_currentMode == LevelControllerMode.Timeout) {
+			Vector3 mouse_to_center_delta = Util.vec_sub(this.GetMousePoint(),Main.GameCamera.GetCurrentPosition());
+			if (mouse_to_center_delta.magnitude > 600) {
+				Vector3 n_mouse_to_center_delta = mouse_to_center_delta.normalized;
+				Vector3 tar_delta = Util.vec_scale(n_mouse_to_center_delta,(mouse_to_center_delta.magnitude-600)*0.2f);
+				Main.GameCamera.SetTargetPos(Util.vec_add(Main.GameCamera.GetCurrentPosition(),tar_delta));
+			} else {
+				Main.GameCamera.SetTargetPositionToCurrent();
+			}
 
+			Main.GameCamera.SetManualOffset(new Vector3(0,0,0));
+			Main.GameCamera.SetTargetZoom(800);
 			Vector3 mouse_pt = this.GetMousePoint();
 			GenericFootballer select_tar = this.IsPointTouchFootballer(mouse_pt,m_playerTeamFootballers);
 			if (select_tar != null) {
