@@ -6,11 +6,11 @@ public class UiPanelGame : Uzu.UiPanel {
 		
 	}
 	
-	public override void OnActivate() {
-		Debug.Log("GAME");
+	public override void OnEnter(Uzu.PanelEnterContext context) {
+		gameObject.SetActive(true);
 	}
 	
-	public override void OnDeactivate() {
-		
+	public override void OnExit(Uzu.PanelExitContext context) {
+		gameObject.SetActive(false);
 	}
 }

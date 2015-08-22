@@ -12,15 +12,23 @@ namespace Uzu
         {
             UiPanel panel;
             if (_uiPanelDataHolder.TryGetValue (panelId, out panel)) {
+              {
                 UiPanel prevPanel = _currentPanel;
 
                 if (prevPanel != null) {
-                    prevPanel.Deactivate ();
+                    PanelExitContext context = new PanelExitContext();
+                    Debug.Log("Exit: " + prevPanel.name);
+                    prevPanel.OnExit (context);
                 }
-
+              }
+              
+              {
+                PanelEnterContext context = new PanelEnterContext();
                 _currentPanel = panel;
                 _currentPanelId = panelId;
-                _currentPanel.Activate ();
+                Debug.Log("Enter: " + _currentPanel.name);
+                _currentPanel.OnEnter (context);
+              }
             } else {
                 Debug.LogError ("Unable to activate a panel that is not registered: " + panelId);
             }
@@ -56,6 +64,7 @@ namespace Uzu
             _uiPanelDataHolder [name] = panel;
 
             // Initialize the panel.
+            Debug.Log("Init: " + panel.name);
             panel.Initialize (this);
         }
 

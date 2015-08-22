@@ -43,22 +43,6 @@ namespace Uzu {
             // We don't want to call Deactivate, since this triggers the callback.
             this.gameObject.SetActive (false);
         }
-
-        /// <summary>
-        /// Activate this instance.
-        /// </summary>
-        public void Activate ()
-        {
-            OnActivate ();
-        }
-
-        /// <summary>
-        /// Deactivate this instance.
-        /// </summary>
-        public void Deactivate ()
-        {
-            OnDeactivate ();
-        }
         #endregion
         #endregion
 
@@ -71,12 +55,12 @@ namespace Uzu {
         /// <summary>
         /// Called when the panel is activated.
         /// </summary>
-        public abstract void OnActivate ();
+        public abstract void OnEnter (PanelEnterContext context);
         
         /// <summary>
         /// Called when the panel is deactivated.
         /// </summary>
-        public abstract void OnDeactivate ();
+        public abstract void OnExit (PanelExitContext context);
         #endregion
     }
 }
