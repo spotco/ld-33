@@ -17,7 +17,7 @@ namespace Uzu
 
                 if (prevPanel != null) {
                     PanelExitContext context = new PanelExitContext();
-                    Debug.Log("Exit: " + prevPanel.name);
+                    // Debug.Log("Exit: " + prevPanel.name);
                     prevPanel.OnExit (context);
                 }
               }
@@ -26,7 +26,7 @@ namespace Uzu
                 PanelEnterContext context = new PanelEnterContext();
                 _currentPanel = panel;
                 _currentPanelId = panelId;
-                Debug.Log("Enter: " + _currentPanel.name);
+                // Debug.Log("Enter: " + _currentPanel.name);
                 _currentPanel.OnEnter (context);
               }
             } else {
@@ -64,7 +64,7 @@ namespace Uzu
             _uiPanelDataHolder [name] = panel;
 
             // Initialize the panel.
-            Debug.Log("Init: " + panel.name);
+            // Debug.Log("Init: " + panel.name);
             panel.Initialize (this);
         }
 
