@@ -46,13 +46,19 @@ public class GenericFootballer : MonoBehaviour {
 
 
 		float reticule_anim_speed = 0.5f;
-		float reticule_scale = 180;
+		float reticule_scale = 160;
 		if (Main.LevelController.m_playerControlledFootballer == this) {
 		} else if (Main.LevelController.m_timeoutSelectedFootballer == this) {
 			reticule_anim_speed = 1.5f;
 			reticule_scale = 250;
 
+		} else if (_selected_ct > 0) {
+			reticule_anim_speed = 1.5f;
+			reticule_scale = 200;
+
 		}
+		_selected_ct -= Util.dt_scale;
+
 	
 		_select_reticule_theta += reticule_anim_speed * Util.dt_scale;
 		Util.transform_set_euler_world(_select_reticule.transform,new Vector3(0,0,_select_reticule_theta));
@@ -187,6 +193,11 @@ public class GenericFootballer : MonoBehaviour {
 	public bool ContainsPoint(Vector3 pt) {
 		SphereCollider col = this.GetComponent<SphereCollider>();
 		return Vector3.Distance(pt,this.transform.position) < col.radius;
+	}
+
+	[SerializeField] private float _selected_ct;
+	public void SetSelectedForAFrame() {
+		_selected_ct = 4;
 	}
 
 }

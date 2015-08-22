@@ -11,6 +11,8 @@ public class LevelController : MonoBehaviour {
 
 	[SerializeField] private GameObject proto_genericFootballer;
 	[SerializeField] private GameObject proto_looseBall;
+	[SerializeField] private GameObject proto_mouseTarget;
+
 	[SerializeField] public BoxCollider2D m_gameBounds;
 	[SerializeField] public BoxCollider2D m_playerGoalBounds;
 	[SerializeField] public BoxCollider2D m_enemyGoalBounds;
@@ -21,6 +23,10 @@ public class LevelController : MonoBehaviour {
 	[System.NonSerialized] public GenericFootballer m_playerControlledFootballer;
 	[System.NonSerialized] public GenericFootballer m_timeoutSelectedFootballer;
 	[System.NonSerialized] public List<LooseBall> m_looseBalls = new List<LooseBall>();
+
+	private GameObject m_mouseTargetIcon;
+	private float m_mouseTargetIconTheta;
+
 	private LevelControllerMode m_currentMode;
 
 	public void StartLevel() {
@@ -35,6 +41,8 @@ public class LevelController : MonoBehaviour {
 		m_playerControlledFootballer = m_playerTeamFootballers[0];
 
 		m_currentMode = LevelControllerMode.GamePlay;
+
+		m_mouseTargetIcon = Util.proto_clone(proto_mouseTarget);
 	}
 
 	public void CreateLooseBall(Vector2 start, Vector2 vel) {
@@ -90,11 +98,17 @@ public class LevelController : MonoBehaviour {
 
 	void Update () {
 		if (Main.PanelManager.CurrentPanelId != PanelIds.Game) return;
+		float mouse_target_anim_speed = 0.3f;
 
 		float dt_scale = (1/60.0f)/(Time.unscaledDeltaTime);
 		Util.dt_scale = dt_scale;
 
 		if (m_currentMode == LevelControllerMode.GamePlay) {
+			mouse_target_anim_speed = 2.0f;
+			m_mouseTargetIcon.SetActive(true);
+			Vector3 mouse_pt = this.GetMousePoint();
+			m_mouseTargetIcon.transform.position = mouse_pt;
+			m_mouseTargetIcon.transform.localScale = Util.valv(50.0f);
 
 			for (int i = m_looseBalls.Count-1; i >= 0; i--) {
 				LooseBall itr = this.m_looseBalls[i];	
@@ -117,6 +131,19 @@ public class LevelController : MonoBehaviour {
 
 
 		} else if (m_currentMode == LevelControllerMode.Timeout) {
+
+			Vector3 mouse_pt = this.GetMousePoint();
+			GenericFootballer select_tar = this.IsPointTouchFootballer(mouse_pt,m_playerTeamFootballers);
+			if (select_tar != null) {
+				m_mouseTargetIcon.SetActive(false);
+				select_tar.SetSelectedForAFrame();
+			} else {
+				m_mouseTargetIcon.SetActive(m_timeoutSelectedFootballer!=null);
+			}
+			m_mouseTargetIcon.transform.position = mouse_pt;
+			m_mouseTargetIcon.transform.localScale = Util.valv(75.0f);
+
+
 			for (int i = 0; i < this.m_playerTeamFootballers.Count; i++) {
 				GenericFootballer itr = this.m_playerTeamFootballers[i];
 				itr.timeout_update();
@@ -142,6 +169,9 @@ public class LevelController : MonoBehaviour {
 				}
 			}
 		}
+
+		m_mouseTargetIconTheta += mouse_target_anim_speed * Util.dt_scale;
+		Util.transform_set_euler_world(m_mouseTargetIcon.transform,new Vector3(0,0,m_mouseTargetIconTheta));
 
 	}
 
