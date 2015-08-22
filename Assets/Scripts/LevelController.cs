@@ -11,6 +11,9 @@ public class LevelController : MonoBehaviour {
 
 	[SerializeField] private GameObject proto_genericFootballer;
 	[SerializeField] private GameObject proto_looseBall;
+	[SerializeField] public BoxCollider2D m_gameBounds;
+	[SerializeField] public BoxCollider2D m_playerGoalBounds;
+	[SerializeField] public BoxCollider2D m_enemyGoalBounds;
 
 	[System.NonSerialized] public PathRenderer m_pathRenderer;
 	[System.NonSerialized] public List<GenericFootballer> m_playerTeamFootballers = new List<GenericFootballer>();
