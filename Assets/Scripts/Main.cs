@@ -2,11 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-/*
-TODO:
-- 1000x500 resolution
- */
-
 public class Main : Uzu.Main
 {
 	public static Uzu.UiPanelMgr PanelManager {
@@ -46,6 +41,25 @@ public class Main : Uzu.Main
       // _panelManager.ChangeCurrentPanel (PanelIds.Game);	
     }
   }
+	
+	#region Pause functionality.
+	private Uzu.PauseHelper _pauseObject = new Uzu.PauseHelper ();
+
+	public static bool IsPaused (int flag)
+	{
+		return Instance._pauseObject.IsPaused (flag);
+	}
+
+	public static void Pause (int flag)
+	{
+		Instance._pauseObject.Pause (flag);
+	}
+
+	public static void Unpause (int flag)
+	{
+		Instance._pauseObject.Unpause (flag);
+	}
+	#endregion	
   
   private static Main _instance;
 
