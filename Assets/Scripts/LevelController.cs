@@ -10,12 +10,14 @@ public class LevelController : MonoBehaviour {
 	}
 
 	[SerializeField] private GameObject proto_genericFootballer;
+	[SerializeField] private GameObject proto_looseBall;
 
-	public PathRenderer m_pathRenderer;
-	private List<GenericFootballer> m_playerTeamFootballers = new List<GenericFootballer>();
+	[System.NonSerialized] public PathRenderer m_pathRenderer;
+	[System.NonSerialized] public List<GenericFootballer> m_playerTeamFootballers = new List<GenericFootballer>();
 
-	public GenericFootballer m_playerControlledFootballer;
-	public GenericFootballer m_timeoutSelectedFootballer;
+	[System.NonSerialized] public GenericFootballer m_playerControlledFootballer;
+	[System.NonSerialized] public GenericFootballer m_timeoutSelectedFootballer;
+	[System.NonSerialized] public List<LooseBall> m_looseBalls = new List<LooseBall>();
 	private LevelControllerMode m_currentMode;
 
 	public void StartLevel() {
@@ -30,6 +32,22 @@ public class LevelController : MonoBehaviour {
 		m_playerControlledFootballer = m_playerTeamFootballers[0];
 
 		m_currentMode = LevelControllerMode.GamePlay;
+	}
+
+	public void CreateLooseBall(Vector2 start, Vector2 vel) {
+		GameObject neu_obj = Util.proto_clone(proto_looseBall);
+		LooseBall rtv = neu_obj.GetComponent<LooseBall>();
+		rtv.sim_initialize(start,vel);
+		m_looseBalls.Add(rtv);
+	}
+
+	public void PickupLooseBall(LooseBall looseball, GenericFootballer tar) {
+		m_looseBalls.Remove(looseball);
+		if (m_playerTeamFootballers.Contains(tar)) {
+			m_playerControlledFootballer = tar;
+			tar._current_mode = GenericFootballer.GenericFootballerMode.Idle;
+		}
+		Destroy(looseball.gameObject);
 	}
 
 	private GenericFootballer CreateFootballer(Vector3 pos) {
@@ -47,7 +65,6 @@ public class LevelController : MonoBehaviour {
 		float rayout;
 		gamePlane.Raycast(ray,out rayout);
 		return Util.vec_add(ray.origin,Util.vec_scale(ray.direction,rayout));
-
 	}
 	
 	private bool IsClickAndPoint(out Vector2 point) {
@@ -73,8 +90,11 @@ public class LevelController : MonoBehaviour {
 		Util.dt_scale = dt_scale;
 
 		if (m_currentMode == LevelControllerMode.GamePlay) {
-			Main.GameCamera.SetTarget(m_playerControlledFootballer.transform);
-			m_pathRenderer._path_renderer_root.SetActive(false);
+
+			for (int i = m_looseBalls.Count-1; i >= 0; i--) {
+				LooseBall itr = this.m_looseBalls[i];	
+				itr.sim_update();
+			}
 
 			for (int i = 0; i < this.m_playerTeamFootballers.Count; i++) {
 				GenericFootballer itr = this.m_playerTeamFootballers[i];	
@@ -92,17 +112,10 @@ public class LevelController : MonoBehaviour {
 
 
 		} else if (m_currentMode == LevelControllerMode.Timeout) {
-			if (m_timeoutSelectedFootballer != null) {
-				Main.GameCamera.SetTarget(m_timeoutSelectedFootballer.transform);
-			} else {
-				Main.GameCamera.SetTarget(m_playerControlledFootballer.transform);
-			}
-
 			for (int i = 0; i < this.m_playerTeamFootballers.Count; i++) {
 				GenericFootballer itr = this.m_playerTeamFootballers[i];
 				itr.timeout_update();
 			}
-			m_pathRenderer._path_renderer_root.SetActive(true);
 
 			keyboard_switch_timeout_selected_footballer();
 

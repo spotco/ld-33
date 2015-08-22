@@ -32,6 +32,10 @@ public class Util {
 		return a + deltaf;
 	}
 
+	public static float lerp(float a, float b, float t) {
+		return a + (b - a) * t;
+	}
+
 	public static float dt_scale = 1;
 	public static System.Random rand = new System.Random();
 	
@@ -89,6 +93,22 @@ public class Util {
 
 	public static bool vec_eq(Vector3 a, Vector3 b) {
 		return a.x == b.x && a.y == b.y && a.z == b.z;
+	}
+
+	public static float bezier_val_for_t(float p0, float p1, float p2, float p3, float t) {
+		float cp0 = (1 - t)*(1 - t)*(1 - t);
+		float cp1 = 3 * t * (1-t)*(1-t);
+		float cp2 = 3 * t * t * (1 - t);
+		float cp3 = t * t * t;
+		return cp0 * p0 + cp1 * p1 + cp2 * p2 + cp3 * p3;
+	}
+
+	public static Vector3 bezier_val_for_t(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {
+		return new Vector3(
+			bezier_val_for_t(p0.x,p1.x,p2.x,p3.x,t),
+			bezier_val_for_t(p0.y,p1.y,p2.y,p3.y,t),
+			bezier_val_for_t(p0.z,p1.z,p2.z,p3.z,t)
+		);
 	}
 	
 }
