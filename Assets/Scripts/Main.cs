@@ -16,6 +16,9 @@ public class Main : Uzu.Main
 	public static FollowCamera GameCamera {
 		get { return _instance._gameCamera; }
 	}
+	public static AudioController AudioController {
+		get { return _instance._audioController; }
+	}
 	
   protected override void OnMainBegin ()
   {
@@ -37,16 +40,9 @@ public class Main : Uzu.Main
     // State initialization.
     {
       // CyMain.Pause (CyPauseFlags.Player);
-
-      //_levelController.LoadLevel (CyLevels.LEVEL_0);
-      //_levelController.LoadLevel (CyLevels.LEVEL_1);
-      //_levelController.LoadLevel (CyLevels.LEVEL_2);
-      //_levelController.LoadLevel (CyLevels.LEVEL_3);
-      //_levelController.LoadLevel (CyLevels.LEVEL_4);
-      //_levelController.LoadLevel (CyLevels.LEVEL_5);
       
-      //_panelManager.ChangeCurrentPanel (PanelIds.Main);	
-       _panelManager.ChangeCurrentPanel (PanelIds.Game);	
+      // _panelManager.ChangeCurrentPanel (PanelIds.Main);	
+      _panelManager.ChangeCurrentPanel (PanelIds.Game);	
     }
   }
 	
@@ -81,4 +77,6 @@ public class Main : Uzu.Main
 	private LevelController _levelController;
 	private FollowCamera _gameCamera;
 	private FanController _fanController;
+	[SerializeField]
+	private AudioController _audioController;
 }

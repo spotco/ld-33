@@ -34,6 +34,35 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &179260
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 409076}
+  - 114: {fileID: 11460724}
+  - 114: {fileID: 11441226}
+  m_Layer: 0
+  m_Name: AudioController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &409076
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 179260}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 468822}
+  m_RootOrder: 1
 --- !u!4 &468822
 Transform:
   m_ObjectHideFlags: 1
@@ -45,6 +74,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 493036}
+  - {fileID: 409076}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!4 &493036
@@ -73,6 +103,17 @@ MonoBehaviour:
   _arrow_dot_proto: {fileID: 114854, guid: 239ac44175b9d4ce1ad214d2f80285f2, type: 2}
   _arrow_head_proto: {fileID: 156912, guid: 33861681dfec64620a8e7c496d06dccb, type: 2}
   _path_renderer_root: {fileID: 0}
+--- !u!114 &11441226
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 179260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 075349b2ca2334f039e2ef1636dc0f8d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11446616
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -86,6 +127,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelManager: {fileID: 0}
   _levelController: {fileID: 11446726}
+  _audioController: {fileID: 11441226}
 --- !u!114 &11446726
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -101,6 +143,22 @@ MonoBehaviour:
     type: 2}
   m_pathRenderer: {fileID: 0}
   m_playerControlledFootballer: {fileID: 0}
+  m_timeoutSelectedFootballer: {fileID: 0}
+--- !u!114 &11460724
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 179260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ccd19bbbfbef4eeabaf7e22a5f71cdd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AudioClips:
+  - {fileID: 8300000, guid: 8873ad28e243a48ae96cadddcb668119, type: 3}
+  AudioClipIds:
+  - MenuBgm
 --- !u!114 &11472460
 MonoBehaviour:
   m_ObjectHideFlags: 1

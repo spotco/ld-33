@@ -29,3 +29,7 @@ public static class PanelIds {
   public const string Main = "MainPanel";
   public const string Game = "GamePanel";
 }
+
+public static class AudioClipIds {
+	public const string MenuBgm = "MenuBgm";
+}
