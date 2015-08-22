@@ -91,7 +91,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 0}
-  _translateSmoothness: 5
+  _translateSmoothness: 2
+  _sizeSmoothness: 1
 --- !u!124 &12420846
 Behaviour:
   m_ObjectHideFlags: 1
