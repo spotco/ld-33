@@ -10,6 +10,9 @@ public class Main : Uzu.Main
 	public static LevelController LevelController {
 		get { return _instance._levelController; }
 	}
+	public static FollowCamera GameCamera {
+		get { return _instance._gameCamera; }
+	}
 	
   protected override void OnMainBegin ()
   {
@@ -20,7 +23,7 @@ public class Main : Uzu.Main
     
     // Singleton creation.
     {
-
+			_gameCamera = GameObject.Find("GameCamera").GetComponent<FollowCamera>();
     }
   }
   
@@ -71,4 +74,5 @@ public class Main : Uzu.Main
 	private Uzu.UiPanelMgr _panelManager;
 	[SerializeField]
 	private LevelController _levelController;
+	private FollowCamera _gameCamera;
 }
