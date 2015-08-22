@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(CircleCollider2D))]
 public class LooseBall : MonoBehaviour {
 
 	[SerializeField] private Vector2 _vel; 
@@ -39,12 +40,17 @@ public class LooseBall : MonoBehaviour {
 		if (this._initial_uncatchable_ct <= 0) {
 			for (int i = 0; i < Main.LevelController.m_playerTeamFootballers.Count; i++) {
 				GenericFootballer itr = Main.LevelController.m_playerTeamFootballers[i];
-				float itr_rad = itr.GetComponent<SphereCollider>().radius;
-				float self_rad = this.GetComponent<SphereCollider>().radius;
-				float dist = Vector3.Distance(this.transform.position,itr.transform.position);
-				if (dist < (itr_rad + self_rad)) {
+				if (itr.collider_contains(this.GetComponent<CircleCollider2D>())) {
 					Main.LevelController.PickupLooseBall(this,itr);
-					break;
+					return;
+				}
+			}
+			for (int i = 0; i < Main.LevelController.m_enemyTeamFootballers.Count; i++) {
+				GenericFootballer itr = Main.LevelController.m_enemyTeamFootballers[i];
+				if (itr.collider_contains(this.GetComponent<CircleCollider2D>())) {
+					Main.LevelController.PickupLooseBall(this,itr);
+
+					return;
 				}
 			}
 		}

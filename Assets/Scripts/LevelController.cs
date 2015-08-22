@@ -4,99 +4,54 @@ using UnityEngine.UI;
 
 public class LevelController : MonoBehaviour {
 
+	[SerializeField] private GameObject proto_genericFootballer;
+	[SerializeField] private GameObject proto_looseBall;
+	[SerializeField] private GameObject proto_mouseTarget;
+
 	enum LevelControllerMode {
 		GamePlay,
 		Timeout
 	}
-
-	[SerializeField] private GameObject proto_genericFootballer;
-	[SerializeField] private GameObject proto_looseBall;
-	[SerializeField] private GameObject proto_mouseTarget;
 
 	[SerializeField] public BoxCollider2D m_gameBounds;
 	[SerializeField] public BoxCollider2D m_playerGoalBounds;
 	[SerializeField] public BoxCollider2D m_enemyGoalBounds;
 
 	[System.NonSerialized] public PathRenderer m_pathRenderer;
-	[System.NonSerialized] public List<GenericFootballer> m_playerTeamFootballers = new List<GenericFootballer>();
+	public List<GenericFootballer> m_playerTeamFootballers = new List<GenericFootballer>();
+	public List<GenericFootballer> m_enemyTeamFootballers = new List<GenericFootballer>();
 
-	[System.NonSerialized] public GenericFootballer m_playerControlledFootballer;
-	[System.NonSerialized] public GenericFootballer m_timeoutSelectedFootballer;
-	[System.NonSerialized] public List<LooseBall> m_looseBalls = new List<LooseBall>();
 
-	private GameObject m_mouseTargetIcon;
-	private float m_mouseTargetIconTheta;
+	public List<GenericFootballer> m_playerTeamFootballersWithBall = new List<GenericFootballer>();
+	public List<GenericFootballer> m_enemyTeamFootballersWithBall = new List<GenericFootballer>();
+
+	//Nullable
+	public GenericFootballer m_timeoutSelectedFootballer;
+	public List<LooseBall> m_looseBalls = new List<LooseBall>();
 
 	private LevelControllerMode m_currentMode;
-
+	
+	private GameObject m_mouseTargetIcon;
+	private float m_mouseTargetIconTheta;
 	public void StartLevel() {
 		m_pathRenderer = this.GetComponent<PathRenderer>();
 
-		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(0,0)));
-		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(-300,-300)));
-		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(-300,0)));
-		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(0,-300)));
-		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(-600,-300)));
+		this.CreateFootballer(Team.PlayerTeam, new Vector3(0,0));
+		this.CreateFootballer(Team.PlayerTeam, new Vector3(-300,-300));
+		this.CreateFootballer(Team.PlayerTeam, new Vector3(-300,0));
+		this.CreateFootballer(Team.PlayerTeam, new Vector3(0,-300));
+		this.CreateFootballer(Team.PlayerTeam, new Vector3(-600,-300));
 
-		m_playerControlledFootballer = m_playerTeamFootballers[0];
+		this.CreateFootballer(Team.EnemyTeam, new Vector3(300,0));
+
+		m_playerTeamFootballersWithBall.Add(m_playerTeamFootballers[0]);
 
 		m_currentMode = LevelControllerMode.GamePlay;
 
 		m_mouseTargetIcon = Util.proto_clone(proto_mouseTarget);
 	}
 
-	public void CreateLooseBall(Vector2 start, Vector2 vel) {
-		GameObject neu_obj = Util.proto_clone(proto_looseBall);
-		LooseBall rtv = neu_obj.GetComponent<LooseBall>();
-		rtv.sim_initialize(start,vel);
-		m_looseBalls.Add(rtv);
-	}
-
-	public void PickupLooseBall(LooseBall looseball, GenericFootballer tar) {
-		m_looseBalls.Remove(looseball);
-		if (m_playerTeamFootballers.Contains(tar)) {
-			m_playerControlledFootballer = tar;
-			tar._current_mode = GenericFootballer.GenericFootballerMode.Idle;
-			tar._waitdelay = 15;
-		}
-		Destroy(looseball.gameObject);
-	}
-
-	private GenericFootballer CreateFootballer(Vector3 pos) {
-		GameObject neu_obj = Util.proto_clone(proto_genericFootballer);
-		GenericFootballer rtv = neu_obj.GetComponent<GenericFootballer>();
-		rtv.transform.position = pos;
-		rtv.sim_initialize();
-		return rtv;
-	}
-
-	public Vector3 GetMousePoint() {
-		RaycastHit hit;
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		Plane gamePlane = new Plane(new Vector3(0,0,-1),new Vector3(0,0,0));
-		float rayout;
-		gamePlane.Raycast(ray,out rayout);
-		return Util.vec_add(ray.origin,Util.vec_scale(ray.direction,rayout));
-	}
-	
-	private bool IsClickAndPoint(out Vector2 point) {
-		if (Input.GetMouseButtonDown(0)) {
-			point = GetMousePoint();
-			return true;
-		}
-		point = Vector2.zero;
-		return false;
-	}
-
-	private GenericFootballer IsPointTouchFootballer(Vector3 pt, List<GenericFootballer> list) {
-		for (int i = 0; i < list.Count; i++) {
-			if (list[i] == m_playerControlledFootballer) continue;
-			if (list[i].ContainsPoint(pt)) return list[i];
-		}
-		return null;
-	}
-
-	void Update () {
+	public void Update () {
 		if (Main.PanelManager.CurrentPanelId != PanelIds.Game) return;
 		float mouse_target_anim_speed = 0.3f;
 
@@ -104,9 +59,9 @@ public class LevelController : MonoBehaviour {
 		Util.dt_scale = dt_scale;
 
 		if (m_currentMode == LevelControllerMode.GamePlay) {
-			if (m_playerControlledFootballer != null) {
-				Main.GameCamera.SetTargetPos(m_playerControlledFootballer.transform.position);
-				if (Input.GetKey(KeyCode.Z)) {
+			if (m_playerTeamFootballersWithBall.Count > 0) {
+				Main.GameCamera.SetTargetPos(m_playerTeamFootballersWithBall[0].transform.position);
+				if (Input.GetMouseButton(0)) {
 					Main.GameCamera.SetTargetZoom(600);
 				} else {
 					Main.GameCamera.SetTargetZoom(400);
@@ -136,6 +91,11 @@ public class LevelController : MonoBehaviour {
 				itr.sim_update();
 			}
 
+			for (int i = 0; i < this.m_enemyTeamFootballers.Count; i++) {
+				GenericFootballer itr = this.m_enemyTeamFootballers[i];	
+				itr.sim_update();
+			}
+
 			if (Input.GetKey(KeyCode.Space)) {
 				for (int i = 0; i < this.m_playerTeamFootballers.Count; i++) {
 					GenericFootballer itr = this.m_playerTeamFootballers[i];
@@ -148,10 +108,12 @@ public class LevelController : MonoBehaviour {
 
 
 		} else if (m_currentMode == LevelControllerMode.Timeout) {
-			Vector3 mouse_to_center_delta = Util.vec_sub(this.GetMousePoint(),Main.GameCamera.GetCurrentPosition());
-			if (mouse_to_center_delta.magnitude > 600) {
+
+			Vector3 mouse_to_center_delta = Util.vec_sub(Input.mousePosition,new Vector2(Screen.width/2,Screen.height/2));
+			float mmouse_move_rad = 400;
+			if (mouse_to_center_delta.magnitude > mmouse_move_rad) {
 				Vector3 n_mouse_to_center_delta = mouse_to_center_delta.normalized;
-				Vector3 tar_delta = Util.vec_scale(n_mouse_to_center_delta,(mouse_to_center_delta.magnitude-600)*0.2f);
+				Vector3 tar_delta = Util.vec_scale(n_mouse_to_center_delta,(mouse_to_center_delta.magnitude-mmouse_move_rad)*0.1f);
 				Main.GameCamera.SetTargetPos(Util.vec_add(Main.GameCamera.GetCurrentPosition(),tar_delta));
 			} else {
 				Main.GameCamera.SetTargetPositionToCurrent();
@@ -165,7 +127,7 @@ public class LevelController : MonoBehaviour {
 				m_mouseTargetIcon.SetActive(false);
 				select_tar.SetSelectedForAFrame();
 			} else {
-				m_mouseTargetIcon.SetActive(m_timeoutSelectedFootballer!=null);
+				m_mouseTargetIcon.SetActive(true);
 			}
 			m_mouseTargetIcon.transform.position = mouse_pt;
 			m_mouseTargetIcon.transform.localScale = Util.valv(75.0f);
@@ -183,7 +145,7 @@ public class LevelController : MonoBehaviour {
 				GenericFootballer clicked_footballer = IsPointTouchFootballer(click_pt,m_playerTeamFootballers);
 				if (clicked_footballer != null) {
 					m_timeoutSelectedFootballer = clicked_footballer;
-				} else if (m_timeoutSelectedFootballer != null && m_timeoutSelectedFootballer != m_playerControlledFootballer) {
+				} else if (m_timeoutSelectedFootballer != null && !this.footballer_has_ball(m_timeoutSelectedFootballer)) {
 					m_timeoutSelectedFootballer.CommandMoveTo(click_pt);
 				}
 			}
@@ -202,6 +164,64 @@ public class LevelController : MonoBehaviour {
 
 	}
 
+	public void CreateLooseBall(Vector2 start, Vector2 vel) {
+		GameObject neu_obj = Util.proto_clone(proto_looseBall);
+		LooseBall rtv = neu_obj.GetComponent<LooseBall>();
+		rtv.sim_initialize(start,vel);
+		m_looseBalls.Add(rtv);
+	}
+	
+	public void PickupLooseBall(LooseBall looseball, GenericFootballer tar) {
+		m_looseBalls.Remove(looseball);
+		if (this.get_footballer_team(tar) == Team.PlayerTeam) {
+			m_playerTeamFootballersWithBall.Add(tar);
+			tar._current_mode = GenericFootballer.GenericFootballerMode.Idle;
+			tar._waitdelay = 15;
+		} else {
+			this.m_enemyTeamFootballersWithBall.Add(tar);
+			tar._current_mode = GenericFootballer.GenericFootballerMode.Idle;
+			tar._waitdelay = 15;
+		}
+		Destroy(looseball.gameObject);
+	}
+	
+	private void CreateFootballer(Team team, Vector3 pos) {
+		GameObject neu_obj = Util.proto_clone(proto_genericFootballer);
+		GenericFootballer rtv = neu_obj.GetComponent<GenericFootballer>();
+		rtv.transform.position = pos;
+		rtv.sim_initialize();
+		if (team == Team.PlayerTeam) {
+			m_playerTeamFootballers.Add(rtv);
+		} else {
+			m_enemyTeamFootballers.Add(rtv);
+		}
+	}
+	
+	public Vector3 GetMousePoint() {
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		Plane gamePlane = new Plane(new Vector3(0,0,-1),new Vector3(0,0,0));
+		float rayout;
+		gamePlane.Raycast(ray,out rayout);
+		return Util.vec_add(ray.origin,Util.vec_scale(ray.direction,rayout));
+	}
+	
+	private bool IsClickAndPoint(out Vector2 point) {
+		if (Input.GetMouseButtonDown(0)) {
+			point = GetMousePoint();
+			return true;
+		}
+		point = Vector2.zero;
+		return false;
+	}
+	
+	private GenericFootballer IsPointTouchFootballer(Vector3 pt, List<GenericFootballer> list) {
+		for (int i = 0; i < list.Count; i++) {
+			if (this.footballer_has_ball(list[i])) continue;
+			if (list[i].ContainsPoint(pt)) return list[i];
+		}
+		return null;
+	}
+
 	private void keyboard_switch_timeout_selected_footballer() {
 		int tar = -1;
 		if (Input.GetKey(KeyCode.Alpha1)) tar = 0;
@@ -214,4 +234,24 @@ public class LevelController : MonoBehaviour {
 		}
 	}
 
+	public Team get_footballer_team(GenericFootballer tar) {
+		if (m_playerTeamFootballers.Contains(tar)) return Team.PlayerTeam;
+		if (m_enemyTeamFootballers.Contains(tar)) return Team.EnemyTeam;
+		return Team.None;
+	}
+
+	public bool footballer_has_ball(GenericFootballer tar) {
+		if (get_footballer_team(tar) == Team.PlayerTeam) {
+			return m_playerTeamFootballersWithBall.Contains(tar);
+		} else {
+			return m_enemyTeamFootballersWithBall.Contains(tar);
+		}
+	}
+
+}
+
+public enum Team {
+	PlayerTeam,
+	EnemyTeam,
+	None
 }
