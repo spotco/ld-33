@@ -566,6 +566,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 1511757810}
   - 114: {fileID: 1511757811}
+  - 114: {fileID: 1511757812}
   m_Layer: 0
   m_Name: Goalie
   m_TagString: Untagged
@@ -597,7 +598,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072323439d91b4cd99f2cd114ed40108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxVelocity: 500
+--- !u!114 &1511757812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1511757809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e055a0feac040078b38accf6115592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxSpeed: 200
+  _maxForce: 100
   _mass: 10
   _friction: .0500000007
 --- !u!1 &1524863582
