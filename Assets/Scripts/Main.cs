@@ -10,6 +10,9 @@ public class Main : Uzu.Main
 	public static LevelController LevelController {
 		get { return _instance._levelController; }
 	}
+	public static FanController FanController {
+		get { return _instance._fanController; }
+	}
 	public static FollowCamera GameCamera {
 		get { return _instance._gameCamera; }
 	}
@@ -25,6 +28,7 @@ public class Main : Uzu.Main
     // Singleton creation.
     {
 			_gameCamera = GameObject.Find("GameCamera").GetComponent<FollowCamera>();
+			_fanController = GetComponent<FanController>();
     }
   }
   
@@ -76,4 +80,5 @@ public class Main : Uzu.Main
 	[SerializeField]
 	private LevelController _levelController;
 	private FollowCamera _gameCamera;
+	private FanController _fanController;
 }
