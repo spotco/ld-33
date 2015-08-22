@@ -141,9 +141,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   proto_genericFootballer: {fileID: 123846, guid: e913ce4842fc942dabb3081837582cee,
     type: 2}
-  m_pathRenderer: {fileID: 0}
-  m_playerControlledFootballer: {fileID: 0}
-  m_timeoutSelectedFootballer: {fileID: 0}
+  proto_looseBall: {fileID: 164902, guid: dfaf8c1d0b2b4483f84670d1bc9c2192, type: 2}
 --- !u!114 &11460724
 MonoBehaviour:
   m_ObjectHideFlags: 1
