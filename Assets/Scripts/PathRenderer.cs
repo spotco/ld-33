@@ -128,7 +128,7 @@ public class PathRenderer : MonoBehaviour {
 	//TODO -- pool me
 	private MultiList<int,GameObject> _id_to_objs = new MultiList<int, GameObject>();
 	public void id_draw_path(int id, Vector3 position, Vector3[] points) {
-		if (_id_to_theta.ContainsKey(id)) _id_to_theta[id] = 0.0f;
+		if (!_id_to_theta.ContainsKey(id)) _id_to_theta[id] = 0.0f;
 		float dist_per = 15.0f;
 		Vector3 last = position;
 		float last_remainder = 0;
@@ -159,6 +159,7 @@ public class PathRenderer : MonoBehaviour {
 			last_remainder = (itr_dist_total - itr_dist);
 			last = itr;
 		}
+		this.update_anim(id,_id_to_theta[id]);
 	}
 	
 	public void clear_path(int id) {
@@ -179,18 +180,23 @@ public class PathRenderer : MonoBehaviour {
 				val += 0.5f * list.Count * 0.02f;
 				if (val > list.Count*1.35f) val = -list.Count*0.35f;
 				
-				for (int i_list = 0; i_list < list.Count; i_list++) {
-					SpriteRenderer itr_list = list[i_list].GetComponent<SpriteRenderer>();
-					if (itr_list.sprite.name != "move_arrow_cross") {
-						Color itr_list_color = itr_list.color;
-						float aval = Mathf.Pow(1-(Mathf.Abs(i_list-val))/list.Count,4.0f);
-						itr_list_color.a = Mathf.Max(aval,0.25f);
-						itr_list.color = itr_list_color;
-						itr_list.transform.localScale = Util.valv((0.75f + aval * 0.5f)*20.0f);
-					}
-				}
-				
+				this.update_anim(id,val);
+
 				_id_to_theta[id] = val;
+			}
+		}
+	}
+
+	private void update_anim(int id, float val) {
+		List<GameObject> list = _id_to_objs.list(id);
+		for (int i_list = 0; i_list < list.Count; i_list++) {
+			SpriteRenderer itr_list = list[i_list].GetComponent<SpriteRenderer>();
+			if (itr_list.sprite.name != "move_arrow_cross") {
+				Color itr_list_color = itr_list.color;
+				float aval = Mathf.Pow(1-(Mathf.Abs(i_list-val))/list.Count,4.0f);
+				itr_list_color.a = Mathf.Max(aval,0.25f);
+				itr_list.color = itr_list_color;
+				itr_list.transform.localScale = Util.valv((0.75f + aval * 0.5f)*20.0f);
 			}
 		}
 	}

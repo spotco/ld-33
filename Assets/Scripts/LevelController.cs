@@ -24,10 +24,10 @@ public class LevelController : MonoBehaviour {
 		m_pathRenderer = this.GetComponent<PathRenderer>();
 
 		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(0,0)));
-		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(300,300)));
-		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(300,0)));
-		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(0,300)));
-		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(600,300)));
+		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(-300,-300)));
+		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(-300,0)));
+		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(0,-300)));
+		m_playerTeamFootballers.Add(this.CreateFootballer(new Vector3(-600,-300)));
 
 		m_playerControlledFootballer = m_playerTeamFootballers[0];
 
