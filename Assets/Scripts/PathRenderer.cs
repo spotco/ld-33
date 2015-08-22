@@ -86,6 +86,7 @@ public class PathRenderer : MonoBehaviour {
 	
 	[SerializeField] private GameObject _arrow_dot_proto;
 	[SerializeField] private GameObject _arrow_head_proto;
+	[SerializeField] private GameObject _path_renderer_root;
 	
 	private void Start () {
 		_arrow_dot_proto.SetActive(false);
@@ -96,7 +97,7 @@ public class PathRenderer : MonoBehaviour {
 	private MultiList<int,GameObject> _id_to_objs = new MultiList<int, GameObject>();
 	public void id_draw_path(int id, Vector3 position, Vector3[] points) {
 		if (_id_to_theta.ContainsKey(id)) _id_to_theta[id] = 0.0f;
-		float dist_per = 0.5f;
+		float dist_per = 15.0f;
 		Vector3 last = position;
 		float last_remainder = 0;
 		for (int i = 0; i < points.Length; i++) {
@@ -108,7 +109,8 @@ public class PathRenderer : MonoBehaviour {
 				Vector3 neu_obj_pos = Vector3.Lerp(last,itr,itr_dist/itr_dist_total);
 				
 				GameObject neu_obj = Util.proto_clone(_arrow_dot_proto);
-				neu_obj.transform.position = new Vector3(neu_obj_pos.x,neu_obj.transform.position.y,neu_obj_pos.z);
+				neu_obj.transform.parent = _path_renderer_root.transform;
+				neu_obj.transform.position = new Vector3(neu_obj_pos.x,neu_obj_pos.y,neu_obj_pos.z);
 				_id_to_objs.add(id,neu_obj);
 				
 				itr_dist += dist_per;
@@ -116,8 +118,8 @@ public class PathRenderer : MonoBehaviour {
 			
 			if (i == points.Length-1) {
 				GameObject neu_obj2 = Util.proto_clone(_arrow_head_proto);
-				neu_obj2.transform.position = new Vector3(itr.x,neu_obj2.transform.position.y + 0.1f,itr.z);
-				Util.transform_set_euler_world(neu_obj2.transform,new Vector3(90,-Mathf.Atan2(itr.z-last.z,itr.x-last.x)*Util.rad2deg + 90.0f));
+				neu_obj2.transform.parent = _path_renderer_root.transform;
+				neu_obj2.transform.position = new Vector3(itr.x,itr.y,itr.z);
 				_id_to_objs.add(id,neu_obj2);
 				
 			}
@@ -152,7 +154,7 @@ public class PathRenderer : MonoBehaviour {
 						float aval = Mathf.Pow(1-(Mathf.Abs(i_list-val))/list.Count,4.0f);
 						itr_list_color.a = Mathf.Max(aval,0.25f);
 						itr_list.color = itr_list_color;
-						itr_list.transform.localScale = Util.valv(0.75f + aval * 0.5f);
+						itr_list.transform.localScale = Util.valv((0.75f + aval * 0.5f)*20.0f);
 					}
 				}
 				
