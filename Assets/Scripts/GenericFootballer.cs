@@ -31,18 +31,51 @@ public class GenericFootballer : MonoBehaviour {
 	}
 
 	void Update() {
-		_select_reticule_theta += 0.5f * Util.dt_scale;
+
+		float reticule_anim_speed = 0.5f;
+		float reticule_scale = 180;
+		if (Main.LevelController.m_playerControlledFootballer == this) {
+		} else if (Main.LevelController.m_timeoutSelectedFootballer == this) {
+			reticule_anim_speed = 1.5f;
+			reticule_scale = 250;
+
+		}
+	
+		_select_reticule_theta += reticule_anim_speed * Util.dt_scale;
 		Util.transform_set_euler_world(_select_reticule.transform,new Vector3(0,0,_select_reticule_theta));
 		Color color = _select_reticule.color;
 		color.a = Util.drpt(color.a,_select_reticule_target_alpha,1/4.0f);
 		_select_reticule.color = color;
-	
+		
+		_select_reticule.transform.localScale = Util.valv(reticule_scale);
+		
 	}
 
 	public void sim_update() {
-		this.set_select_reticule_alpha(0.0f);
-		if (_current_mode == GenericFootballerMode.Idle) {
+		if (Main.LevelController.m_playerControlledFootballer == this) {
+			this.set_select_reticule_alpha(0.3f);
+		} else {
+			this.set_select_reticule_alpha(0.0f);
+		}
 
+		if (Main.LevelController.m_playerControlledFootballer == this) {
+			float vx = 0, vy = 0;
+			if (Input.GetKey(KeyCode.W)) {
+				vy = 1;
+			} else if (Input.GetKey(KeyCode.S)) {
+				vy = -1;
+			}
+			if (Input.GetKey(KeyCode.A)) {
+				vx = -1;
+			} else if (Input.GetKey(KeyCode.D)) {
+				vx = 1;
+			}
+			float speed = 5.0f * Util.dt_scale;
+			vx *= speed;
+			vy *= speed;
+			transform.position = Util.vec_add(transform.position,new Vector3(vx,vy));
+
+		} else if (_current_mode == GenericFootballerMode.Idle) {
 
 		} else if (_current_mode == GenericFootballerMode.CommandMoving) {
 			float speed = 5.0f * Util.dt_scale;
@@ -74,7 +107,14 @@ public class GenericFootballer : MonoBehaviour {
 	}
 
 	public void timeout_update() {
-		this.set_select_reticule_alpha(0.4f);
+		if (Main.LevelController.m_playerControlledFootballer == this) {
+			this.set_select_reticule_alpha(0.0f);
+		} else if (Main.LevelController.m_timeoutSelectedFootballer == this) {
+			this.set_select_reticule_alpha(0.6f);
+		} else {
+			this.set_select_reticule_alpha(0.15f);
+		}
+
 	}
 
 	[SerializeField] private Vector2 _command_move_to_point;
@@ -85,6 +125,11 @@ public class GenericFootballer : MonoBehaviour {
 		Main.LevelController.m_pathRenderer.clear_path(_id);
 		Vector3 tar_pos = new Vector3(_command_move_to_point.x,_command_move_to_point.y);                         
 		Main.LevelController.m_pathRenderer.id_draw_path(_id,this.transform.position,new Vector3[] { tar_pos });
+	}
+
+	public bool ContainsPoint(Vector3 pt) {
+		SphereCollider col = this.GetComponent<SphereCollider>();
+		return Vector3.Distance(pt,this.transform.position) < col.radius;
 	}
 
 }

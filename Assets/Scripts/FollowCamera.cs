@@ -41,6 +41,7 @@ public class FollowCamera : MonoBehaviour {
 	private int _sizeIdx = 0;
 	
 	void Update() {
+		/*
 		if (Input.GetKeyDown(KeyCode.Alpha1)) {
 			Transform newTarget = null;
 			if (_t == "T1") {
@@ -56,6 +57,7 @@ public class FollowCamera : MonoBehaviour {
 			_sizeIdx = (_sizeIdx + 1) % _t_size.Length;
 			TargetSize = _t_size[_sizeIdx];
 		}
+		*/
 	}
 	
 	void LateUpdate () {
