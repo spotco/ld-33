@@ -8,6 +8,8 @@ public class GenericFootballer : MonoBehaviour {
 	[SerializeField] private Sprite _image_holding_ball;
 	[SerializeField] private SpriteRenderer _renderer;
 
+	[SerializeField] public float _waitdelay;
+
 	private float _select_reticule_theta;
 	[SerializeField] private SpriteRenderer _select_reticule;
 	private float _select_reticule_target_alpha = 0.0f;
@@ -68,7 +70,10 @@ public class GenericFootballer : MonoBehaviour {
 		this.set_select_reticule_alpha(0.0f);
 		Vector3 last_pos = transform.position;
 
-		if (Main.LevelController.m_playerControlledFootballer == this) {
+		if (_waitdelay > 0) {
+			_waitdelay -= Util.dt_scale;
+
+		} else if (Main.LevelController.m_playerControlledFootballer == this) {
 			Vector3 delta =  Util.vec_sub(Main.LevelController.GetMousePoint(),transform.position);
 			Vector3 dir = delta.normalized;
 			float mag = delta.magnitude;

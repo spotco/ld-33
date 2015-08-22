@@ -46,6 +46,7 @@ public class LevelController : MonoBehaviour {
 		if (m_playerTeamFootballers.Contains(tar)) {
 			m_playerControlledFootballer = tar;
 			tar._current_mode = GenericFootballer.GenericFootballerMode.Idle;
+			tar._waitdelay = 15;
 		}
 		Destroy(looseball.gameObject);
 	}
