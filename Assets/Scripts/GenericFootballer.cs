@@ -1,16 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour {
-	[SerializeField]
-	private float _moveSpeed = 10.0f;
+public class GenericFootballer : MonoBehaviour {
+	[SerializeField] private float _moveSpeed = 10.0f;
 	
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
 	void Update () {
 		Vector3 moveVec = Vector3.zero;
 		if(Input.GetKey(KeyCode.UpArrow)) {
@@ -38,5 +31,3 @@ public class Player : MonoBehaviour {
 		}
 	}
 }
-
-
