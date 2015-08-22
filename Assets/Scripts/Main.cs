@@ -16,6 +16,7 @@ public class Main : Uzu.Main
 	
   protected override void OnMainBegin ()
   {
+	Application.targetFrameRate = 60;
     _instance = (Main)Uzu.Main.Instance;
     
     // InitGraphicsSettings ();
@@ -40,8 +41,8 @@ public class Main : Uzu.Main
       //_levelController.LoadLevel (CyLevels.LEVEL_4);
       //_levelController.LoadLevel (CyLevels.LEVEL_5);
       
-      _panelManager.ChangeCurrentPanel (PanelIds.Main);	
-      // _panelManager.ChangeCurrentPanel (PanelIds.Game);	
+      //_panelManager.ChangeCurrentPanel (PanelIds.Main);	
+       _panelManager.ChangeCurrentPanel (PanelIds.Game);	
     }
   }
 	

@@ -25,6 +25,14 @@ public class MultiList<TKey, TValue> {
 }
 
 public class Util {
+
+	public static float drpt(float a, float b, float fric) {
+		float deltaf = (b - a);
+		deltaf *= Mathf.Pow(fric,1/Util.dt_scale);
+		return a + deltaf;
+	}
+
+	public static float dt_scale = 1;
 	public static System.Random rand = new System.Random();
 	
 	public static float rand_range(float min, float max) {
@@ -78,6 +86,10 @@ public class Util {
 	public static Vector3 vec_sub(Vector3 a, Vector3 b) {
 		return new Vector3(a.x-b.x,a.y-b.y,a.z-b.z);
 	}
+
+	public static bool vec_eq(Vector3 a, Vector3 b) {
+		return a.x == b.x && a.y == b.y && a.z == b.z;
+	}
 	
 }
 
@@ -86,7 +98,7 @@ public class PathRenderer : MonoBehaviour {
 	
 	[SerializeField] private GameObject _arrow_dot_proto;
 	[SerializeField] private GameObject _arrow_head_proto;
-	[SerializeField] private GameObject _path_renderer_root;
+	[SerializeField] public GameObject _path_renderer_root;
 	
 	private void Start () {
 		_arrow_dot_proto.SetActive(false);
