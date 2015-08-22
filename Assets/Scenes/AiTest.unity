@@ -609,10 +609,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e055a0feac040078b38accf6115592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 200
-  _maxForce: 100
-  _mass: 10
-  _friction: .0500000007
+  _maxSpeed: 300
+  _maxForce: 1000
+  _mass: .100000001
+  _slowRadius: 200
+  _stopRadius: 50
 --- !u!1 &1524863582
 GameObject:
   m_ObjectHideFlags: 0

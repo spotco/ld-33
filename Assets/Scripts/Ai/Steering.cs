@@ -8,14 +8,17 @@ public class Steering : MonoBehaviour {
 	[SerializeField]
 	private float _maxForce = 100.0f;
 	[SerializeField]
-	private float _mass = 10.0f;
+	private float _mass = 1.0f;
 	[SerializeField]
-	private float _friction = 0.05f;
+	private float _slowRadius = 100.0f;
+	[SerializeField]
+	private float _stopRadius = 50.0f;
 	
 	[System.Flags]
 	private enum Mode {
 		None = 0x0,
 		Seek = 0x1,
+		Arrive = 0x2,
 	}
 	
 	private Mode _currentMode = Mode.None;
@@ -31,9 +34,14 @@ public class Steering : MonoBehaviour {
 	public void SeekOn() {
 		_currentMode |= Mode.Seek;
 	}
-	
 	public void SeekOff() {
 		_currentMode &= ~Mode.Seek;
+	}
+	public void ArriveOn() {
+		_currentMode |= Mode.Arrive;
+	}
+	public void ArriveOff() {
+		_currentMode &= ~Mode.Arrive;
 	}
 	
 	private bool IsOn(Mode mode) {
@@ -47,8 +55,7 @@ public class Steering : MonoBehaviour {
 		_steeringForce = SumForces();
 		_steeringForce = Vector3.ClampMagnitude(_steeringForce, _maxForce);
 		
-		_currentVelocity += _steeringForce / _mass;
-		_currentVelocity -= _currentVelocity * _friction;
+		_currentVelocity += (_steeringForce / _mass) * Time.deltaTime;
 		_currentVelocity = Vector3.ClampMagnitude(_currentVelocity, _maxSpeed);
 		
 		transform.localPosition = _currentPosition + _currentVelocity * Time.deltaTime;
@@ -59,6 +66,14 @@ public class Steering : MonoBehaviour {
 		
 		if (IsOn(Mode.Seek)) {
 			deltaForce += Seek(_currentTarget);
+			
+			if (!AccumulateForce(deltaForce)) {
+				return _steeringForce;
+			}
+		}
+		
+		if (IsOn(Mode.Arrive)) {
+			deltaForce += Arrive(_currentTarget);
 			
 			if (!AccumulateForce(deltaForce)) {
 				return _steeringForce;
@@ -86,7 +101,22 @@ public class Steering : MonoBehaviour {
 		return true;
 	}
 	
-	private Vector3 Seek(Vector3 target) {
-		return ((target - _currentPosition).normalized * _maxSpeed) - _currentVelocity;
+	private Vector3 Seek(Vector3 targetPos) {
+		return ((targetPos - _currentPosition).normalized * _maxSpeed) - _currentVelocity;
+	}
+	
+	private Vector3 Arrive(Vector3 targetPos) {
+		float distance = Vector3.Distance(_currentPosition, targetPos);
+		Vector3 desiredVelocity = (targetPos - _currentPosition).normalized;
+		
+		if (distance < _stopRadius) {
+			desiredVelocity = Vector2.zero;
+		} else if (distance < _slowRadius) {
+			desiredVelocity = desiredVelocity * _maxSpeed * ((distance - _stopRadius) / (_slowRadius - _stopRadius));
+		} else {
+			desiredVelocity = desiredVelocity * _maxSpeed;
+		}
+
+		return desiredVelocity - _currentVelocity;
 	}
 }
