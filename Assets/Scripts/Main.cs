@@ -12,6 +12,9 @@ public class Main : Uzu.Main
 	public static Uzu.UiPanelMgr PanelManager {
 		get { return _instance._panelManager; }
 	}
+	public static LevelController LevelController {
+		get { return _instance._levelController; }
+	}
 	
   protected override void OnMainBegin ()
   {
@@ -52,4 +55,6 @@ public class Main : Uzu.Main
 	
 	[SerializeField]
 	private Uzu.UiPanelMgr _panelManager;
+	[SerializeField]
+	private LevelController _levelController;
 }
