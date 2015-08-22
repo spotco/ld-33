@@ -1,28 +1,23 @@
 using UnityEngine;
 using System.Collections;
 
-/*
-TODO:
-- allow setable target and lerp around
-- allow zooming in on target
-- allow clamping to edge of world
- */
-
 public class FollowCamera : MonoBehaviour {
-	[SerializeField]
-  private Transform _target;
-	
 	[SerializeField]
 	private float _translateSmoothness;
 	[SerializeField]
 	private float _sizeSmoothness;
 	
+	private Vector3 _currentTargetPos;
 	private Vector3 _offset;
 	private Camera _cachedCamera;
 	private float _targetSize;
 	
 	public void SetTarget(Transform target) {
-		_target = target;
+		_currentTargetPos = target.localPosition;
+	}
+	
+	public void SetTargetPos(Vector3 targetPos) {
+		_currentTargetPos = targetPos;
 	}
 	
 	public float TargetSize {
@@ -33,6 +28,7 @@ public class FollowCamera : MonoBehaviour {
 	void Awake() {
 		_offset = new Vector3(0.0f, 0.0f, transform.localPosition.z);
 		_cachedCamera = this.GetComponent<Camera>();
+		_currentTargetPos = this.transform.localPosition;
 		_targetSize = _cachedCamera.orthographicSize;
 	}
 	
@@ -61,14 +57,10 @@ public class FollowCamera : MonoBehaviour {
 	}
 	
 	void LateUpdate () {
-		if (_target == null) {
-			return;
-		}
-		
 		// Position interp.
 		{
 			float t = _translateSmoothness * Time.deltaTime;
-			Vector3 newPos = Vector3.Lerp(transform.localPosition, _target.localPosition, t);
+			Vector3 newPos = Vector3.Lerp(transform.localPosition, _currentTargetPos, t);
 			newPos += _offset;
 			transform.localPosition = newPos;
 		}
