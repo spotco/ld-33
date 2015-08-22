@@ -462,6 +462,15 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 21291584, guid: 57090a5d7042d4737a6e3ea4647e38d8, type: 2}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 0bf212727d9304afda097c3c99dcff69,
+        type: 3}
+    - target: {fileID: 196510, guid: 57090a5d7042d4737a6e3ea4647e38d8, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11485898, guid: 57090a5d7042d4737a6e3ea4647e38d8, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 57090a5d7042d4737a6e3ea4647e38d8, type: 2}
