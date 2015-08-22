@@ -19,6 +19,7 @@ public class Steering : MonoBehaviour {
 		None = 0x0,
 		Seek = 0x1,
 		Arrive = 0x2,
+		Interpose = 0x4,
 	}
 	
 	private Mode _currentMode = Mode.None;
@@ -26,6 +27,9 @@ public class Steering : MonoBehaviour {
 	private Vector3 _currentPosition;
 	private Vector3 _currentTarget;
 	private Vector3 _currentVelocity;
+	
+	private Vector3 _interposeAnchorPos;
+	private float _interposeDistance;
 	
 	public void SetTarget(Vector3 pos) {
 		_currentTarget = pos;
@@ -42,6 +46,14 @@ public class Steering : MonoBehaviour {
 	}
 	public void ArriveOff() {
 		_currentMode &= ~Mode.Arrive;
+	}
+	public void InterposeOn(Vector3 anchorPos, float dist) {
+		_currentMode |= Mode.Interpose;
+		_interposeAnchorPos = anchorPos;
+		_interposeDistance = dist;
+	}
+	public void InterposeOff() {
+		_currentMode &= ~Mode.Interpose;
 	}
 	
 	private bool IsOn(Mode mode) {
@@ -74,6 +86,14 @@ public class Steering : MonoBehaviour {
 		
 		if (IsOn(Mode.Arrive)) {
 			deltaForce += Arrive(_currentTarget);
+			
+			if (!AccumulateForce(deltaForce)) {
+				return _steeringForce;
+			}
+		}
+		
+		if (IsOn(Mode.Interpose)) {
+			deltaForce += Interpose(_currentTarget, _interposeAnchorPos, _interposeDistance);
 			
 			if (!AccumulateForce(deltaForce)) {
 				return _steeringForce;
@@ -118,5 +138,10 @@ public class Steering : MonoBehaviour {
 		}
 
 		return desiredVelocity - _currentVelocity;
+	}
+	
+	private Vector3 Interpose(Vector3 targetPos, Vector3 anchorPos, float distFromTarget) {
+		Vector3 target = anchorPos + (targetPos - anchorPos).normalized * distFromTarget;
+		return Arrive(target);
 	}
 }

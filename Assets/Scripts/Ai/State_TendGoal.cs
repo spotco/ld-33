@@ -13,15 +13,20 @@ public class State_TendGoal : FSMState<BotBase> {
 	private State_TendGoal() { }
 	
 	public override void Enter (BotBase bot) {
-		bot.Steering.EnableSeek(true);
+		// bot.Steering.ArriveOn();
+		
+		Vector3 anchorPos = GameObject.Find("Goal").transform.localPosition;
+		bot.Steering.InterposeOn(anchorPos, 350.0f);
+		// bot.Steering.SeekOn();
+		
 		// bot.Steering.EnableArrive(true);
 		// bot.Steering.SetTarget(Vector3.zero);
+			
+		// bot.Steering.EnableInterpose(true);
+		// bot.Steering.SetTarget(...);
 		
 		// bot.Steering.InterposeOn(Prm.GoalKeeperTendingDistance);
 		// bot.Steering.SetTarget(bot->GetRearInterposeTarget());
-		
-		// bot.Steering.SeekOn();
-		// bot.Steering.Target = Vector3.zero;
 	}
 	
 	public override void Execute (BotBase bot) {
