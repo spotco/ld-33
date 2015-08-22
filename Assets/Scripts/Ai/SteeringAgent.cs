@@ -64,12 +64,5 @@ public class SteeringAgent
 
         Transform transform = bot.transform;
         transform.localPosition = transform.localPosition + (Vector3)CurrentVelocity * Time.deltaTime;
-    
-        if (RotateSprite && CurrentVelocity.magnitude > 0.0001f)
-        {
-            float angle = Mathf.Atan2(CurrentVelocity.y, CurrentVelocity.x) * Mathf.Rad2Deg;
-
-            transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, angle);
-        }
     }
 }
