@@ -24,18 +24,18 @@ public class Fan : MonoBehaviour {
 		_jumpAmount = Random.Range(_jumpRange.x, _jumpRange.y);
 		_jumpDuration = Random.Range(_jumpTime.x, _jumpTime.y);
 		
-		LeanTween.moveY(
+		LeanTween.moveZ(
 			_targetTransform.gameObject,
-			_targetTransform.position.y + _jumpAmount, _jumpDuration)
+			_targetTransform.position.z + _jumpAmount, _jumpDuration)
 			.setOnComplete(() => {
 			DoJumpDown();
 		}).setEase(LeanTweenType.easeOutQuad);
 	}
 	
 	private void DoJumpDown() {
-		LeanTween.moveY(
+		LeanTween.moveZ(
 			_targetTransform.gameObject,
-			_targetTransform.position.y - _jumpAmount, _jumpDuration)
+			_targetTransform.position.z - _jumpAmount, _jumpDuration)
 			.setOnComplete(() => {
 			DoJumpUp();
 		}).setEase(LeanTweenType.easeOutQuad);
