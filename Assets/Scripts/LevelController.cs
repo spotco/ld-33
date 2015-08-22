@@ -77,8 +77,9 @@ public class LevelController : MonoBehaviour {
 		return false;
 	}
 
-	private static GenericFootballer IsPointTouchFootballer(Vector3 pt, List<GenericFootballer> list) {
+	private GenericFootballer IsPointTouchFootballer(Vector3 pt, List<GenericFootballer> list) {
 		for (int i = 0; i < list.Count; i++) {
+			if (list[i] == m_playerControlledFootballer) continue;
 			if (list[i].ContainsPoint(pt)) return list[i];
 		}
 		return null;

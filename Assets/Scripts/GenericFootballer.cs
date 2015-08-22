@@ -66,6 +66,7 @@ public class GenericFootballer : MonoBehaviour {
 
 	[SerializeField] public float _throw_charge_ct;
 	private List<Vector3> __tmp = new List<Vector3>();
+	private bool _ball_charging = false;
 	public void sim_update() {
 		this.set_select_reticule_alpha(0.0f);
 		Vector3 last_pos = transform.position;
@@ -80,6 +81,7 @@ public class GenericFootballer : MonoBehaviour {
 			Main.LevelController.m_pathRenderer.clear_path(_id);
 
 			if (Input.GetKey(KeyCode.Z)) {
+				_ball_charging = true;
 				_throw_charge_ct = Mathf.Min(_throw_charge_ct+Util.dt_scale*10.0f,mag);
 
 				Vector3 p0 = this.transform.position;
@@ -101,7 +103,7 @@ public class GenericFootballer : MonoBehaviour {
 				__tmp.Add(p3);
 				Main.LevelController.m_pathRenderer.id_draw_path(_id,this.transform.position,__tmp.ToArray());
 
-			} else if (Input.GetKeyUp(KeyCode.Z)) {
+			} else if (!Input.GetKey(KeyCode.Z) && _ball_charging) {
 				if (_throw_charge_ct > 100) {
 
 					float vel = Mathf.Clamp(_throw_charge_ct/2000.0f * 6 + 3,3,10);
@@ -111,6 +113,8 @@ public class GenericFootballer : MonoBehaviour {
 					);
 					Main.LevelController.m_playerControlledFootballer = null;
 				}
+				_ball_charging = false;
+				_throw_charge_ct = 0;
 
 			} else {
 				_throw_charge_ct = 0;
