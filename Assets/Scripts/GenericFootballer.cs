@@ -52,28 +52,20 @@ public class GenericFootballer : MonoBehaviour {
 	}
 
 	public void sim_update() {
-		if (Main.LevelController.m_playerControlledFootballer == this) {
-			this.set_select_reticule_alpha(0.3f);
-		} else {
-			this.set_select_reticule_alpha(0.0f);
-		}
+		this.set_select_reticule_alpha(0.0f);
 
 		if (Main.LevelController.m_playerControlledFootballer == this) {
-			float vx = 0, vy = 0;
-			if (Input.GetKey(KeyCode.W)) {
-				vy = 1;
-			} else if (Input.GetKey(KeyCode.S)) {
-				vy = -1;
+			if (Input.GetKey(KeyCode.Z)) {
+
+			} else {
+				Vector3 delta =  Util.vec_sub(Main.LevelController.GetMousePoint(),transform.position);
+				Vector3 dir = delta.normalized;
+				float mag = delta.magnitude;
+				float scf = mag/200.0f;
+				float speed = 5.0f * Util.dt_scale;
+				dir.Scale(Util.valv(scf*speed));
+				transform.position = Util.vec_add(transform.position,dir);
 			}
-			if (Input.GetKey(KeyCode.A)) {
-				vx = -1;
-			} else if (Input.GetKey(KeyCode.D)) {
-				vx = 1;
-			}
-			float speed = 5.0f * Util.dt_scale;
-			vx *= speed;
-			vy *= speed;
-			transform.position = Util.vec_add(transform.position,new Vector3(vx,vy));
 
 		} else if (_current_mode == GenericFootballerMode.Idle) {
 

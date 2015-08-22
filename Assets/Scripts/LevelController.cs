@@ -40,18 +40,20 @@ public class LevelController : MonoBehaviour {
 		return rtv;
 	}
 
+	public Vector3 GetMousePoint() {
+		RaycastHit hit;
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		Plane gamePlane = new Plane(new Vector3(0,0,-1),new Vector3(0,0,0));
+		float rayout;
+		gamePlane.Raycast(ray,out rayout);
+		return Util.vec_add(ray.origin,Util.vec_scale(ray.direction,rayout));
+
+	}
+	
 	private bool IsClickAndPoint(out Vector2 point) {
 		if (Input.GetMouseButtonDown(0)) {
-			RaycastHit hit;
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			Plane gamePlane = new Plane(new Vector3(0,0,-1),new Vector3(0,0,0));
-			float rayout;
-			bool did_hit = gamePlane.Raycast(ray,out rayout);
-			if (did_hit) {
-				Vector3 plane_intersect = Util.vec_add(ray.origin,Util.vec_scale(ray.direction,rayout));
-				point = new Vector2(plane_intersect.x,plane_intersect.y);
-				return true;
-			}
+			point = GetMousePoint();
+			return true;
 		}
 		point = Vector2.zero;
 		return false;
