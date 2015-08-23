@@ -244,8 +244,18 @@ public class LevelController : MonoBehaviour {
 	private void player_goal_score() {
 		Debug.Log ("PLAYER GOAL");
 	}
+	
+	private BotBase _prev_ball_owner;
 
 	public void CreateLooseBall(Vector2 start, Vector2 vel) {
+		// ai msg
+		{
+			if (_prev_ball_owner != null) {
+				_prev_ball_owner.Msg_LostBall();
+				_prev_ball_owner = null;
+			}
+		}
+		
 		GameObject neu_obj = Util.proto_clone(proto_looseBall);
 		LooseBall rtv = neu_obj.GetComponent<LooseBall>();
 		rtv.sim_initialize(start,vel);
@@ -263,6 +273,17 @@ public class LevelController : MonoBehaviour {
 			tar._current_mode = GenericFootballer.GenericFootballerMode.Idle;
 			tar.set_wait_delay(15);
 		}
+		
+		// ai msg
+		{
+			BotBase new_ball_owner = tar.GetComponent<BotBase>();
+			if (_prev_ball_owner != null) {
+				_prev_ball_owner.Msg_LostBall();
+			}
+			new_ball_owner.Msg_GotBall();
+			_prev_ball_owner = new_ball_owner;
+		}
+		
 		Destroy(looseball.gameObject);
 	}
 	

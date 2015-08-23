@@ -4,6 +4,7 @@ public static class BotConstants {
 	public const float ArriveDistance = 10.0f;
 	public const float KeeperFetchDistance = 400.0f;
 	public const float DefenderChaseDistance = 500.0f;
+	public const float AttackerShootDistance = 400.0f;
 }
 
 /**
@@ -118,10 +119,7 @@ public class BotState_PutBallBackInPlay : FSMState<BotBase> {
 		// Throw the ball.
 		if (bot.GetBallOwner() == bot) {
 			BotBase throwTarget = bot.GetClosestTeammate();
-			Vector3 throwDir = throwTarget.transform.position - bot.transform.position;
-			float throwDist = throwDir.magnitude;
-			throwDir /= throwDist;
-			bot.ThrowBall(throwDir, throwDist);
+			bot.ThrowBall(throwTarget.transform.position);
 		}
 		
 		bot.ChangeState(BotState_GoHome.Instance);
@@ -195,11 +193,66 @@ public class BotState_Idle : FSMState<BotBase> {
 					return;
 				}
 			}
+		} else if (bot.FieldPosition == FieldPosition.Attacker) {
+			// Teammate forward has the ball, let's help him.
+			BotBase owner = bot.GetBallOwner();
+			if (owner != null &&
+				  owner.Team == bot.Team &&
+					owner != bot &&
+					owner.FieldPosition == FieldPosition.Attacker) {
+				bot.ChangeState(BotState_Pressure.Instance);
+				return;
+			}
 		}
+		
+		bot.ChangeState(BotState_Roam.Instance);
 	}
 	
 	public override void Exit(BotBase bot) {
 		
+	}
+}
+
+/**
+ * 
+ */
+public class BotState_Roam : FSMState<BotBase> {
+	static readonly BotState_Roam instance = new BotState_Roam();
+	public static BotState_Roam Instance {
+		get {
+			return instance;
+		}
+	}
+	static BotState_Roam() { }
+	
+	private BotState_Roam() { }
+	
+	private Vector3 GetRoamPosition(BotBase bot) {
+		Vector3 dir = Uzu.Math.RandomOnUnitCircle();
+		float offset = Random.Range(20.0f, 40.0f);
+		return bot.HomePosition + dir * offset;
+	}
+	
+	public override void Enter (BotBase bot) {
+		bot.Steering.ArriveOn();
+		bot.Steering.CurrentTarget = GetRoamPosition(bot);
+		bot.RoamTime = Random.Range(0.5f, 1.0f);
+	}
+	
+	public override void Execute (BotBase bot) {
+		if (Vector3.Distance(bot.Steering.CurrentTarget, bot.transform.position) <= BotConstants.ArriveDistance) {
+			bot.Steering.ArriveOff();
+			
+			if (bot.RoamTime <= 0.0f) {
+				bot.ChangeState(BotState_Idle.Instance);
+			} else {
+				bot.RoamTime -= Time.deltaTime;
+			}
+		}
+	}
+	
+	public override void Exit(BotBase bot) {
+		bot.Steering.ArriveOff();
 	}
 }
 
@@ -229,6 +282,30 @@ public class BotState_Wait : FSMState<BotBase> {
 		
 		// Unstunned.
 		bot.RevertState();
+	}
+	
+	public override void Exit(BotBase bot) {
+	}
+}
+
+/**
+ * 
+ */
+public class BotState_Pressure : FSMState<BotBase> {
+	static readonly BotState_Pressure instance = new BotState_Pressure();
+	public static BotState_Pressure Instance {
+		get {
+			return instance;
+		}
+	}
+	static BotState_Pressure() { }
+	
+	private BotState_Pressure() { }
+	
+	public override void Enter (BotBase bot) {
+	}
+	
+	public override void Execute (BotBase bot) {
 	}
 	
 	public override void Exit(BotBase bot) {
@@ -272,6 +349,8 @@ public class BotState_ChaseBall : FSMState<BotBase> {
 				bot.ChangeState(BotState_GoHome.Instance);
 				return;
 			}
+		} else if (bot.FieldPosition == FieldPosition.Attacker) {
+			// TODO:
 		}
 				
 		bot.Steering.CurrentTarget = bot.GetBallPosition();
@@ -298,7 +377,11 @@ public class BotState_Dribble : FSMState<BotBase> {
 	private BotState_Dribble() { }
 	
 	public override void Enter (BotBase bot) {
-		bot.DribbleTime = Random.Range(0.5f, 1.0f);
+		if (bot.FieldPosition == FieldPosition.Defender) {
+			bot.DribbleTime = Random.Range(0.5f, 1.0f);
+		} else if (bot.FieldPosition == FieldPosition.Attacker) {
+			bot.DribbleTime = Random.Range(4.0f, 6.0f);
+		}
 		
 		bot.Steering.SeekOn();
 		bot.Steering.CurrentTarget = bot.GetGoalpostPosition(bot.OtherTeam);
@@ -315,13 +398,29 @@ public class BotState_Dribble : FSMState<BotBase> {
 			bot.DribbleTime -= Time.deltaTime;
 			if (bot.DribbleTime <= 0.0f) {
 				BotBase throwTarget = bot.GetClosestTeammate();
-				Vector3 throwDir = throwTarget.transform.position - bot.transform.position;
-				float throwDist = throwDir.magnitude;
-				throwDir /= throwDist;
-				bot.ThrowBall(throwDir, throwDist);
+				bot.ThrowBall(throwTarget.transform.position);
 				bot.ChangeState(BotState_GoHome.Instance);
 				
 				throwTarget.Msg_ReceivePass();
+			}
+		} else if (bot.FieldPosition == FieldPosition.Attacker) {
+			// Lost the ball.
+			if (bot.GetBallOwner() != bot) {
+				bot.ChangeState(BotState_ChaseBall.Instance);
+				return;
+			}
+			
+			{
+				float distToGoal = Vector3.Distance(bot.transform.position, bot.GetGoalpostPosition(bot.OtherTeam));
+				bot.DribbleTime -= Time.deltaTime;
+				if (distToGoal < BotConstants.AttackerShootDistance ||
+					  bot.DribbleTime <= 0.0f) {
+					// TODO: if lane to goal is open, attempt a shot... else try to pass to other forward if open.. else pass back to defender
+					
+					bot.ThrowBall(bot.GetGoalpostPosition(bot.OtherTeam));
+					bot.ChangeState(BotState_Pressure.Instance);
+					return;
+				}
 			}
 		}
 	}
@@ -358,6 +457,16 @@ public class BotState_ReceivePass : FSMState<BotBase> {
 			
 			if (!bot.IsBallLoose()) {
 				bot.ChangeState(BotState_GoHome.Instance);
+				return;
+			}
+		} else if (bot.FieldPosition == FieldPosition.Attacker) {
+			if (bot.GetBallOwner() == bot) {
+				bot.ChangeState(BotState_Dribble.Instance);
+				return;
+			}
+			
+			if (!bot.IsBallLoose()) {
+				bot.ChangeState(BotState_ChaseBall.Instance);
 				return;
 			}
 		}

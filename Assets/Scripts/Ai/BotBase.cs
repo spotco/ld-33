@@ -35,6 +35,7 @@ public class BotBase : MonoBehaviour {
 	}
 	
 	public float DribbleTime { get; set; }
+	public float RoamTime { get; set; }
 	
 	public void ChangeState(FSMState<BotBase> e) {
 		_FSM.ChangeState(e);		
@@ -86,8 +87,11 @@ public class BotBase : MonoBehaviour {
 		return Main.LevelController.currentLooseBallVelocity();
 	}
 	
-	public void ThrowBall(Vector3 dir, float speed) {
-		this.GetComponent<GenericFootballer>().throw_ball(dir, speed);
+	public void ThrowBall(Vector3 targetPos) {
+		Vector3 throwDir = targetPos - this.transform.position;
+		float throwDist = throwDir.magnitude;
+		throwDir /= throwDist;
+		this.GetComponent<GenericFootballer>().throw_ball(throwDir, throwDist);
 	}
 	
 	public bool IsBallLoose() {
@@ -139,6 +143,16 @@ public class BotBase : MonoBehaviour {
 	
 	public void Msg_Stunned() {
 		ChangeState(BotState_Wait.Instance);
+	}
+	
+	public void Msg_GotBall() {
+		if (FieldPosition == FieldPosition.Attacker) {
+			ChangeState(BotState_Dribble.Instance);
+		}
+	}
+	
+	public void Msg_LostBall() {
+		
 	}
 	
 	public bool IsStunned() {
