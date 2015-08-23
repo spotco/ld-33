@@ -25,7 +25,10 @@ public class Referee : MonoBehaviour {
 			_basepos = m_RefereeTopBase.transform.position;
 		}
 		this.transform.position = _basepos;
+		_movespeed = 8.0f;
 	}
+
+	[SerializeField] public float _movespeed ;
 
 	public void sim_update() {
 		Vector3 current_ball_pos = Main.LevelController.currentBallPosition();
@@ -39,7 +42,7 @@ public class Referee : MonoBehaviour {
 				target_pos = new Vector3(current_ball_pos.x,_basepos.y,_basepos.z);
 			}
 		}
-		float speed = 8.0f * Util.dt_scale;
+		float speed = _movespeed * Util.dt_scale;
 		Vector3 delta =  Util.vec_sub(target_pos,transform.position);
 		if (delta.magnitude < speed) {
 			transform.position = target_pos;

@@ -18,6 +18,7 @@ public class LevelController : MonoBehaviour {
 
 	[SerializeField] public BoxCollider2D m_gameBounds;
 	[SerializeField] public BoxCollider2D m_ballBounds;
+	[SerializeField] public BoxCollider2D m_minGameBounds;
 	[SerializeField] public AnimatedGoalPost m_playerGoal;
 	[SerializeField] public AnimatedGoalPost m_enemyGoal;
 
@@ -108,7 +109,7 @@ public class LevelController : MonoBehaviour {
 
 
 			} else {
-				Main.GameCamera.SetTargetPos(this.GetMousePoint());
+				Main.GameCamera.SetTargetPos(this.GetLastMousePointInBallBounds());
 				Main.GameCamera.SetTargetZoom(600);
 				Main.GameCamera.SetManualOffset(new Vector3(0,0,0));
 			}
@@ -181,7 +182,12 @@ public class LevelController : MonoBehaviour {
 
 		} else if (m_currentMode == LevelControllerMode.Timeout) {
 
-			Vector3 mouse_to_center_delta = Util.vec_sub(Input.mousePosition,new Vector2(Screen.width/2,Screen.height/2));
+			Vector3 screen = Main.GameCamera.GetComponent<Camera>().WorldToScreenPoint(this.GetLastMousePointInBallBounds());
+			screen.z = 0;
+
+			Vector3 mouse_to_center_delta = Util.vec_sub(
+				screen,
+				new Vector2(Screen.width/2,Screen.height/2));
 			float mmouse_move_rad = (Screen.width+Screen.height)/2.0f * 0.25f;
 			if (mouse_to_center_delta.magnitude > mmouse_move_rad) {
 				Vector3 n_mouse_to_center_delta = mouse_to_center_delta.normalized;
@@ -195,7 +201,7 @@ public class LevelController : MonoBehaviour {
 			Main.GameCamera.SetTargetZoom(800);
 			Vector3 mouse_pt = GetLastMousePointInBallBounds();
 			GenericFootballer select_tar = this.IsPointTouchFootballer(mouse_pt,m_playerTeamFootballers);
-			if (select_tar != null) {
+			if (select_tar != null && select_tar.can_take_commands()) {
 				m_mouseTargetIcon.SetActive(false);
 				select_tar.SetSelectedForAFrame();
 			} else {
@@ -336,26 +342,14 @@ public class LevelController : MonoBehaviour {
 	private Vector3 _last_mouse_point_in_ball_bounds;
 	public Vector3 GetLastMousePointInBallBounds() {
 		Vector3 mpt = this.GetMousePoint();
-		if (m_ballBounds.OverlapPoint(mpt)) {
+		if (m_gameBounds.OverlapPoint(mpt)) {
 			_last_mouse_point_in_ball_bounds = mpt;
 		
 		} else {
-			_last_mouse_point_in_ball_bounds = closest_point_in_bounds((mpt-Main.GameCamera.GetCurrentPosition()).normalized, mpt.magnitude);
+			_last_mouse_point_in_ball_bounds = m_gameBounds.bounds.ClosestPoint(mpt);
 
 		}
 		return _last_mouse_point_in_ball_bounds;
-	}
-
-	private Vector3 closest_point_in_bounds(Vector3 dir, float mag) {
-		float itr = 0.01f;
-		for (float pct = itr; pct <= 1.05f; pct += itr) {
-			Vector3 ppos = Util.vec_scale(dir,mag*pct) + Main.GameCamera.GetCurrentPosition();
-			if (!m_ballBounds.OverlapPoint(ppos)) {
-				return Util.vec_scale(dir,mag*(pct-itr)) + Main.GameCamera.GetCurrentPosition();
-			}
-
-		}
-		return Util.vec_scale(dir,mag) + Main.GameCamera.GetCurrentPosition();
 	}
 	
 	private bool IsClickAndPoint(out Vector2 point) {
@@ -369,7 +363,6 @@ public class LevelController : MonoBehaviour {
 	
 	private GenericFootballer IsPointTouchFootballer(Vector3 pt, List<GenericFootballer> list) {
 		for (int i = 0; i < list.Count; i++) {
-			if (this.footballer_has_ball(list[i])) continue;
 			if (list[i].ContainsPoint(pt)) return list[i];
 		}
 		return null;

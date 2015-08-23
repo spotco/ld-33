@@ -89,7 +89,7 @@ NavMeshSettings:
   m_NavMeshData: {fileID: 0}
 --- !u!61 &34276293 stripped
 BoxCollider2D:
-  m_PrefabParentObject: {fileID: 6110802, guid: 7966cd997bfa14d2fbee3b44970a31f0,
+  m_PrefabParentObject: {fileID: 6152496, guid: 7966cd997bfa14d2fbee3b44970a31f0,
     type: 2}
   m_PrefabInternal: {fileID: 1610779071}
 --- !u!1001 &76456638
@@ -173,26 +173,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: proto_referee
-      value: 
-      objectReference: {fileID: 1869773522}
-    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: m_gameBounds
-      value: 
-      objectReference: {fileID: 34276293}
-    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: m_playerGoal
-      value: 
-      objectReference: {fileID: 1219017173}
-    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: m_enemyGoal
-      value: 
-      objectReference: {fileID: 1191084275}
-    - target: {fileID: 11426180, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: _path_renderer_root
-      value: 
-      objectReference: {fileID: 1285087775}
     - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
       propertyPath: _panelManager
       value: 
@@ -205,10 +185,34 @@ Prefab:
       propertyPath: _particleRoot
       value: 
       objectReference: {fileID: 1870365452}
+    - target: {fileID: 11426180, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: _path_renderer_root
+      value: 
+      objectReference: {fileID: 1285087775}
+    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: proto_referee
+      value: 
+      objectReference: {fileID: 1869773522}
+    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: m_gameBounds
+      value: 
+      objectReference: {fileID: 34276293}
     - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
       propertyPath: m_ballBounds
       value: 
       objectReference: {fileID: 1111627609}
+    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: m_minGameBounds
+      value: 
+      objectReference: {fileID: 1389733486}
+    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: m_playerGoal
+      value: 
+      objectReference: {fileID: 1219017173}
+    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: m_enemyGoal
+      value: 
+      objectReference: {fileID: 1191084275}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
   m_IsPrefabParent: 0
@@ -442,6 +446,11 @@ Transform:
   - {fileID: 1564814044}
   m_Father: {fileID: 0}
   m_RootOrder: 3
+--- !u!61 &1389733486 stripped
+BoxCollider2D:
+  m_PrefabParentObject: {fileID: 6110802, guid: 7966cd997bfa14d2fbee3b44970a31f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 1610779071}
 --- !u!4 &1564814044 stripped
 Transform:
   m_PrefabParentObject: {fileID: 498418, guid: 239ac44175b9d4ce1ad214d2f80285f2, type: 2}

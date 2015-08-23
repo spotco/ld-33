@@ -29,7 +29,8 @@ public class GenericFootballer : MonoBehaviour {
 		CommandMoving,
 		CatchWait,
 		Stunned,
-		PlayerTeamHasBall
+		PlayerTeamHasBall,
+		MoveBackIntoBounds
 	}
 
 	[SerializeField] public GenericFootballerMode _current_mode;
@@ -144,13 +145,37 @@ public class GenericFootballer : MonoBehaviour {
 
 		Vector3 last_pos = transform.position;
 
-		if (Main.LevelController.footballer_has_ball(this)) {
+		if (!Main.LevelController.m_gameBounds.OverlapPoint(transform.position) && _stunned_mode_ct <= 0) {
+			_current_mode = GenericFootballerMode.MoveBackIntoBounds;
+		} else if (Main.LevelController.footballer_has_ball(this)) {
 			_current_mode = GenericFootballerMode.PlayerTeamHasBall;
 		} else if (_current_mode == GenericFootballerMode.PlayerTeamHasBall && !Main.LevelController.footballer_has_ball(this)) {
 			_current_mode = GenericFootballerMode.Idle;
 		}
 
-		if (_current_mode == GenericFootballerMode.Stunned) {
+		if (_current_mode == GenericFootballerMode.MoveBackIntoBounds) {
+			Vector3 tar_pos = Main.LevelController.m_minGameBounds.bounds.ClosestPoint(transform.position);
+			tar_pos.z = 0;
+			float speed = this.get_move_speed();
+			Vector3 delta =  Util.vec_sub(tar_pos,transform.position);
+			if (delta.magnitude < speed) {
+				transform.position = tar_pos;
+			} else {
+				Vector3 dir = delta.normalized;
+				float mag = delta.magnitude;
+				dir.Scale(Util.valv(speed));
+				transform.position = Util.vec_add(transform.position,dir);
+			}
+
+			if (Main.LevelController.m_gameBounds.OverlapPoint(transform.position)) {
+				if (_has_command_move_to_point) {
+					_current_mode = GenericFootballerMode.CommandMoving;
+				} else {
+					_current_mode = GenericFootballerMode.Idle;
+				}
+			}
+
+		} else if (_current_mode == GenericFootballerMode.Stunned) {
 			Main.LevelController.m_pathRenderer.clear_path(_id);
 			_stunned_vel.x = Util.drpt(_stunned_vel.x,0,0.01f);
 			_stunned_vel.y = Util.drpt(_stunned_vel.y,0,0.01f);
@@ -377,8 +402,13 @@ public class GenericFootballer : MonoBehaviour {
 		return Vector3.Distance(col.transform.position,this.transform.position) < rads;
 	}
 
-	public bool can_pickup_ball() { return this._current_mode != GenericFootballerMode.Stunned; }
-	public bool can_take_commands() { return this._current_mode != GenericFootballerMode.Stunned; }
+	public bool can_pickup_ball() { return this._current_mode != GenericFootballerMode.Stunned && this._current_mode != GenericFootballerMode.MoveBackIntoBounds; }
+	public bool can_take_commands() { 
+		return 
+			this._current_mode != GenericFootballerMode.Stunned && 
+				this._current_mode != GenericFootballerMode.MoveBackIntoBounds && 
+				this._current_mode != GenericFootballerMode.PlayerTeamHasBall; 
+	}
 
 	private Vector2 _last_pos;
 	private Vector2 _calc_vel;
