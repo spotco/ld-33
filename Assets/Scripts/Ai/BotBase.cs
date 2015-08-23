@@ -114,7 +114,12 @@ public class BotBase : MonoBehaviour {
 	}
  
 	public void Update() {
+		if (Main.IsPaused(PauseFlags.TimeOut)) {
+			return;
+		}
+		
 		_FSM.Update();
+		Steering.DoUpdate();
 	}
 }
 

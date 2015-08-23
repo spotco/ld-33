@@ -72,7 +72,7 @@ public class Steering : MonoBehaviour {
 		return (mode & _currentMode) != 0;
 	}
 	
-	public void Update() {
+	public void DoUpdate() {
 		// No steering.
 		if (_currentMode == Mode.None) {
 			_currentVelocity = Vector3.zero;

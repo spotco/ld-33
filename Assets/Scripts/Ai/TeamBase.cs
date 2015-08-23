@@ -82,6 +82,10 @@ public class TeamBase : MonoBehaviour {
 	}
  
 	public void Update() {
+		if (Main.IsPaused(PauseFlags.TimeOut)) {
+			return;
+		}
+		
 		_FSM.Update();
 	}
 }
