@@ -15,8 +15,8 @@ public class LevelController : MonoBehaviour {
 	}
 
 	[SerializeField] public BoxCollider2D m_gameBounds;
-	[SerializeField] public BoxCollider2D m_playerGoalBounds;
-	[SerializeField] public BoxCollider2D m_enemyGoalBounds;
+	[SerializeField] public AnimatedGoalPost m_playerGoal;
+	[SerializeField] public AnimatedGoalPost m_enemyGoal;
 
 	[System.NonSerialized] public PathRenderer m_pathRenderer;
 	public List<GenericFootballer> m_playerTeamFootballers = new List<GenericFootballer>();
@@ -123,10 +123,16 @@ public class LevelController : MonoBehaviour {
 
 			for (int i = m_looseBalls.Count-1; i >= 0; i--) {
 				LooseBall itr = this.m_looseBalls[i];
-				if (m_enemyGoalBounds.OverlapPoint(itr.transform.position)) {
+				if (m_enemyGoal.box_collider().OverlapPoint(itr.transform.position)) {
+					m_looseBalls.Remove(itr);
+					Destroy(itr.gameObject);
+					m_enemyGoal.play_eat_anim(40);
 
 				}
-				if (m_playerGoalBounds.OverlapPoint(itr.transform.position)) {
+				if (m_playerGoal.box_collider().OverlapPoint(itr.transform.position)) {
+					m_looseBalls.Remove(itr);
+					Destroy(itr.gameObject);
+					m_playerGoal.play_eat_anim(40);
 
 				}
 			}

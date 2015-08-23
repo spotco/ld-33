@@ -437,6 +437,7 @@ GameObject:
   - 4: {fileID: 419478}
   - 61: {fileID: 6150218}
   - 114: {fileID: 11462434}
+  - 114: {fileID: 11481718}
   m_Layer: 0
   m_Name: GoalPostPlayer
   m_TagString: Untagged
@@ -877,6 +878,7 @@ GameObject:
   - 4: {fileID: 401672}
   - 61: {fileID: 6169346}
   - 114: {fileID: 11443330}
+  - 114: {fileID: 11487292}
   m_Layer: 0
   m_Name: GoalPostEnemy
   m_TagString: Untagged
@@ -1025,7 +1027,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 195286}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: -1.62920685e-07}
-  m_LocalPosition: {x: 1.89999998, y: -.239999995, z: 14}
+  m_LocalPosition: {x: 1.89999998, y: -.239999995, z: 0}
   m_LocalScale: {x: .795354009, y: .916457117, z: 1}
   m_Children: []
   m_Father: {fileID: 483074}
@@ -1197,7 +1199,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 161948}
   m_LocalRotation: {x: 0, y: 0, z: 1, w: -1.62920685e-07}
-  m_LocalPosition: {x: -1.92999995, y: -.239999995, z: 14}
+  m_LocalPosition: {x: -1.92999995, y: -.239999995, z: 0}
   m_LocalScale: {x: .795354009, y: .916457117, z: 1}
   m_Children: []
   m_Father: {fileID: 455294}
@@ -2015,6 +2017,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rightGoalLineTop: {fileID: 437076}
   _rightGoalLineBottom: {fileID: 493924}
+--- !u!114 &11481718
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 146990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93a9253a5ebc249bba346e56d1974969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tar: {fileID: 21224506}
+--- !u!114 &11487292
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 193212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93a9253a5ebc249bba346e56d1974969, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tar: {fileID: 21217186}
 --- !u!212 &21203334
 SpriteRenderer:
   m_ObjectHideFlags: 1

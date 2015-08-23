@@ -239,6 +239,14 @@ Prefab:
       propertyPath: _fsmDebugger
       value: 
       objectReference: {fileID: 882577298}
+    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: m_playerGoal
+      value: 
+      objectReference: {fileID: 1219017173}
+    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: m_enemyGoal
+      value: 
+      objectReference: {fileID: 1191084275}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
   m_IsPrefabParent: 0
@@ -326,6 +334,10 @@ Prefab:
     - target: {fileID: 490250, guid: 7966cd997bfa14d2fbee3b44970a31f0, type: 2}
       propertyPath: m_RootOrder
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 401672, guid: 7966cd997bfa14d2fbee3b44970a31f0, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 1892
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7966cd997bfa14d2fbee3b44970a31f0, type: 2}
@@ -478,6 +490,18 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 6169346, guid: 7966cd997bfa14d2fbee3b44970a31f0,
     type: 2}
   m_PrefabInternal: {fileID: 542642710}
+--- !u!114 &1191084275 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11443330, guid: 7966cd997bfa14d2fbee3b44970a31f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 542642710}
+  m_Script: {fileID: 11500000, guid: 74a1c3ecdabe44a3db6d7202e7034cc2, type: 3}
+--- !u!114 &1219017173 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11462434, guid: 7966cd997bfa14d2fbee3b44970a31f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 542642710}
+  m_Script: {fileID: 11500000, guid: 74a1c3ecdabe44a3db6d7202e7034cc2, type: 3}
 --- !u!1 &1285087775
 GameObject:
   m_ObjectHideFlags: 0
