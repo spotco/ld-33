@@ -11,7 +11,11 @@ public class GenericFootballer : MonoBehaviour {
 	[SerializeField] private Sprite _image_enemy_holding_ball;
 
 	[SerializeField] private SpriteRenderer _renderer;
-	[SerializeField] public float _waitdelay;
+	[SerializeField] private float _waitdelay;
+	public void set_wait_delay(float tar) {
+		_waitdelay = tar;
+		_current_mode = GenericFootballerMode.CatchWait;
+	}
 
 	private float _select_reticule_theta;
 	[SerializeField] private SpriteRenderer _select_reticule;
@@ -22,7 +26,10 @@ public class GenericFootballer : MonoBehaviour {
 
 	public enum GenericFootballerMode {
 		Idle,
-		CommandMoving
+		CommandMoving,
+		CatchWait,
+		Stunned,
+		PlayerTeamHasBall
 	}
 
 	[SerializeField] public GenericFootballerMode _current_mode;
@@ -38,9 +45,10 @@ public class GenericFootballer : MonoBehaviour {
 		_select_reticule.color = color;
 		this.set_select_reticule_alpha(0);
 		_throw_charge_ct = 0;
+		this.update_calculated_velocity();
 	}
 
-	public void image_update() {
+	public void sim_update_image() {
 		if (Main.LevelController.get_footballer_team(this) == Team.PlayerTeam) {
 			if (Main.LevelController.footballer_has_ball(this)) {
 				_renderer.sprite = _image_holding_ball;
@@ -88,26 +96,48 @@ public class GenericFootballer : MonoBehaviour {
 	private List<Vector3> __tmp = new List<Vector3>();
 	private bool _ball_charging = false;
 	public void sim_update() {
-		this.image_update();
+		this.sim_update_image();
 		if (Main.LevelController.get_footballer_team(this) == Team.PlayerTeam) {
 			this.playerteam_sim_update();
 		} else {
 			this.enemyteam_sim_update();
 		}
+		this.update_calculated_velocity();
+		this.sim_update_bump();
 	}
 
 	private void enemyteam_sim_update() {
-
+		if (_current_mode == GenericFootballerMode.Stunned) {
+			_stunned_vel.x = Util.drpt(_stunned_vel.x,0,0.01f);
+			_stunned_vel.y = Util.drpt(_stunned_vel.y,0,0.01f);
+			this.transform.position = Util.vec_add(this.transform.position,Util.vec_scale(_stunned_vel,Util.dt_scale));
+			_stunned_mode_ct -= Util.dt_scale;
+			if (_stunned_mode_ct <= 0) _current_mode = GenericFootballerMode.Idle;
+		}
 	}
 
 	private void playerteam_sim_update() {
 		this.set_select_reticule_alpha(0.0f);
 		Vector3 last_pos = transform.position;
-		
-		if (_waitdelay > 0) {
+
+		if (Main.LevelController.footballer_has_ball(this)) {
+			_current_mode = GenericFootballerMode.PlayerTeamHasBall;
+		} else if (_current_mode == GenericFootballerMode.PlayerTeamHasBall && !Main.LevelController.footballer_has_ball(this)) {
+			_current_mode = GenericFootballerMode.Idle;
+		}
+
+		if (_current_mode == GenericFootballerMode.Stunned) {
+			_stunned_vel.x = Util.drpt(_stunned_vel.x,0,0.01f);
+			_stunned_vel.y = Util.drpt(_stunned_vel.y,0,0.01f);
+			this.transform.position = Util.vec_add(this.transform.position,Util.vec_scale(_stunned_vel,Util.dt_scale));
+			_stunned_mode_ct -= Util.dt_scale;
+			if (_stunned_mode_ct <= 0) _current_mode = GenericFootballerMode.Idle;
+
+		} else if (_current_mode == GenericFootballerMode.CatchWait) {
 			_waitdelay -= Util.dt_scale;
+			if (_waitdelay < 0) _current_mode = GenericFootballerMode.Idle;
 			
-		} else if (Main.LevelController.footballer_has_ball(this)) {
+		} else if (_current_mode == GenericFootballerMode.PlayerTeamHasBall) {
 			Vector3 delta =  Util.vec_sub(Main.LevelController.GetMousePoint(),transform.position);
 			Vector3 dir = delta.normalized;
 			float mag = delta.magnitude;
@@ -123,12 +153,12 @@ public class GenericFootballer : MonoBehaviour {
 					Util.lerp(p0.x,p3.x,0.25f),
 					Util.lerp(p0.y,p3.y,0.25f),
 					-150
-					);
+				);
 				Vector3 p2 = new Vector3(
 					Util.lerp(p0.x,p3.x,0.75f),
 					Util.lerp(p0.y,p3.y,0.75f),
 					-150
-					);
+				);
 				__tmp.Clear();
 				for (float i = 0; i < 1.0f; i += 0.125f) {
 					__tmp.Add(Util.bezier_val_for_t(p0,p1,p2,p3,i));
@@ -184,6 +214,54 @@ public class GenericFootballer : MonoBehaviour {
 		_renderer.transform.localScale = rts;
 	}
 
+	public void sim_update_bump() {
+		for (int i = 0; i < Main.LevelController.m_playerTeamFootballers.Count; i++) {
+			GenericFootballer itr = Main.LevelController.m_playerTeamFootballers[i];
+			if (itr != this) this.check_bump_with_target(itr);
+		}
+		for (int i = 0; i < Main.LevelController.m_enemyTeamFootballers.Count; i++) {
+			GenericFootballer itr = Main.LevelController.m_enemyTeamFootballers[i];
+			if (itr != this) this.check_bump_with_target(itr);
+		}
+
+		Vector3 imgpos = _renderer.transform.localPosition;
+		_stunned_upwards_vel -= 0.05f * Util.dt_scale;
+		imgpos.y += _stunned_upwards_vel;
+		if (imgpos.y <= 0) {
+			imgpos.y = 0;
+			_stunned_upwards_vel = Mathf.Abs(_stunned_upwards_vel) * 0.5f;
+		}
+		_renderer.transform.localPosition = imgpos;
+	}
+
+	private void check_bump_with_target(GenericFootballer tar) {
+		if (this.collider_contains(tar.GetComponent<CircleCollider2D>()) && this.get_calculated_velocity().magnitude > 0) {
+			this.apply_bump(Util.vec_scale(this.get_calculated_velocity(),-1));
+			tar.apply_bump(this.get_calculated_velocity());
+		}
+	}
+
+	[SerializeField] private Vector3 _stunned_vel = Vector3.zero;
+	[SerializeField] private float _stunned_mode_ct = 0;
+	[SerializeField] private float _stunned_upwards_vel = 0;
+	private void apply_bump(Vector3 vel) {
+		if (_current_mode != GenericFootballerMode.Stunned) {
+			_stunned_vel = vel;
+			_stunned_mode_ct = 100;
+			_current_mode = GenericFootballerMode.Stunned;
+			_stunned_upwards_vel = 1.5f;
+			if (Main.LevelController.footballer_has_ball(this)) {
+				Main.LevelController.CreateLooseBall(
+					this.transform.position,
+					Util.vec_scale(vel,2)
+				);
+				Main.LevelController.m_playerTeamFootballersWithBall.Remove(this);
+				_ball_charging = false;
+				_throw_charge_ct = 0;
+			}
+		}
+	}
+
 	public void timeout_start() {
 		Main.LevelController.m_pathRenderer.clear_path(_id);
 		if (_current_mode == GenericFootballerMode.CommandMoving) {
@@ -197,7 +275,7 @@ public class GenericFootballer : MonoBehaviour {
 	}
 
 	public void timeout_update() {
-		if (Main.LevelController.footballer_has_ball(this)) {
+		if (Main.LevelController.footballer_has_ball(this) || !this.can_take_commands()) {
 			this.set_select_reticule_alpha(0.0f);
 		} else if (Main.LevelController.m_timeoutSelectedFootballer == this) {
 			this.set_select_reticule_alpha(0.75f);
@@ -209,6 +287,7 @@ public class GenericFootballer : MonoBehaviour {
 
 	[SerializeField] private Vector2 _command_move_to_point;
 	public void CommandMoveTo(Vector2 pos) {
+		if (!this.can_take_commands()) return;
 		_command_move_to_point = pos;
 		_current_mode = GenericFootballerMode.CommandMoving;
 
@@ -230,6 +309,20 @@ public class GenericFootballer : MonoBehaviour {
 	public bool collider_contains(CircleCollider2D col) {
 		float rads = col.radius + this.GetComponent<CircleCollider2D>().radius;
 		return Vector3.Distance(col.transform.position,this.transform.position) < rads;
+	}
+
+	public bool can_pickup_ball() { return this._current_mode != GenericFootballerMode.Stunned; }
+	public bool can_take_commands() { return this._current_mode != GenericFootballerMode.Stunned; }
+
+	private Vector2 _last_pos;
+	private Vector2 _calc_vel;
+	public Vector2 get_calculated_velocity() {
+		return _calc_vel;
+	}
+	private void update_calculated_velocity() {
+		Vector2 neu_pos = new Vector2(transform.position.x,transform.position.y);
+		_calc_vel = (neu_pos - _last_pos);
+		_last_pos = neu_pos;
 	}
 
 }
