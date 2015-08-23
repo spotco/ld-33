@@ -26,12 +26,11 @@ public class Steering : MonoBehaviour {
 	private Vector3 _currentVelocity;
 	
 	public Vector3 CurrentTarget {
-		get {
-			return _currentTarget;
-		}
-		set {
-			_currentTarget = value;
-		}
+		get { return _currentTarget; }
+		set { _currentTarget = value; }
+	}
+	public Vector3 CurrentVelocity {
+		get { return _currentVelocity; }
 	}
 	public Vector3 CurrentInterposeTarget {
 		get; set;

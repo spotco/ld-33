@@ -121,6 +121,18 @@ public class GenericFootballer : MonoBehaviour {
 			_stunned_mode_ct -= Util.dt_scale;
 			if (_stunned_mode_ct <= 0) _current_mode = GenericFootballerMode.Idle;
 		}
+		
+		// Adjust facing direction.
+		BotBase bot = this.GetComponent<BotBase>();
+		if (bot != null) {
+			Vector3 rts = _renderer.transform.localScale;
+			if (bot.Steering.CurrentVelocity.x >= 0.0f) {
+				rts.x = Mathf.Abs(rts.x) * 1;
+			} else {
+				rts.x = Mathf.Abs(rts.x) * -1;
+			}
+			_renderer.transform.localScale = rts;
+		}
 	}
 
 	private void playerteam_sim_update() {

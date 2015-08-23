@@ -126,6 +126,11 @@ public class BotBase : MonoBehaviour {
 	}
 	
 	public void Msg_ReceivePass() {
+		// Stay in position.
+		if (FieldPosition == FieldPosition.Keeper) {
+			return;
+		}
+		
 		ChangeState(BotState_ReceivePass.Instance);
 	}
 	
