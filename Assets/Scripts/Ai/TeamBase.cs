@@ -42,8 +42,8 @@ public class TeamBase : MonoBehaviour {
 		_defense1 = d1;
 		
 		_keeper.FieldPosition = FieldPosition.Keeper;
-		_defense0.FieldPosition = FieldPosition.Defense;
-		_defense1.FieldPosition = FieldPosition.Defense;
+		_defense0.FieldPosition = FieldPosition.Defender;
+		_defense1.FieldPosition = FieldPosition.Defender;
 		
 		_teamMembers.Clear();
 		_teamMembers.Add(_keeper);
@@ -51,7 +51,7 @@ public class TeamBase : MonoBehaviour {
 		_teamMembers.Add(_defense1);
 		
 		foreach (BotBase bot in _teamMembers) {
-			bot.Team = this;
+			bot.TeamBase = this;
 		}
 	}
 	
@@ -85,5 +85,3 @@ public class TeamBase : MonoBehaviour {
 		_FSM.Update();
 	}
 }
-
-

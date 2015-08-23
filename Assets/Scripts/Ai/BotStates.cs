@@ -3,6 +3,7 @@ using UnityEngine;
 public static class BotConstants {
 	public const float ArriveDistance = 10.0f;
 	public const float KeeperFetchDistance = 400.0f;
+	public const float DefenderChaseDistance = 500.0f;
 }
 
 /**
@@ -108,7 +109,7 @@ public class BotState_PutBallBackInPlay : FSMState<BotBase> {
 	static BotState_PutBallBackInPlay() { }
 	
 	private BotState_PutBallBackInPlay() { }
-		
+	
 	public override void Enter (BotBase bot) {
 		
 	}
@@ -185,7 +186,94 @@ public class BotState_Idle : FSMState<BotBase> {
 	}
 	
 	public override void Execute (BotBase bot) {
+		// TODO:
+		// - if have ball, dribble forward a bit
+		// - if ball nearby, chase it
 		
+		// if (bot.FieldPosition == FieldPosition.Defender) {
+		// 	if (bot.GetBallTeamOwner() == bot.Team) {
+		// 		// If a teammate already has it, do nothing.
+		// 	} else {
+		// 		if (bot.GetBallDistance() <= BotConstants.DefenderChaseDistance) {
+		// 			bot.ChangeState(BotState_ChaseBall.Instance);
+		// 			return;
+		// 		}
+		// 	}
+		// }
+	}
+	
+	public override void Exit(BotBase bot) {
+		
+	}
+}
+
+/**
+ * 
+ */
+public class BotState_ChaseBall : FSMState<BotBase> {
+	static readonly BotState_ChaseBall instance = new BotState_ChaseBall();
+	public static BotState_ChaseBall Instance {
+		get {
+			return instance;
+		}
+	}
+	static BotState_ChaseBall() { }
+	
+	private BotState_ChaseBall() { }
+	
+	public override void Enter (BotBase bot) {
+		bot.Steering.PursuitOn();
+	}
+	
+	public override void Execute (BotBase bot) {
+		if (bot.FieldPosition == FieldPosition.Defender) {
+			// Too far - go home.
+			if (bot.GetBallDistance() > BotConstants.DefenderChaseDistance) {
+				bot.ChangeState(BotState_GoHome.Instance);
+				return;
+			}
+			
+			// We got the ball!
+			if (bot.GetBallOwner() == bot) {
+				bot.ChangeState(BotState_Dribble.Instance);
+				return;
+			}
+			
+			// Someone else from our team got it - go home.
+			if (bot.GetBallTeamOwner() == bot.Team) {
+				bot.ChangeState(BotState_GoHome.Instance);
+				return;
+			}
+		}
+				
+		bot.Steering.CurrentTarget = bot.GetBallPosition();
+		bot.Steering.CurrentEvaderVelocity = bot.GetBallVelocity();
+	}
+	
+	public override void Exit(BotBase bot) {
+		bot.Steering.PursuitOff();
+	}
+}
+
+/**
+ * 
+ */
+public class BotState_Dribble : FSMState<BotBase> {
+	static readonly BotState_Dribble instance = new BotState_Dribble();
+	public static BotState_Dribble Instance {
+		get {
+			return instance;
+		}
+	}
+	static BotState_Dribble() { }
+	
+	private BotState_Dribble() { }
+	
+	public override void Enter (BotBase bot) {
+	}
+	
+	public override void Execute (BotBase bot) {
+		// TODO: move forward a bit
 	}
 	
 	public override void Exit(BotBase bot) {

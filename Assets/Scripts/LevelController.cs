@@ -44,11 +44,12 @@ public class LevelController : MonoBehaviour {
 		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
 		
 		{
-			this.CreateFootballer(m_playerTeam, new Vector3(1800,-250));
-			this.CreateFootballer(m_playerTeam, new Vector3(-300,-300));
-			this.CreateFootballer(m_playerTeam, new Vector3(-300,0));
+			BotBase keeper = this.CreateFootballer(m_playerTeam, new Vector3(1800,-250));
+			BotBase d0 = this.CreateFootballer(m_playerTeam, new Vector3(-300,-300));
+			BotBase d1 = this.CreateFootballer(m_playerTeam, new Vector3(-300,0));
 			this.CreateFootballer(m_playerTeam, new Vector3(0,-300));
 			this.CreateFootballer(m_playerTeam, new Vector3(-600,-300));
+			m_playerTeam.SetPlayers(keeper, d0, d1);
 		}
 
 		/*

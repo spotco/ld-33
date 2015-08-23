@@ -12,8 +12,13 @@ public class BotBase : MonoBehaviour {
 		get { return _FSM; }
 	}
 	
-	public TeamBase Team {
+	public TeamBase TeamBase {
 		get; set;
+	}
+	public Team Team {
+		get {
+			return TeamBase.Team;
+		}
 	}
 	
 	public FieldPosition FieldPosition {
@@ -52,6 +57,10 @@ public class BotBase : MonoBehaviour {
 		Main.FieldController.GetRightGoalLinePositions(out top, out bottom);
 	}
 	
+	public float GetBallDistance() {
+		return Vector3.Distance(GetBallPosition(), this.transform.position);
+	}
+	
 	public Vector3 GetBallPosition() {
 		return Main.LevelController.currentBallPosition();
 	}
@@ -68,6 +77,14 @@ public class BotBase : MonoBehaviour {
 		return GetBallOwner() == null;
 	}
 	
+	public Team GetBallTeamOwner() {
+		BotBase owner = GetBallOwner();
+		if (owner != null) {
+			return owner.Team;
+		}
+		return Team.None;
+	}
+	
 	public BotBase GetBallOwner() {
 		GenericFootballer footballer = Main.LevelController.nullableCurrentFootballerWithBall();
 		if (footballer != null) {
@@ -77,7 +94,7 @@ public class BotBase : MonoBehaviour {
 	}
 	
 	public BotBase GetClosestTeammate() {
-		var members = Team.GetTeamExcept(this);
+		var members = TeamBase.GetTeamExcept(this);
 		float minDist = float.MaxValue;
 		int minIdx = -1;
 		for (int i = 0; i < members.Count; i++) {
@@ -103,5 +120,5 @@ public class BotBase : MonoBehaviour {
 
 public enum FieldPosition {
 	Keeper,
-	Defense,
+	Defender,
 }
