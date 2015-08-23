@@ -186,10 +186,6 @@ public class BotState_Idle : FSMState<BotBase> {
 	}
 	
 	public override void Execute (BotBase bot) {
-		// TODO:
-		// - if have ball, dribble forward a bit
-		// - if ball nearby, chase it
-		
 		if (bot.FieldPosition == FieldPosition.Defender) {
 			if (bot.GetBallTeamOwner() == bot.Team) {
 				// If a teammate already has it, do nothing.

@@ -135,6 +135,10 @@ public class BotBase : MonoBehaviour {
 		if (Main.IsPaused(PauseFlags.TimeOut)) {
 			return;
 		}
+		// HACK: don't update for player
+		if (this.Team == Team.PlayerTeam) {
+			return;
+		}
 		
 		_FSM.Update();
 		Steering.DoUpdate();
