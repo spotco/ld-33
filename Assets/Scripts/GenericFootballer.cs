@@ -280,8 +280,13 @@ public class GenericFootballer : MonoBehaviour {
 			float mag = Mathf.Max(this.get_calculated_velocity().magnitude,tar.get_calculated_velocity().magnitude);
 			Vector2 bump_vel = calc_vel_dir * mag;
 
-			this.apply_bump(Util.vec_scale(bump_vel,-1));
-			tar.apply_bump(bump_vel);
+			Vector3 hit_spot = new Vector3(
+				(transform.position.x + tar.transform.position.x)/2,
+				(transform.position.y + tar.transform.position.y)/2,
+				(transform.position.z + tar.transform.position.z)/2
+			);
+			this.apply_bump(Util.vec_scale(bump_vel,-1),hit_spot);
+			tar.apply_bump(bump_vel,hit_spot);
 		}
 	}
 
@@ -289,7 +294,7 @@ public class GenericFootballer : MonoBehaviour {
 	[SerializeField] private float _stunned_mode_ct = 0;
 	[SerializeField] private float _stunned_upwards_vel = 0;
 	private float _cannot_stun_ct = 0;
-	private void apply_bump(Vector3 vel) {
+	private void apply_bump(Vector3 vel, Vector3 hit_spot) {
 		if (_current_mode != GenericFootballerMode.Stunned && _cannot_stun_ct <= 0) {
 			if (vel.magnitude == 0) vel = new Vector3(Util.rand_range(-1,1),Util.rand_range(-1,1));
 			int testct = 0;
@@ -298,7 +303,7 @@ public class GenericFootballer : MonoBehaviour {
 				testct++;
 			}
 			_cannot_stun_ct = Util.rand_range(30,100);
-
+			Main.LevelController.blood_anim_at(hit_spot,4);
 			_stunned_vel = vel;
 			_stunned_mode_ct = 100;
 			_current_mode = GenericFootballerMode.Stunned;

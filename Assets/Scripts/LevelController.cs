@@ -87,12 +87,12 @@ public class LevelController : MonoBehaviour {
 	public void Update () {
 		if (Main.PanelManager.CurrentPanelId != PanelIds.Game) return;
 
-		m_particles.i_update(this);
 		float mouse_target_anim_speed = 0.3f;
 		float dt_scale = (1/60.0f)/(Time.deltaTime);
 		Util.dt_scale = dt_scale;
 
 		if (m_currentMode == LevelControllerMode.GamePlay) {
+			m_particles.i_update(this);
 			if (m_playerTeamFootballersWithBall.Count > 0) {
 				Main.GameCamera.SetTargetPos(m_playerTeamFootballersWithBall[0].transform.position);
 				if (Input.GetMouseButton(0)) {
@@ -286,8 +286,8 @@ public class LevelController : MonoBehaviour {
 		return neu_obj.GetComponent<BotBase>();
 	}
 
-	public void blood_anim_at(Vector3 pos) {
-		for (int i = 0; i < 16; i++ ) {
+	public void blood_anim_at(Vector3 pos, int reps = 32) {
+		for (int i = 0; i < reps; i++ ) {
 			RotateFadeOutSPParticle tmp = RotateFadeOutSPParticle.cons(proto_bloodParticle);
 			tmp.transform.position = pos;
 			tmp.set_ctmax(35);
@@ -326,8 +326,8 @@ public class LevelController : MonoBehaviour {
 	}
 
 	private Vector3 closest_point_in_bounds(Vector3 dir, float mag) {
-		float itr = 0.025f;
-		for (float pct = 0.0f; pct <= 1.0f; pct += itr) {
+		float itr = 0.01f;
+		for (float pct = itr; pct <= 1.05f; pct += itr) {
 			Vector3 ppos = Util.vec_scale(dir,mag*pct) + Main.GameCamera.GetCurrentPosition();
 			if (!m_ballBounds.OverlapPoint(ppos)) {
 				return Util.vec_scale(dir,mag*(pct-itr)) + Main.GameCamera.GetCurrentPosition();
