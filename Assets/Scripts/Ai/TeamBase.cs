@@ -92,7 +92,7 @@ public class TeamBase : MonoBehaviour {
 	}
  
 	public void Update() {
-		if (Main.IsPaused(PauseFlags.TimeOut)) {
+		if (Main.IsPaused(PauseFlags.TimeOut | PauseFlags.Ai)) {
 			return;
 		}
 		

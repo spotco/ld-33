@@ -3,6 +3,7 @@
 /// </summary>
 public static class PauseFlags
 {
+	public const int Ai = 1 << 0;
 	public const int TimeOut = 1 << 5;
 }
 

@@ -46,7 +46,7 @@ public class Main : Uzu.Main
   {
     // State initialization.
     {
-      // CyMain.Pause (CyPauseFlags.Player);
+      // Pause (PauseFlags.Ai);
       
       // _panelManager.ChangeCurrentPanel (PanelIds.Main);	
       _panelManager.ChangeCurrentPanel (PanelIds.Game);	

@@ -132,7 +132,7 @@ public class BotBase : MonoBehaviour {
 	}
  
 	public void Update() {
-		if (Main.IsPaused(PauseFlags.TimeOut)) {
+		if (Main.IsPaused(PauseFlags.TimeOut | PauseFlags.Ai)) {
 			return;
 		}
 		// HACK: don't update for player
