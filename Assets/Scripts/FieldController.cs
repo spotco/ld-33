@@ -4,11 +4,20 @@ using System.Collections.Generic;
 
 public class FieldController : MonoBehaviour {
 	[SerializeField]
+	private Transform _leftGoalLineTop;
+	[SerializeField]
+	private Transform _leftGoalLineBottom;
+	[SerializeField]
 	private Transform _rightGoalLineTop;
 	[SerializeField]
 	private Transform _rightGoalLineBottom;
 	
 	List<Vector3> _regionPositions = new List<Vector3>();
+	
+	public void GetLeftGoalLinePositions(out Vector3 top, out Vector3 bottom) {
+		top = _leftGoalLineTop.position;
+		bottom = _leftGoalLineBottom.position;
+	}
 	
 	public void GetRightGoalLinePositions(out Vector3 top, out Vector3 bottom) {
 		top = _rightGoalLineTop.position;
