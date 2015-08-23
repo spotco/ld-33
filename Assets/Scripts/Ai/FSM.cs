@@ -8,6 +8,9 @@ public class FiniteStateMachine <T>  {
 	public FSMState<T> CurrentState {
 		get { return _currentState; }
 	}
+	public FSMState<T> PreviousState {
+		get { return _previousState; }
+	}
 	
 	public void Awake()
 	{		
@@ -38,11 +41,5 @@ public class FiniteStateMachine <T>  {
  
 		if (_currentState != null)
 			_currentState.Enter(Owner);
-	}
- 
-	public void  RevertTo_previousState()
-	{
-		if (_previousState != null)
-			ChangeState(_previousState);
 	}
 }

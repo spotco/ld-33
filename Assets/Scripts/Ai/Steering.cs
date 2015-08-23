@@ -42,6 +42,9 @@ public class Steering : MonoBehaviour {
 		get; set;
 	}
 	
+	public void AllOff() {
+		_currentMode = Mode.None;
+	}
 	public void SeekOn() {
 		_currentMode |= Mode.Seek;
 	}

@@ -206,6 +206,38 @@ public class BotState_Idle : FSMState<BotBase> {
 /**
  * 
  */
+public class BotState_Wait : FSMState<BotBase> {
+	static readonly BotState_Wait instance = new BotState_Wait();
+	public static BotState_Wait Instance {
+		get {
+			return instance;
+		}
+	}
+	static BotState_Wait() { }
+	
+	private BotState_Wait() { }
+	
+	public override void Enter (BotBase bot) {
+		bot.Steering.AllOff();
+	}
+	
+	public override void Execute (BotBase bot) {
+		if (bot.IsStunned()) {
+			// Waiting..
+			return;
+		}
+		
+		// Unstunned.
+		bot.RevertState();
+	}
+	
+	public override void Exit(BotBase bot) {
+	}
+}
+
+/**
+ * 
+ */
 public class BotState_ChaseBall : FSMState<BotBase> {
 	static readonly BotState_ChaseBall instance = new BotState_ChaseBall();
 	public static BotState_ChaseBall Instance {

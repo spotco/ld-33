@@ -318,6 +318,9 @@ public class GenericFootballer : MonoBehaviour {
 				_ball_charging = false;
 				_throw_charge_ct = 0;
 			}
+			
+			// ai event
+			GetComponent<BotBase>().Msg_Stunned();
 		}
 	}
 

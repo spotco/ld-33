@@ -39,6 +39,9 @@ public class BotBase : MonoBehaviour {
 	public void ChangeState(FSMState<BotBase> e) {
 		_FSM.ChangeState(e);		
 	}
+	public void RevertState() {
+		_FSM.ChangeState(_FSM.PreviousState);
+	}
 	
 	public Vector3 HomePosition {
 		get; set;
@@ -132,6 +135,14 @@ public class BotBase : MonoBehaviour {
 		}
 		
 		ChangeState(BotState_ReceivePass.Instance);
+	}
+	
+	public void Msg_Stunned() {
+		ChangeState(BotState_Wait.Instance);
+	}
+	
+	public bool IsStunned() {
+		return GetComponent<GenericFootballer>()._current_mode == GenericFootballer.GenericFootballerMode.Stunned;
 	}
 	
 	public void Awake() {
