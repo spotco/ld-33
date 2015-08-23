@@ -8,6 +8,7 @@ public class LevelController : MonoBehaviour {
 	[SerializeField] private GameObject proto_genericFootballer;
 	[SerializeField] private GameObject proto_looseBall;
 	[SerializeField] private GameObject proto_mouseTarget;
+	[SerializeField] private GameObject proto_bloodParticle;
 
 	enum LevelControllerMode {
 		GamePlay,
@@ -30,6 +31,8 @@ public class LevelController : MonoBehaviour {
 	public GenericFootballer m_timeoutSelectedFootballer;
 	public List<LooseBall> m_looseBalls = new List<LooseBall>();
 
+	public SPParticleSystem m_particles;
+
 	private LevelControllerMode m_currentMode;
 	
 	private TeamBase m_playerTeam;
@@ -44,14 +47,13 @@ public class LevelController : MonoBehaviour {
 		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
 		
 		{
-			this.CreateFootballer(m_playerTeam, new Vector3(1800,-250));
+			this.CreateFootballer(m_playerTeam, new Vector3(0,0));
 			this.CreateFootballer(m_playerTeam, new Vector3(-300,-300));
 			this.CreateFootballer(m_playerTeam, new Vector3(-300,0));
 			this.CreateFootballer(m_playerTeam, new Vector3(0,-300));
 			this.CreateFootballer(m_playerTeam, new Vector3(-600,-300));
 		}
 
-		/*
 		{
 			BotBase keeper = this.CreateFootballer(m_enemyTeam, new Vector3(300,0));
 			BotBase d0 = this.CreateFootballer(m_enemyTeam, new Vector3(200,0));
@@ -59,17 +61,18 @@ public class LevelController : MonoBehaviour {
 			m_enemyTeam.SetPlayers(keeper, d0, d1);
 			m_enemyTeam.StartKickoff();
 		}
-		*/
 		
 		m_playerTeamFootballersWithBall.Add(m_playerTeamFootballers[0]);
 		m_currentMode = LevelControllerMode.GamePlay;
 		m_mouseTargetIcon = Util.proto_clone(proto_mouseTarget);
+		m_particles = SPParticleSystem.cons_anchor(Main.Instance._particleRoot.transform);
 	}
 
 	public void Update () {
 		if (Main.PanelManager.CurrentPanelId != PanelIds.Game) return;
-		float mouse_target_anim_speed = 0.3f;
 
+		m_particles.i_update(this);
+		float mouse_target_anim_speed = 0.3f;
 		float dt_scale = (1/60.0f)/(Time.unscaledDeltaTime);
 		Util.dt_scale = dt_scale;
 
@@ -79,7 +82,7 @@ public class LevelController : MonoBehaviour {
 				if (Input.GetMouseButton(0)) {
 					Main.GameCamera.SetTargetZoom(600);
 				} else {
-					Main.GameCamera.SetTargetZoom(400);
+					Main.GameCamera.SetTargetZoom(500);
 				}
 				Main.GameCamera.SetManualOffset(new Vector3(200,0,0));
 
@@ -101,9 +104,20 @@ public class LevelController : MonoBehaviour {
 				itr.sim_update();
 			}
 
-			for (int i = 0; i < this.m_playerTeamFootballers.Count; i++) {
+			for (int i = this.m_playerTeamFootballers.Count-1; i >= 0; i--) {
 				GenericFootballer itr = this.m_playerTeamFootballers[i];	
 				itr.sim_update();
+				if (m_enemyGoal.box_collider().OverlapPoint(itr.transform.position) || m_playerGoal.box_collider().OverlapPoint(itr.transform.position)) {
+					if (this.footballer_has_ball(itr)) {
+						this.m_playerTeamFootballersWithBall.Remove(itr);
+						this.CreateLooseBall(itr.transform.position,Vector2.zero);
+					}
+					this.blood_anim_at(itr.transform.position);
+					this.m_playerTeamFootballers.RemoveAt(i);
+					Destroy(itr.gameObject);
+					m_enemyGoal.play_eat_anim(40);
+					m_playerGoal.play_eat_anim(40);
+				}
 			}
 
 			for (int i = 0; i < this.m_enemyTeamFootballers.Count; i++) {
@@ -124,15 +138,19 @@ public class LevelController : MonoBehaviour {
 			for (int i = m_looseBalls.Count-1; i >= 0; i--) {
 				LooseBall itr = this.m_looseBalls[i];
 				if (m_enemyGoal.box_collider().OverlapPoint(itr.transform.position)) {
+					this.blood_anim_at(itr.transform.position);
 					m_looseBalls.Remove(itr);
 					Destroy(itr.gameObject);
 					m_enemyGoal.play_eat_anim(40);
+					this.enemy_goal_score();
 
 				}
 				if (m_playerGoal.box_collider().OverlapPoint(itr.transform.position)) {
+					this.blood_anim_at(itr.transform.position);
 					m_looseBalls.Remove(itr);
 					Destroy(itr.gameObject);
 					m_playerGoal.play_eat_anim(40);
+					this.player_goal_score();
 
 				}
 			}
@@ -144,7 +162,7 @@ public class LevelController : MonoBehaviour {
 			float mmouse_move_rad = (Screen.width+Screen.height)/2.0f * 0.25f;
 			if (mouse_to_center_delta.magnitude > mmouse_move_rad) {
 				Vector3 n_mouse_to_center_delta = mouse_to_center_delta.normalized;
-				Vector3 tar_delta = Util.vec_scale(n_mouse_to_center_delta,(mouse_to_center_delta.magnitude-mmouse_move_rad)*0.1f);
+				Vector3 tar_delta = Util.vec_scale(n_mouse_to_center_delta,(mouse_to_center_delta.magnitude-mmouse_move_rad)*0.3f);
 				Main.GameCamera.SetTargetPos(Util.vec_add(Main.GameCamera.GetCurrentPosition(),tar_delta));
 			} else {
 				Main.GameCamera.SetTargetPositionToCurrent();
@@ -195,6 +213,14 @@ public class LevelController : MonoBehaviour {
 
 	}
 
+	private void enemy_goal_score() {
+		Debug.Log("ENEMY GOAL");
+	}
+
+	private void player_goal_score() {
+		Debug.Log ("PLAYER GOAL");
+	}
+
 	public void CreateLooseBall(Vector2 start, Vector2 vel) {
 		GameObject neu_obj = Util.proto_clone(proto_looseBall);
 		LooseBall rtv = neu_obj.GetComponent<LooseBall>();
@@ -234,6 +260,24 @@ public class LevelController : MonoBehaviour {
 			m_enemyTeamFootballers.Add(rtv);
 		}
 		return neu_obj.GetComponent<BotBase>();
+	}
+
+	public void blood_anim_at(Vector3 pos) {
+		for (int i = 0; i < 16; i++ ) {
+			RotateFadeOutSPParticle tmp = RotateFadeOutSPParticle.cons(proto_bloodParticle);
+			tmp.transform.position = pos;
+			tmp.set_ctmax(35);
+			float scale = Util.rand_range(25,100);
+			tmp._scmax = scale;
+			tmp._scmin = scale;
+			tmp._alpha.x = 0.6f;
+			tmp._alpha.y = 0.0f;
+			tmp._vr = Util.rand_range(-30,30);
+			tmp._velocity.x = Util.rand_range(-3,3);
+			tmp._velocity.y = Util.rand_range(0,7);
+			tmp._gravity = 0.2f;
+			m_particles.add_particle(tmp);
+		}
 	}
 	
 	public Vector3 GetMousePoint() {

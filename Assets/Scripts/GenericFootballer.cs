@@ -68,15 +68,15 @@ public class GenericFootballer : MonoBehaviour {
 
 	void Update() {
 		float reticule_anim_speed = 0.5f;
-		float reticule_scale = 160;
+		float reticule_scale = 200;
 		if (Main.LevelController.footballer_has_ball(this)) {
 		} else if (Main.LevelController.m_timeoutSelectedFootballer == this) {
 			reticule_anim_speed = 1.5f;
-			reticule_scale = 250;
+			reticule_scale = 300;
 
 		} else if (_selected_ct > 0) {
 			reticule_anim_speed = 1.5f;
-			reticule_scale = 200;
+			reticule_scale = 250;
 
 		}
 		_selected_ct -= Util.dt_scale;
@@ -132,7 +132,13 @@ public class GenericFootballer : MonoBehaviour {
 			_stunned_vel.y = Util.drpt(_stunned_vel.y,0,0.01f);
 			this.transform.position = Util.vec_add(this.transform.position,Util.vec_scale(_stunned_vel,Util.dt_scale));
 			_stunned_mode_ct -= Util.dt_scale;
-			if (_stunned_mode_ct <= 0) _current_mode = GenericFootballerMode.Idle;
+			if (_stunned_mode_ct <= 0) {
+				if (_has_command_move_to_point) {
+					_current_mode = GenericFootballerMode.CommandMoving;
+				} else {
+					_current_mode = GenericFootballerMode.Idle;
+				}
+			}
 
 		} else if (_current_mode == GenericFootballerMode.CatchWait) {
 			_waitdelay -= Util.dt_scale;
@@ -170,11 +176,11 @@ public class GenericFootballer : MonoBehaviour {
 			} else if (!Input.GetKey(KeyCode.Z) && _ball_charging) {
 				if (_throw_charge_ct > 100) {
 					
-					float vel = Mathf.Clamp(_throw_charge_ct/2000.0f * 6 + 3,3,10);
+					float vel = Mathf.Clamp(_throw_charge_ct/2000.0f * 10 + 6,6,18);
 					Main.LevelController.CreateLooseBall(
 						this.transform.position,
 						Util.vec_scale(dir,vel)
-						);
+					);
 					Main.LevelController.m_playerTeamFootballersWithBall.Remove(this);
 				}
 				_ball_charging = false;
@@ -192,11 +198,12 @@ public class GenericFootballer : MonoBehaviour {
 		} else if (_current_mode == GenericFootballerMode.Idle) {
 			
 		} else if (_current_mode == GenericFootballerMode.CommandMoving) {
-			float speed = 2.0f * Util.dt_scale;
+			float speed = this.get_move_speed() * Util.dt_scale;
 			Vector3 delta = Util.vec_sub(new Vector3(_command_move_to_point.x,_command_move_to_point.y),transform.position);
 			if (delta.magnitude <= speed) {
 				transform.position = new Vector3(_command_move_to_point.x,_command_move_to_point.y);
 				_current_mode = GenericFootballerMode.Idle;
+				_has_command_move_to_point = false;
 				
 			} else {
 				Vector3 dir = delta.normalized;
@@ -214,6 +221,8 @@ public class GenericFootballer : MonoBehaviour {
 		}
 		_renderer.transform.localScale = rts;
 	}
+
+	public float get_move_speed() { return 2.0f; }
 
 	public void sim_update_bump() {
 		for (int i = 0; i < Main.LevelController.m_playerTeamFootballers.Count; i++) {
@@ -247,6 +256,12 @@ public class GenericFootballer : MonoBehaviour {
 	[SerializeField] private float _stunned_upwards_vel = 0;
 	private void apply_bump(Vector3 vel) {
 		if (_current_mode != GenericFootballerMode.Stunned) {
+			if (vel.magnitude == 0) vel = new Vector3(Util.rand_range(-1,1),Util.rand_range(-1,1));
+			int testct = 0;
+			while (vel.magnitude < 2 && testct < 10) {
+				vel = Util.vec_scale(vel,2);
+			}
+
 			_stunned_vel = vel;
 			_stunned_mode_ct = 100;
 			_current_mode = GenericFootballerMode.Stunned;
@@ -266,7 +281,7 @@ public class GenericFootballer : MonoBehaviour {
 
 	public void timeout_start() {
 		Main.LevelController.m_pathRenderer.clear_path(_id);
-		if (_current_mode == GenericFootballerMode.CommandMoving) {
+		if (_current_mode == GenericFootballerMode.CommandMoving || (_current_mode == GenericFootballerMode.Stunned && _has_command_move_to_point)) {
 			Vector3 tar_pos = new Vector3(_command_move_to_point.x,_command_move_to_point.y);                         
 			Main.LevelController.m_pathRenderer.id_draw_path(_id,this.transform.position,new Vector3[] { tar_pos });
 		}
@@ -288,10 +303,12 @@ public class GenericFootballer : MonoBehaviour {
 	}
 
 	[SerializeField] private Vector2 _command_move_to_point;
+	[SerializeField] private bool _has_command_move_to_point;
 	public void CommandMoveTo(Vector2 pos) {
 		if (!this.can_take_commands()) return;
 		_command_move_to_point = pos;
 		_current_mode = GenericFootballerMode.CommandMoving;
+		_has_command_move_to_point = true;
 
 		Main.LevelController.m_pathRenderer.clear_path(_id);
 		Vector3 tar_pos = new Vector3(_command_move_to_point.x,_command_move_to_point.y);                         

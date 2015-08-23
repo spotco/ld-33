@@ -129,6 +129,7 @@ MonoBehaviour:
   _levelController: {fileID: 11446726}
   _audioController: {fileID: 11441226}
   _fsmDebugger: {fileID: 0}
+  _particleRoot: {fileID: 0}
 --- !u!114 &11446726
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,9 +146,10 @@ MonoBehaviour:
     type: 2}
   proto_looseBall: {fileID: 164902, guid: dfaf8c1d0b2b4483f84670d1bc9c2192, type: 2}
   proto_mouseTarget: {fileID: 199526, guid: 4689dbc2e3b524b21b8d10e06d2afbda, type: 2}
+  proto_bloodParticle: {fileID: 196250, guid: 0d53fe6f0a79a46b4aa289de983634c1, type: 2}
   m_gameBounds: {fileID: 0}
-  m_playerGoalBounds: {fileID: 0}
-  m_enemyGoalBounds: {fileID: 0}
+  m_playerGoal: {fileID: 0}
+  m_enemyGoal: {fileID: 0}
   m_playerTeamFootballers: []
   m_enemyTeamFootballers: []
   m_playerTeamFootballersWithBall: []
