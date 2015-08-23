@@ -29,7 +29,7 @@ public class BotState_TendGoal : FSMState<BotBase> {
 		{
 			Vector3 targetPos;
 			Vector3 topPost, bottomPost;
-			bot.GetGoalpostPositions(out topPost, out bottomPost);
+			bot.GetGoalpostPositions(bot.Team, out topPost, out bottomPost);
 			Uzu.Math.ClosestPtPointSegment(
 				topPost, bottomPost,
 				bot.GetBallPosition(),
@@ -84,7 +84,7 @@ public class BotState_Intercept : FSMState<BotBase> {
 			return;
 		}
 		
-		if (bot.GetDistanceFromGoal() >= BotConstants.KeeperFetchDistance) {
+		if (bot.GetDistanceFromGoal(bot.Team) >= BotConstants.KeeperFetchDistance) {
 			Debug.Log("Too far from goal - go home.");
 			bot.ChangeState(BotState_GoHome.Instance);
 			return;
@@ -190,16 +190,16 @@ public class BotState_Idle : FSMState<BotBase> {
 		// - if have ball, dribble forward a bit
 		// - if ball nearby, chase it
 		
-		// if (bot.FieldPosition == FieldPosition.Defender) {
-		// 	if (bot.GetBallTeamOwner() == bot.Team) {
-		// 		// If a teammate already has it, do nothing.
-		// 	} else {
-		// 		if (bot.GetBallDistance() <= BotConstants.DefenderChaseDistance) {
-		// 			bot.ChangeState(BotState_ChaseBall.Instance);
-		// 			return;
-		// 		}
-		// 	}
-		// }
+		if (bot.FieldPosition == FieldPosition.Defender) {
+			if (bot.GetBallTeamOwner() == bot.Team) {
+				// If a teammate already has it, do nothing.
+			} else {
+				if (bot.GetBallDistance() <= BotConstants.DefenderChaseDistance) {
+					bot.ChangeState(BotState_ChaseBall.Instance);
+					return;
+				}
+			}
+		}
 	}
 	
 	public override void Exit(BotBase bot) {
@@ -270,10 +270,30 @@ public class BotState_Dribble : FSMState<BotBase> {
 	private BotState_Dribble() { }
 	
 	public override void Enter (BotBase bot) {
+		bot.DribbleTime = Random.Range(0.5f, 1.0f);
+		
+		bot.Steering.SeekOn();
+		bot.Steering.CurrentTarget = bot.GetGoalpostPosition(bot.OtherTeam);
 	}
 	
 	public override void Execute (BotBase bot) {
-		// TODO: move forward a bit
+		if (bot.FieldPosition == FieldPosition.Defender) {
+			// Lost the ball.
+			if (bot.GetBallOwner() != bot) {
+				bot.ChangeState(BotState_ChaseBall.Instance);
+				return;
+			}
+			
+			bot.DribbleTime -= Time.deltaTime;
+			if (bot.DribbleTime <= 0.0f) {
+				BotBase throwTarget = bot.GetClosestTeammate();
+				Vector3 throwDir = throwTarget.transform.position - bot.transform.position;
+				float throwDist = throwDir.magnitude;
+				throwDir /= throwDist;
+				bot.ThrowBall(throwDir, throwDist);
+				bot.ChangeState(BotState_GoHome.Instance);
+			}
+		}
 	}
 	
 	public override void Exit(BotBase bot) {

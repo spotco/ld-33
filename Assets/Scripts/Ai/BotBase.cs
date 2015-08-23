@@ -20,6 +20,11 @@ public class BotBase : MonoBehaviour {
 			return TeamBase.Team;
 		}
 	}
+	public Team OtherTeam {
+		get {
+			return Team == Team.PlayerTeam ? Team.EnemyTeam : Team.PlayerTeam;
+		}
+	}
 	
 	public FieldPosition FieldPosition {
 		get; set;
@@ -28,6 +33,8 @@ public class BotBase : MonoBehaviour {
 	public Steering Steering {
 		get { return _steering; }
 	}
+	
+	public float DribbleTime { get; set; }
 	
 	public void ChangeState(FSMState<BotBase> e) {
 		_FSM.ChangeState(e);		
@@ -46,15 +53,22 @@ public class BotBase : MonoBehaviour {
 		return Vector3.Distance(HomePosition, this.transform.localPosition) <= BotConstants.ArriveDistance;
 	}
 	
-	public float GetDistanceFromGoal() {
-		Vector3 top, bottom;
-		GetGoalpostPositions(out top, out bottom);
-		Vector3 center = (top + bottom) * 0.5f;
-		return Vector3.Distance(center, this.transform.position);
+	public float GetDistanceFromGoal(Team team) {
+		return Vector3.Distance(GetGoalpostPosition(team), this.transform.position);
 	}
 	
-	public void GetGoalpostPositions(out Vector3 top, out Vector3 bottom) {
-		Main.FieldController.GetRightGoalLinePositions(out top, out bottom);
+	public Vector3 GetGoalpostPosition(Team team) {
+		Vector3 top, bottom;
+		GetGoalpostPositions(team, out top, out bottom);
+		return (top + bottom) * 0.5f;
+	}
+	
+	public void GetGoalpostPositions(Team team, out Vector3 top, out Vector3 bottom) {
+		if (team == Team.PlayerTeam) {
+			Main.FieldController.GetLeftGoalLinePositions(out top, out bottom);
+		} else {
+			Main.FieldController.GetRightGoalLinePositions(out top, out bottom);
+		}
 	}
 	
 	public float GetBallDistance() {
@@ -104,6 +118,10 @@ public class BotBase : MonoBehaviour {
 				minIdx = i;
 			}
 		}
+		if (minIdx == -1) {
+			Debug.Log("No one to pass to!");
+			return null;
+		}
 		return members[minIdx];
 	}
 	
@@ -114,11 +132,17 @@ public class BotBase : MonoBehaviour {
 	}
  
 	public void Update() {
+		if (Main.IsPaused(PauseFlags.TimeOut)) {
+			return;
+		}
+		
 		_FSM.Update();
+		Steering.DoUpdate();
 	}
 }
 
 public enum FieldPosition {
 	Keeper,
 	Defender,
+	Attacker,
 }
