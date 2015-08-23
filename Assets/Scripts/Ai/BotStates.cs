@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public static class BotConstants {
-	public const float ArriveDistance = 50.0f;
+	public const float ArriveDistance = 10.0f;
 	public const float KeeperFetchDistance = 400.0f;
 }
 

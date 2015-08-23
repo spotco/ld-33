@@ -9,10 +9,6 @@ public class Steering : MonoBehaviour {
 	private float _maxForce = 100.0f;
 	[SerializeField]
 	private float _mass = 1.0f;
-	[SerializeField]
-	private float _slowRadius = 100.0f;
-	[SerializeField]
-	private float _stopRadius = 50.0f;
 	
 	[System.Flags]
 	private enum Mode {
@@ -138,18 +134,20 @@ public class Steering : MonoBehaviour {
 	}
 	
 	private Vector3 Arrive(Vector3 targetPos) {
-		float distance = Vector3.Distance(_currentPosition, targetPos);
-		Vector3 desiredVelocity = (targetPos - _currentPosition).normalized;
+		Vector3 toTarget = targetPos - _currentPosition;
 		
-		if (distance < _stopRadius) {
-			desiredVelocity = Vector2.zero;
-		} else if (distance < _slowRadius) {
-			desiredVelocity = desiredVelocity * _maxSpeed * ((distance - _stopRadius) / (_slowRadius - _stopRadius));
-		} else {
-			desiredVelocity = desiredVelocity * _maxSpeed;
-		}
-
-		return desiredVelocity - _currentVelocity;
+	  float dist = toTarget.magnitude;
+	  if (dist > 0) {
+	    const float DECELERATION_TWEAK = 0.6f;
+	
+	    float speed =  dist / DECELERATION_TWEAK;
+	    speed = Mathf.Min(speed, _maxSpeed);
+			
+	    Vector3 desiredVelocity = toTarget * speed / dist;
+	    return desiredVelocity - _currentVelocity;
+	  }
+	
+	  return Vector3.zero;
 	}
 	
 	private Vector3 Interpose(Vector3 targetPos, Vector3 anchorPos, float distFromTarget) {
