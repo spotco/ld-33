@@ -69,16 +69,23 @@ public class GenericFootballer : MonoBehaviour {
 	void Update() {
 		float reticule_anim_speed = 0.5f;
 		float reticule_scale = 200;
+		Color tar = Color.white;
 		if (Main.LevelController.footballer_has_ball(this)) {
+			reticule_anim_speed = -1.3f;
+			reticule_scale = 270;
+			tar = new Color(0.25f,0.86f,0.25f);
+
 		} else if (Main.LevelController.m_timeoutSelectedFootballer == this) {
 			reticule_anim_speed = 1.5f;
-			reticule_scale = 300;
+			reticule_scale = 270;
 
 		} else if (_selected_ct > 0) {
 			reticule_anim_speed = 1.5f;
-			reticule_scale = 250;
+			reticule_scale = 230;
 
 		}
+		tar.a = _select_reticule.color.a;
+		_select_reticule.color = tar;
 		_selected_ct -= Util.dt_scale;
 
 	
@@ -117,7 +124,12 @@ public class GenericFootballer : MonoBehaviour {
 	}
 
 	private void playerteam_sim_update() {
-		this.set_select_reticule_alpha(0.0f);
+		if (Main.LevelController.footballer_has_ball(this)) {
+			this.set_select_reticule_alpha(0.5f);
+		} else {
+			this.set_select_reticule_alpha(0.0f);
+		}
+
 		Vector3 last_pos = transform.position;
 
 		if (Main.LevelController.footballer_has_ball(this)) {
@@ -297,7 +309,9 @@ public class GenericFootballer : MonoBehaviour {
 	}
 
 	public void timeout_update() {
-		if (Main.LevelController.footballer_has_ball(this) || !this.can_take_commands()) {
+		if (Main.LevelController.footballer_has_ball(this)) {
+			this.set_select_reticule_alpha(0.5f);
+		} else if (!this.can_take_commands()) {
 			this.set_select_reticule_alpha(0.0f);
 		} else if (Main.LevelController.m_timeoutSelectedFootballer == this) {
 			this.set_select_reticule_alpha(0.75f);
