@@ -26,6 +26,13 @@ public class MultiList<TKey, TValue> {
 
 public class Util {
 
+	public static Vector3 vec_rotate_rad(Vector3 v, float rad) {
+		float mag = v.magnitude;
+		float ang = Mathf.Atan2(v.y, v.x);
+		ang += rad;
+		return new Vector3(mag*Mathf.Cos(ang), mag*Mathf.Sin(ang), v.z);
+	}
+
 	public static float drpt(float a, float b, float fric) {
 		float deltaf = (b - a);
 		deltaf *= Mathf.Pow(fric,1/Util.dt_scale);

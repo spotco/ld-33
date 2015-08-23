@@ -68,9 +68,9 @@ public class FollowCamera : MonoBehaviour {
 			_zoom = Util.drpt(_zoom,_target_zoom,1/20.0f);
 
 			_manualOffset = new Vector3(
-				Util.drpt(_manualOffset.x,_tarManualOffset.x,1/40.0f),
-				Util.drpt(_manualOffset.y,_tarManualOffset.y,1/40.0f),
-				Util.drpt(_manualOffset.z,_tarManualOffset.z,1/40.0f)
+				Util.drpt(_manualOffset.x,_tarManualOffset.x,1/15.0f),
+				Util.drpt(_manualOffset.y,_tarManualOffset.y,1/15.0f),
+				Util.drpt(_manualOffset.z,_tarManualOffset.z,1/15.0f)
 			);
 
 			transform.localPosition = _cachedPosition + Util.vec_scale(_offset_dir,_zoom) + _manualOffset;

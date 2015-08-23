@@ -145,6 +145,7 @@ public class GenericFootballer : MonoBehaviour {
 			if (_waitdelay < 0) _current_mode = GenericFootballerMode.Idle;
 			
 		} else if (_current_mode == GenericFootballerMode.PlayerTeamHasBall) {
+			_has_command_move_to_point = false;
 			Vector3 delta =  Util.vec_sub(Main.LevelController.GetMousePoint(),transform.position);
 			Vector3 dir = delta.normalized;
 			float mag = delta.magnitude;
@@ -250,8 +251,12 @@ public class GenericFootballer : MonoBehaviour {
 
 	private void check_bump_with_target(GenericFootballer tar) {
 		if (this.collider_contains(tar.GetComponent<CircleCollider2D>()) && this.get_calculated_velocity().magnitude > 0) {
-			this.apply_bump(Util.vec_scale(this.get_calculated_velocity(),-1));
-			tar.apply_bump(this.get_calculated_velocity());
+			Vector2 calc_vel_dir = this.get_calculated_velocity().normalized;
+			float mag = Mathf.Max(this.get_calculated_velocity().magnitude,tar.get_calculated_velocity().magnitude);
+			Vector2 bump_vel = calc_vel_dir * mag;
+
+			this.apply_bump(Util.vec_scale(bump_vel,-1));
+			tar.apply_bump(bump_vel);
 		}
 	}
 
@@ -261,10 +266,6 @@ public class GenericFootballer : MonoBehaviour {
 	private void apply_bump(Vector3 vel) {
 		if (_current_mode != GenericFootballerMode.Stunned) {
 			if (vel.magnitude == 0) vel = new Vector3(Util.rand_range(-1,1),Util.rand_range(-1,1));
-			int testct = 0;
-			while (vel.magnitude < 2 && testct < 10) {
-				vel = Util.vec_scale(vel,2);
-			}
 
 			_stunned_vel = vel;
 			_stunned_mode_ct = 100;
@@ -273,7 +274,7 @@ public class GenericFootballer : MonoBehaviour {
 			if (Main.LevelController.footballer_has_ball(this)) {
 				Main.LevelController.CreateLooseBall(
 					this.transform.position,
-					Util.vec_scale(vel,2)
+					Util.vec_rotate_rad(Util.vec_scale(vel,1.8f),Util.rand_range(-1.4f,1.4f))
 				);
 				Main.LevelController.m_playerTeamFootballersWithBall.Remove(this);
 				Main.LevelController.m_enemyTeamFootballersWithBall.Remove(this);

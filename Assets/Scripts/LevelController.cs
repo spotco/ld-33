@@ -74,7 +74,7 @@ public class LevelController : MonoBehaviour {
 
 		m_particles.i_update(this);
 		float mouse_target_anim_speed = 0.3f;
-		float dt_scale = (1/60.0f)/(Time.unscaledDeltaTime);
+		float dt_scale = (1/60.0f)/(Time.deltaTime);
 		Util.dt_scale = dt_scale;
 
 		if (m_currentMode == LevelControllerMode.GamePlay) {
@@ -85,7 +85,12 @@ public class LevelController : MonoBehaviour {
 				} else {
 					Main.GameCamera.SetTargetZoom(500);
 				}
-				Main.GameCamera.SetManualOffset(new Vector3(200,0,0));
+				if (Input.GetMouseButton(0)) {
+					Main.GameCamera.SetManualOffset(new Vector3(0,0,0));
+				} else {
+					Main.GameCamera.SetManualOffset(new Vector3(150,0,0));
+				}
+
 
 			} else {
 				Main.GameCamera.SetTargetPos(this.GetMousePoint());
