@@ -146,7 +146,8 @@ public class BotBase : MonoBehaviour {
 	}
 	
 	public void Msg_GotBall() {
-		if (FieldPosition == FieldPosition.Attacker) {
+		if (FieldPosition == FieldPosition.Defender ||
+				FieldPosition == FieldPosition.Attacker) {
 			ChangeState(BotState_Dribble.Instance);
 		}
 	}

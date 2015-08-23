@@ -91,7 +91,33 @@ public class TeamBase : MonoBehaviour {
 	public bool AreAllPlayersHome() {
 		return _keeper.IsAtHomePosition() &&
 			_defense0.IsAtHomePosition() &&
-			_defense1.IsAtHomePosition();
+			_defense1.IsAtHomePosition() &&
+			_forward0.IsAtHomePosition() &&
+			_forward1.IsAtHomePosition();
+	}
+	
+	/*
+			Field regions:
+			0	3	6 9  12 15
+			1 4 7 10 13 16
+			2 5 8 11 14 17
+	 */
+	
+	public FieldRegion GetFieldRegion(Vector3 pos) {
+		int region = Main.FieldController.GetRegion(pos);
+		if (this.Team == Team.EnemyTeam) {
+			// TODO: assuming they are on right side
+			if (region < 6) {
+				return FieldRegion.Forwardfield;
+			} else if (region < 12) {
+				return FieldRegion.Midfield;
+			} else {
+				return FieldRegion.Backfield;
+			}
+		} else {
+			Debug.LogWarning("Unhandled.");
+			return FieldRegion.None;
+		}
 	}
 	
 	public void SendPlayersHome() {

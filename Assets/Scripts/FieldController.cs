@@ -24,6 +24,25 @@ public class FieldController : MonoBehaviour {
 		bottom = _rightGoalLineBottom.position;
 	}
 	
+	public Vector3 GetFieldSize() {
+		float height = Vector3.Distance(_regionPositions[0], _regionPositions[1]) * 3;
+		float width = Vector3.Distance(_regionPositions[0], _regionPositions[3]) * 6;
+		return new Vector3(width, height, 0.0f);
+	}
+	
+	public int GetRegion(Vector3 pos) {
+		float minDist = float.MaxValue;
+		int minIdx = -1;
+		for (int i = 0; i < _regionPositions.Count; i++) {
+			float dist = Vector3.Distance(_regionPositions[i], pos);
+			if (dist < minDist) {
+				minDist = dist;
+				minIdx = i;
+			}
+		}
+		return minIdx;
+	}
+	
 	public Vector3 GetRegionPosition(int region) {
 		if (region >= _regionPositions.Count) {
 			Debug.Log("Invalid region: " + region);
@@ -45,4 +64,11 @@ public class FieldController : MonoBehaviour {
 			}
 		}
 	}
+}
+
+public enum FieldRegion {
+	Backfield,
+	Midfield,
+	Forwardfield,
+	None,
 }

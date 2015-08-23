@@ -203,6 +203,27 @@ public class BotState_Idle : FSMState<BotBase> {
 				bot.ChangeState(BotState_Pressure.Instance);
 				return;
 			}
+			
+			Vector3 ballPosition = bot.GetBallPosition();
+			FieldRegion fieldRegion = bot.TeamBase.GetFieldRegion(ballPosition);
+			
+			// Get ball.
+			if (fieldRegion == FieldRegion.Midfield) {
+				// Attempt to stay in bot's vertical half of the field (top/bottom).
+				float verticalOffset = Mathf.Abs(bot.HomePosition.y - bot.GetBallPosition().y);
+				float checkHeight = Main.FieldController.GetFieldSize().y * 0.333333f;
+				if (verticalOffset < checkHeight) {
+					bot.ChangeState(BotState_ChaseBall.Instance);
+					return;
+				}
+			}
+			// Ball is loose in forward region - get it.
+			if (fieldRegion == FieldRegion.Forwardfield) {
+				if (bot.GetBallOwner() == null) {
+					bot.ChangeState(BotState_ChaseBall.Instance);
+					return;
+				}
+			}
 		}
 		
 		bot.ChangeState(BotState_Roam.Instance);
@@ -350,7 +371,28 @@ public class BotState_ChaseBall : FSMState<BotBase> {
 				return;
 			}
 		} else if (bot.FieldPosition == FieldPosition.Attacker) {
-			// TODO:
+			// We got the ball!
+			BotBase ballOwner = bot.GetBallOwner();
+			if (ballOwner == bot) {
+				bot.ChangeState(BotState_Dribble.Instance);
+				return;
+			}
+			
+			Vector3 ballPosition = bot.GetBallPosition();
+			FieldRegion fieldRegion = bot.TeamBase.GetFieldRegion(ballPosition);
+			// Ignore - defender will get it.
+			if (fieldRegion == FieldRegion.Backfield) {
+				bot.ChangeState(BotState_Idle.Instance);
+				return;
+			}
+			
+			// Ball in defender region and other team has control.
+			if (fieldRegion == FieldRegion.Forwardfield) {
+				if (ballOwner != null && ballOwner.Team != bot.Team) {
+					bot.ChangeState(BotState_GoHome.Instance);
+					return;
+				}
+			}
 		}
 				
 		bot.Steering.CurrentTarget = bot.GetBallPosition();
