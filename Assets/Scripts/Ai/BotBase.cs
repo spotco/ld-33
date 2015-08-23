@@ -38,7 +38,14 @@ public class BotBase : MonoBehaviour {
 	}
 	
 	public bool IsAtHomePosition() {
-		return Vector3.Distance(HomePosition, this.transform.localPosition) <= AiConstants.ArriveDistance;
+		return Vector3.Distance(HomePosition, this.transform.localPosition) <= BotConstants.ArriveDistance;
+	}
+	
+	public float GetDistanceFromGoal() {
+		Vector3 top, bottom;
+		GetGoalpostPositions(out top, out bottom);
+		Vector3 center = (top + bottom) * 0.5f;
+		return Vector3.Distance(center, this.transform.position);
 	}
 	
 	public void GetGoalpostPositions(out Vector3 top, out Vector3 bottom) {
@@ -46,9 +53,19 @@ public class BotBase : MonoBehaviour {
 	}
 	
 	public Vector3 GetBallPosition() {
-		// TODO: 
-		// return Main.LevelController.m_looseBalls[0].transform.position;
-		return Main.LevelController.m_playerTeamFootballers[0].transform.position;
+		return Main.LevelController.currentBallPosition();
+	}
+	
+	public bool IsBallLoose() {
+		return GetBallOwner() == null;
+	}
+	
+	public BotBase GetBallOwner() {
+		GenericFootballer footballer = Main.LevelController.nullableCurrentFootballerWithBall();
+		if (footballer != null) {
+			return footballer.GetComponent<BotBase>();
+		}
+		return null;
 	}
 	
 	public void Awake() {
