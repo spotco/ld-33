@@ -346,6 +346,13 @@ public class LevelController : MonoBehaviour {
 			return Vector3.zero;
 		}
 	}
+	
+	public Vector3 currentLooseBallVelocity() {
+		if (m_looseBalls.Count > 0) {
+			return m_looseBalls[0]._vel;
+		}
+		return Vector3.zero;
+	}
 }
 
 public enum Team {
