@@ -60,11 +60,11 @@ public class LevelController : MonoBehaviour {
 		}
 
 		{
-			BotBase keeper = this.CreateFootballer(m_enemyTeam, new Vector3(300,0));
-			BotBase d0 = this.CreateFootballer(m_enemyTeam, new Vector3(200,0));
-			BotBase d1 = this.CreateFootballer(m_enemyTeam, new Vector3(100,0));
-			BotBase f0 = this.CreateFootballer(m_enemyTeam, new Vector3(200,-300));
-			BotBase f1 = this.CreateFootballer(m_enemyTeam, new Vector3(300,-400));
+			BotBase keeper = this.CreateFootballer(m_enemyTeam, new Vector3(900,-400));
+			BotBase d0 = this.CreateFootballer(m_enemyTeam, new Vector3(778,-277));
+			BotBase d1 = this.CreateFootballer(m_enemyTeam, new Vector3(778, -453));
+			BotBase f0 = this.CreateFootballer(m_enemyTeam, new Vector3(525,-277));
+			BotBase f1 = this.CreateFootballer(m_enemyTeam, new Vector3(525,-453));
 			m_enemyTeam.SetPlayers(keeper, d0, d1, f0, f1);
 			m_enemyTeam.StartKickoff();
 			
