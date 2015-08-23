@@ -40,4 +40,4 @@ public class FiniteStateMachine <T>  {
 		if (PreviousState != null)
 			ChangeState(PreviousState);
 	}
-};
+}

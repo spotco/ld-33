@@ -19,10 +19,13 @@ public class Main : Uzu.Main
 	public static AudioController AudioController {
 		get { return _instance._audioController; }
 	}
+	public static FieldController FieldController {
+		get { return _instance._fieldController; }
+	}
 	
   protected override void OnMainBegin ()
   {
-	Application.targetFrameRate = 60;
+		Application.targetFrameRate = 60;
     _instance = (Main)Uzu.Main.Instance;
     
     // InitGraphicsSettings ();
@@ -32,6 +35,7 @@ public class Main : Uzu.Main
     {
 			_gameCamera = GameObject.Find("GameCamera").GetComponent<FollowCamera>();
 			_fanController = GetComponent<FanController>();
+			_fieldController = GameObject.Find("FieldController").GetComponent<FieldController>();
     }
   }
   
@@ -79,4 +83,5 @@ public class Main : Uzu.Main
 	private FanController _fanController;
 	[SerializeField]
 	private AudioController _audioController;
+	private FieldController _fieldController;
 }

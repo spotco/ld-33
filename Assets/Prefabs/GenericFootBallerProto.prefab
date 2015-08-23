@@ -26,6 +26,8 @@ GameObject:
   - 4: {fileID: 430358}
   - 114: {fileID: 11477984}
   - 58: {fileID: 5800298}
+  - 114: {fileID: 11483570}
+  - 114: {fileID: 11403424}
   m_Layer: 9
   m_Name: GenericFootBallerProto
   m_TagString: Untagged
@@ -129,6 +131,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 40
+--- !u!114 &11403424
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 072323439d91b4cd99f2cd114ed40108, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  topPost: {fileID: 0}
+  bottomPost: {fileID: 0}
 --- !u!114 &11477984
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -155,6 +170,22 @@ MonoBehaviour:
   _throw_charge_ct: 0
   _command_move_to_point: {x: 0, y: 0}
   _selected_ct: 0
+--- !u!114 &11483570
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 123846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e055a0feac040078b38accf6115592, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxSpeed: 200
+  _maxForce: 100
+  _mass: 1
+  _slowRadius: 100
+  _stopRadius: 50
 --- !u!212 &21225608
 SpriteRenderer:
   m_ObjectHideFlags: 1

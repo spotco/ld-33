@@ -7,16 +7,9 @@ using UnityEngine;
 public class BotBase : MonoBehaviour {
 	private FiniteStateMachine<BotBase> FSM;
 	private Steering _steering;
-	private TeamBase _team;
-
-	// TODO:
-	public Transform topPost;
-	public Transform bottomPost;
 	
 	public TeamBase Team {
-		get {
-			return _team;
-		}
+		get; set;
 	}
 	
 	public Steering Steering {
@@ -27,9 +20,24 @@ public class BotBase : MonoBehaviour {
 		FSM.ChangeState(e);		
 	}
 	
+	public Vector3 HomePosition {
+		get; set;
+	}
+	
+	public void GoToRegion(int region) {
+		HomePosition = Main.FieldController.GetRegionPosition(region);
+		ChangeState(BotState_GoHome.Instance);
+	}
+	
+	public bool IsAtHomePosition() {
+		return true;
+	}
+	
 	public void GetGoalpostPositions(out Vector3 top, out Vector3 bottom) {
-		top = topPost.position;
-		bottom = bottomPost.position;
+		top = Vector3.zero;
+		bottom = Vector3.zero;
+		// top = topPost.position;
+		// bottom = bottomPost.position;
 	}
 	
 	public Vector3 GetBallPosition() {
@@ -39,9 +47,7 @@ public class BotBase : MonoBehaviour {
 	public void Awake() {
 		FSM = new FiniteStateMachine<BotBase>();
 		_steering = GetComponent<Steering>();
-		_team = Uzu.Util.FindInParents<TeamBase>(this.gameObject);
-		
-		// FSM.Configure(this, BotState_TendGoal.Instance);
+		FSM.Configure(this, BotState_Idle.Instance);
 	}
  
 	public void Update() {

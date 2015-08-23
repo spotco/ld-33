@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class LevelController : MonoBehaviour {
 
+	[SerializeField] private GameObject proto_team;
 	[SerializeField] private GameObject proto_genericFootballer;
 	[SerializeField] private GameObject proto_looseBall;
 	[SerializeField] private GameObject proto_mouseTarget;
@@ -31,19 +32,31 @@ public class LevelController : MonoBehaviour {
 
 	private LevelControllerMode m_currentMode;
 	
+	private TeamBase m_playerTeam;
+	private TeamBase m_enemyTeam;
+	
 	private GameObject m_mouseTargetIcon;
 	private float m_mouseTargetIconTheta;
 	public void StartLevel() {
 		m_pathRenderer = this.GetComponent<PathRenderer>();
+		
+		m_playerTeam = this.CreateTeam(Team.PlayerTeam);
+		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
+		
+		{
+			this.CreateFootballer(m_playerTeam, new Vector3(0,0));
+			this.CreateFootballer(m_playerTeam, new Vector3(-300,-300));
+			this.CreateFootballer(m_playerTeam, new Vector3(-300,0));
+			this.CreateFootballer(m_playerTeam, new Vector3(0,-300));
+			this.CreateFootballer(m_playerTeam, new Vector3(-600,-300));
+		}
 
-		this.CreateFootballer(Team.PlayerTeam, new Vector3(0,0));
-		this.CreateFootballer(Team.PlayerTeam, new Vector3(-300,-300));
-		this.CreateFootballer(Team.PlayerTeam, new Vector3(-300,0));
-		this.CreateFootballer(Team.PlayerTeam, new Vector3(0,-300));
-		this.CreateFootballer(Team.PlayerTeam, new Vector3(-600,-300));
-
-		this.CreateFootballer(Team.EnemyTeam, new Vector3(300,0));
-
+		{
+			BotBase keeper = this.CreateFootballer(m_enemyTeam, new Vector3(300,0));
+			m_enemyTeam.SetPlayers(keeper);
+			m_enemyTeam.StartKickoff();
+		}
+		
 		m_playerTeamFootballersWithBall.Add(m_playerTeamFootballers[0]);
 
 		m_currentMode = LevelControllerMode.GamePlay;
@@ -185,16 +198,24 @@ public class LevelController : MonoBehaviour {
 		Destroy(looseball.gameObject);
 	}
 	
-	private void CreateFootballer(Team team, Vector3 pos) {
+	private TeamBase CreateTeam(Team team) {
+		GameObject neu_obj = Util.proto_clone(proto_team);
+		TeamBase rtv = neu_obj.GetComponent<TeamBase>();
+		rtv.Team = team;
+		return rtv;
+	}
+	
+	private BotBase CreateFootballer(TeamBase team, Vector3 pos) {
 		GameObject neu_obj = Util.proto_clone(proto_genericFootballer);
 		GenericFootballer rtv = neu_obj.GetComponent<GenericFootballer>();
 		rtv.transform.position = pos;
 		rtv.sim_initialize();
-		if (team == Team.PlayerTeam) {
+		if (team.Team == Team.PlayerTeam) {
 			m_playerTeamFootballers.Add(rtv);
 		} else {
 			m_enemyTeamFootballers.Add(rtv);
 		}
+		return neu_obj.GetComponent<BotBase>();
 	}
 	
 	public Vector3 GetMousePoint() {

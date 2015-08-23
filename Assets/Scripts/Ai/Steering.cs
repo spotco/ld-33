@@ -67,6 +67,12 @@ public class Steering : MonoBehaviour {
 	}
 	
 	public void Update() {
+		// No steering.
+		if (_currentMode == Mode.None) {
+			_currentVelocity = Vector3.zero;
+			return;
+		}
+		
 		_currentPosition = transform.localPosition;
 		
 		_steeringForce = Vector3.zero;

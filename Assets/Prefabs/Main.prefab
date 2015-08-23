@@ -139,6 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9106d6f2ff324b80ae6d90d85bf415e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  proto_team: {fileID: 122958, guid: c24fa09b9bee54ec9b33eb22f1854a46, type: 2}
   proto_genericFootballer: {fileID: 123846, guid: e913ce4842fc942dabb3081837582cee,
     type: 2}
   proto_looseBall: {fileID: 164902, guid: dfaf8c1d0b2b4483f84670d1bc9c2192, type: 2}
@@ -146,6 +147,12 @@ MonoBehaviour:
   m_gameBounds: {fileID: 0}
   m_playerGoalBounds: {fileID: 0}
   m_enemyGoalBounds: {fileID: 0}
+  m_playerTeamFootballers: []
+  m_enemyTeamFootballers: []
+  m_playerTeamFootballersWithBall: []
+  m_enemyTeamFootballersWithBall: []
+  m_timeoutSelectedFootballer: {fileID: 0}
+  m_looseBalls: []
 --- !u!114 &11460724
 MonoBehaviour:
   m_ObjectHideFlags: 1
