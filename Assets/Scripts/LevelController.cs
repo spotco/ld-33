@@ -280,6 +280,22 @@ public class LevelController : MonoBehaviour {
 			return m_enemyTeamFootballersWithBall.Contains(tar);
 		}
 	}
+
+	public GenericFootballer nullableCurrentFootballerWithBall() {
+		if (m_playerTeamFootballersWithBall.Count > 0) return m_playerTeamFootballersWithBall[0];
+		if (m_enemyTeamFootballersWithBall.Count > 0) return m_enemyTeamFootballersWithBall[0];
+		return null;
+	}
+
+	public Vector3 currentBallPosition() {
+		GenericFootballer ball_holder = nullableCurrentFootballerWithBall();
+		if (ball_holder != null) {
+			return ball_holder.transform.position;
+		} else {
+			if (m_looseBalls.Count > 0) return m_looseBalls[0].transform.position;
+			return Vector3.zero;
+		}
+	}
 }
 
 public enum Team {
