@@ -127,6 +127,7 @@ public class GenericFootballer : MonoBehaviour {
 		}
 
 		if (_current_mode == GenericFootballerMode.Stunned) {
+			Main.LevelController.m_pathRenderer.clear_path(_id);
 			_stunned_vel.x = Util.drpt(_stunned_vel.x,0,0.01f);
 			_stunned_vel.y = Util.drpt(_stunned_vel.y,0,0.01f);
 			this.transform.position = Util.vec_add(this.transform.position,Util.vec_scale(_stunned_vel,Util.dt_scale));
@@ -256,6 +257,7 @@ public class GenericFootballer : MonoBehaviour {
 					Util.vec_scale(vel,2)
 				);
 				Main.LevelController.m_playerTeamFootballersWithBall.Remove(this);
+				Main.LevelController.m_enemyTeamFootballersWithBall.Remove(this);
 				_ball_charging = false;
 				_throw_charge_ct = 0;
 			}
