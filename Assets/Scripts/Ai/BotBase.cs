@@ -5,8 +5,12 @@ using UnityEngine;
  */
 [RequireComponent (typeof (Steering))]
 public class BotBase : MonoBehaviour {
-	private FiniteStateMachine<BotBase> FSM;
+	private FiniteStateMachine<BotBase> _FSM;
 	private Steering _steering;
+	
+	public FiniteStateMachine<BotBase> DBG_FSM {
+		get { return _FSM; }
+	}
 	
 	public TeamBase Team {
 		get; set;
@@ -17,7 +21,7 @@ public class BotBase : MonoBehaviour {
 	}
 	
 	public void ChangeState(FSMState<BotBase> e) {
-		FSM.ChangeState(e);		
+		_FSM.ChangeState(e);		
 	}
 	
 	public Vector3 HomePosition {
@@ -45,13 +49,13 @@ public class BotBase : MonoBehaviour {
 	}
 	
 	public void Awake() {
-		FSM = new FiniteStateMachine<BotBase>();
+		_FSM = new FiniteStateMachine<BotBase>();
 		_steering = GetComponent<Steering>();
-		FSM.Configure(this, BotState_Idle.Instance);
+		_FSM.Configure(this, BotState_Idle.Instance);
 	}
  
 	public void Update() {
-		FSM.Update();
+		_FSM.Update();
 	}
 }
 

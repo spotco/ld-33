@@ -1,14 +1,18 @@
+using UnityEngine;
+
 public class FiniteStateMachine <T>  {
 	private T Owner;
-	private FSMState<T> CurrentState;
-	private FSMState<T> PreviousState;
-	private FSMState<T> GlobalState;
+	private FSMState<T> _currentState;
+	private FSMState<T> _previousState;
+	
+	public FSMState<T> CurrentState {
+		get { return _currentState; }
+	}
 	
 	public void Awake()
 	{		
-		CurrentState = null;
-		PreviousState = null;
-		GlobalState = null;
+		_currentState = null;
+		_previousState = null;
 	}
 	
 	public void Configure(T owner, FSMState<T> InitialState) {
@@ -18,26 +22,27 @@ public class FiniteStateMachine <T>  {
 
 	public void  Update()
 	{
-		if (GlobalState != null)  GlobalState.Execute(Owner);
-		if (CurrentState != null) CurrentState.Execute(Owner);
+		if (_currentState != null) {
+			_currentState.Execute(Owner);
+		}
 	}
  
-	public void  ChangeState(FSMState<T> NewState)
+	public void  ChangeState(FSMState<T> newState)
 	{	
-		PreviousState = CurrentState;
+		_previousState = _currentState;
  
-		if (CurrentState != null)
-			CurrentState.Exit(Owner);
+		if (_currentState != null)
+			_currentState.Exit(Owner);
  
-		CurrentState = NewState;
+		_currentState = newState;
  
-		if (CurrentState != null)
-			CurrentState.Enter(Owner);
+		if (_currentState != null)
+			_currentState.Enter(Owner);
 	}
  
-	public void  RevertToPreviousState()
+	public void  RevertTo_previousState()
 	{
-		if (PreviousState != null)
-			ChangeState(PreviousState);
+		if (_previousState != null)
+			ChangeState(_previousState);
 	}
 }
