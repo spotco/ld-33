@@ -13,7 +13,7 @@ public class LooseBall : MonoBehaviour {
 		this.transform.position = position;
 		_vel = vel;
 		_z = 0;
-		_vz = vel.magnitude * 0.5f;
+		_vz = vel.magnitude * 0.25f;
 		_initial_uncatchable_ct = 40;
 	}
 

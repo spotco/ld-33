@@ -89,4 +89,7 @@ public class Main : Uzu.Main
 	private FieldController _fieldController;
 	[SerializeField]
 	private FSMDebugger _fsmDebugger;
+
+	[SerializeField]
+	public GameObject _particleRoot;
 }
