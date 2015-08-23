@@ -40,16 +40,15 @@ public class LooseBall : MonoBehaviour {
 		if (this._initial_uncatchable_ct <= 0) {
 			for (int i = 0; i < Main.LevelController.m_playerTeamFootballers.Count; i++) {
 				GenericFootballer itr = Main.LevelController.m_playerTeamFootballers[i];
-				if (itr.collider_contains(this.GetComponent<CircleCollider2D>())) {
+				if (itr.can_pickup_ball() && itr.collider_contains(this.GetComponent<CircleCollider2D>())) {
 					Main.LevelController.PickupLooseBall(this,itr);
 					return;
 				}
 			}
 			for (int i = 0; i < Main.LevelController.m_enemyTeamFootballers.Count; i++) {
 				GenericFootballer itr = Main.LevelController.m_enemyTeamFootballers[i];
-				if (itr.collider_contains(this.GetComponent<CircleCollider2D>())) {
+				if (itr.can_pickup_ball() && itr.collider_contains(this.GetComponent<CircleCollider2D>())) {
 					Main.LevelController.PickupLooseBall(this,itr);
-
 					return;
 				}
 			}

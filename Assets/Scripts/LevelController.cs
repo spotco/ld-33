@@ -189,11 +189,11 @@ public class LevelController : MonoBehaviour {
 		if (this.get_footballer_team(tar) == Team.PlayerTeam) {
 			m_playerTeamFootballersWithBall.Add(tar);
 			tar._current_mode = GenericFootballer.GenericFootballerMode.Idle;
-			tar._waitdelay = 15;
+			tar.set_wait_delay(15);
 		} else {
 			this.m_enemyTeamFootballersWithBall.Add(tar);
 			tar._current_mode = GenericFootballer.GenericFootballerMode.Idle;
-			tar._waitdelay = 15;
+			tar.set_wait_delay(15);
 		}
 		Destroy(looseball.gameObject);
 	}
@@ -268,7 +268,6 @@ public class LevelController : MonoBehaviour {
 			return m_enemyTeamFootballersWithBall.Contains(tar);
 		}
 	}
-
 }
 
 public enum Team {
