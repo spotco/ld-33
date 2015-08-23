@@ -19261,8 +19261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5931ba9fa85cd468ab681ee6f524dc65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _leftGoalLineTop: {fileID: 0}
-  _leftGoalLineBottom: {fileID: 0}
+  _leftGoalLineTop: {fileID: 437076}
+  _leftGoalLineBottom: {fileID: 493924}
   _rightGoalLineTop: {fileID: 493508}
   _rightGoalLineBottom: {fileID: 474376}
 --- !u!114 &11466676
