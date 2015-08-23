@@ -25,10 +25,6 @@ public static class PauseFlags
 	// public const int LevelEffects = 1 << 4;
 }
 
-public static class AiConstants {
-	public const float ArriveDistance = 50.0f;
-}
-
 public static class PanelIds {
   public const string Main = "MainPanel";
   public const string Game = "GamePanel";

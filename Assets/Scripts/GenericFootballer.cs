@@ -167,7 +167,7 @@ public class GenericFootballer : MonoBehaviour {
 				__tmp.Add(p3);
 				Main.LevelController.m_pathRenderer.id_draw_path(_id,this.transform.position,__tmp.ToArray());
 				
-			} else if (!Input.GetKey(KeyCode.Z) && _ball_charging) {
+			} else if (!Input.GetMouseButton(0) && _ball_charging) {
 				if (_throw_charge_ct > 100) {
 					
 					float vel = Mathf.Clamp(_throw_charge_ct/2000.0f * 6 + 3,3,10);

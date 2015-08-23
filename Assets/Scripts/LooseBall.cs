@@ -4,7 +4,7 @@ using System.Collections;
 [RequireComponent(typeof(CircleCollider2D))]
 public class LooseBall : MonoBehaviour {
 
-	[SerializeField] private Vector2 _vel; 
+	[SerializeField] public Vector2 _vel; 
 	[SerializeField] private float _z, _vz;
 	[SerializeField] private GameObject _ball;
 	[SerializeField] private float _initial_uncatchable_ct;

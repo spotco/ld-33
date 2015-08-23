@@ -9,10 +9,6 @@ public class Steering : MonoBehaviour {
 	private float _maxForce = 100.0f;
 	[SerializeField]
 	private float _mass = 1.0f;
-	[SerializeField]
-	private float _slowRadius = 100.0f;
-	[SerializeField]
-	private float _stopRadius = 50.0f;
 	
 	[System.Flags]
 	private enum Mode {
@@ -20,6 +16,7 @@ public class Steering : MonoBehaviour {
 		Seek = 0x1,
 		Arrive = 0x2,
 		Interpose = 0x4,
+		Pursuit = 0x8,
 	}
 	
 	private Mode _currentMode = Mode.None;
@@ -42,6 +39,9 @@ public class Steering : MonoBehaviour {
 	public float CurrentInterposeDistance {
 		get; set;
 	}
+	public Vector3 CurrentEvaderVelocity {
+		get; set;
+	}
 	
 	public void SeekOn() {
 		_currentMode |= Mode.Seek;
@@ -60,6 +60,12 @@ public class Steering : MonoBehaviour {
 	}
 	public void InterposeOff() {
 		_currentMode &= ~Mode.Interpose;
+	}
+	public void PursuitOn() {
+		_currentMode |= Mode.Pursuit;
+	}
+	public void PursuitOff() {
+		_currentMode &= ~Mode.Pursuit;
 	}
 	
 	private bool IsOn(Mode mode) {
@@ -111,6 +117,14 @@ public class Steering : MonoBehaviour {
 				return _steeringForce;
 			}
 		}
+		
+		if (IsOn(Mode.Pursuit)) {
+			deltaForce += Pursuit(_currentTarget);
+			
+			if (!AccumulateForce(deltaForce)) {
+				return _steeringForce;
+			}
+		}
 
 		return _steeringForce;
 	}
@@ -138,22 +152,37 @@ public class Steering : MonoBehaviour {
 	}
 	
 	private Vector3 Arrive(Vector3 targetPos) {
-		float distance = Vector3.Distance(_currentPosition, targetPos);
-		Vector3 desiredVelocity = (targetPos - _currentPosition).normalized;
+		Vector3 toTarget = targetPos - _currentPosition;
 		
-		if (distance < _stopRadius) {
-			desiredVelocity = Vector2.zero;
-		} else if (distance < _slowRadius) {
-			desiredVelocity = desiredVelocity * _maxSpeed * ((distance - _stopRadius) / (_slowRadius - _stopRadius));
-		} else {
-			desiredVelocity = desiredVelocity * _maxSpeed;
-		}
-
-		return desiredVelocity - _currentVelocity;
+	  float dist = toTarget.magnitude;
+	  if (dist > 0) {
+	    const float DECELERATION_TWEAK = 0.6f;
+	
+	    float speed =  dist / DECELERATION_TWEAK;
+	    speed = Mathf.Min(speed, _maxSpeed);
+			
+	    Vector3 desiredVelocity = toTarget * speed / dist;
+	    return desiredVelocity - _currentVelocity;
+	  }
+	
+	  return Vector3.zero;
 	}
 	
 	private Vector3 Interpose(Vector3 targetPos, Vector3 anchorPos, float distFromTarget) {
 		Vector3 target = anchorPos + (targetPos - anchorPos).normalized * distFromTarget;
 		return Arrive(target);
+	}
+	
+	private Vector3 Pursuit(Vector3 targetPos) {
+		Vector3 toEvader = targetPos - _currentPosition;
+		float relativeHeading = Vector3.Dot(CurrentEvaderVelocity.normalized, _currentVelocity.normalized);
+		
+		if (Vector3.Dot(toEvader, _currentVelocity.normalized) > 0.0f &&
+				relativeHeading < -0.95f /* ~18 degrees */) {
+			return Seek(targetPos);
+		}
+		
+		float lookAheadTime = toEvader.magnitude / (_maxSpeed + CurrentEvaderVelocity.magnitude);
+		return Seek(targetPos + CurrentEvaderVelocity * lookAheadTime);
 	}
 }
