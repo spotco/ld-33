@@ -56,11 +56,15 @@ public class FollowCamera : MonoBehaviour {
 			Vector3 target_move_delta = Util.vec_sub(target_move_to_position,_cachedPosition);
 			Vector3 max_move_delta = Util.vec_scale(Util.vec_sub(_currentTargetPos,_cachedPosition).normalized,5.0f);
 
-			_cachedPosition = Util.vec_add(_cachedPosition, new Vector3(
+			Vector3 neuCachedPosition = Util.vec_add(_cachedPosition, new Vector3(
 				Mathf.Sign(target_move_delta.x) * Mathf.Min(Mathf.Abs(target_move_delta.x),Mathf.Abs(max_move_delta.x)),
 				Mathf.Sign(target_move_delta.y) * Mathf.Min(Mathf.Abs(target_move_delta.y),Mathf.Abs(max_move_delta.y)),
 				Mathf.Sign(target_move_delta.z) * Mathf.Min(Mathf.Abs(target_move_delta.z),Mathf.Abs(max_move_delta.z))
 			));
+			if (Main.LevelController.m_gameBounds.OverlapPoint(new Vector3(neuCachedPosition.x,neuCachedPosition.y))) {
+				_cachedPosition = neuCachedPosition;
+			}
+
 			_zoom = Util.drpt(_zoom,_target_zoom,1/20.0f);
 
 			_manualOffset = new Vector3(
