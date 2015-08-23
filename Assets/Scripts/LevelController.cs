@@ -44,13 +44,14 @@ public class LevelController : MonoBehaviour {
 		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
 		
 		{
-			this.CreateFootballer(m_playerTeam, new Vector3(0,0));
+			this.CreateFootballer(m_playerTeam, new Vector3(1800,-250));
 			this.CreateFootballer(m_playerTeam, new Vector3(-300,-300));
 			this.CreateFootballer(m_playerTeam, new Vector3(-300,0));
 			this.CreateFootballer(m_playerTeam, new Vector3(0,-300));
 			this.CreateFootballer(m_playerTeam, new Vector3(-600,-300));
 		}
 
+		/*
 		{
 			BotBase keeper = this.CreateFootballer(m_enemyTeam, new Vector3(300,0));
 			BotBase d0 = this.CreateFootballer(m_enemyTeam, new Vector3(200,0));
@@ -58,11 +59,10 @@ public class LevelController : MonoBehaviour {
 			m_enemyTeam.SetPlayers(keeper, d0, d1);
 			m_enemyTeam.StartKickoff();
 		}
+		*/
 		
 		m_playerTeamFootballersWithBall.Add(m_playerTeamFootballers[0]);
-
 		m_currentMode = LevelControllerMode.GamePlay;
-
 		m_mouseTargetIcon = Util.proto_clone(proto_mouseTarget);
 	}
 
@@ -121,11 +121,21 @@ public class LevelController : MonoBehaviour {
 
 			}
 
+			for (int i = m_looseBalls.Count-1; i >= 0; i--) {
+				LooseBall itr = this.m_looseBalls[i];
+				if (m_enemyGoalBounds.OverlapPoint(itr.transform.position)) {
+
+				}
+				if (m_playerGoalBounds.OverlapPoint(itr.transform.position)) {
+
+				}
+			}
+
 
 		} else if (m_currentMode == LevelControllerMode.Timeout) {
 
 			Vector3 mouse_to_center_delta = Util.vec_sub(Input.mousePosition,new Vector2(Screen.width/2,Screen.height/2));
-			float mmouse_move_rad = 400;
+			float mmouse_move_rad = (Screen.width+Screen.height)/2.0f * 0.25f;
 			if (mouse_to_center_delta.magnitude > mmouse_move_rad) {
 				Vector3 n_mouse_to_center_delta = mouse_to_center_delta.normalized;
 				Vector3 tar_delta = Util.vec_scale(n_mouse_to_center_delta,(mouse_to_center_delta.magnitude-mmouse_move_rad)*0.1f);

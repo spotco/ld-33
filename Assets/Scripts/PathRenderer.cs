@@ -110,6 +110,12 @@ public class Util {
 			bezier_val_for_t(p0.z,p1.z,p2.z,p3.z,t)
 		);
 	}
+
+	public static bool box2d_contains_point(BoxCollider2D box, Vector3 point) {
+		Bounds box_bounds = box.bounds;
+		box_bounds.Expand(new Vector3(0,0,9999));
+		return box_bounds.Contains(point);
+	}
 	
 }
 

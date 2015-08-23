@@ -890,7 +890,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 401672}
-  - 65: {fileID: 6535758}
+  - 61: {fileID: 6169346}
   m_Layer: 0
   m_Name: GoalPostEnemy
   m_TagString: Untagged
@@ -1890,6 +1890,19 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
+--- !u!61 &6169346
+BoxCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 193212}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 27.2424316, y: -11.987793}
+  serializedVersion: 2
+  m_Size: {x: 519.61145, y: 476.024414}
 --- !u!61 &6184870
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -1955,18 +1968,6 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
---- !u!65 &6535758
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 193212}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 354.876953, y: 480.712402, z: 1}
-  m_Center: {x: -102.32666, y: -20.0476074, z: 0}
 --- !u!114 &11466414
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2106,7 +2107,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1535931219
+  m_SortingLayerID: -1783731295
   m_SortingOrder: 100
   m_Sprite: {fileID: 21300000, guid: 561ac75d367a0426e841cb83b3120aa5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -2184,7 +2185,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 1535931219
+  m_SortingLayerID: -1783731295
   m_SortingOrder: 100
   m_Sprite: {fileID: 21300000, guid: 4cd3de21f6a1a4df89183bb0446321c8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

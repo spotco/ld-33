@@ -215,14 +215,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: _panelManager
-      value: 
-      objectReference: {fileID: 1573188531}
-    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: _fsmDebugger
-      value: 
-      objectReference: {fileID: 882577298}
     - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
       propertyPath: m_gameBounds
       value: 
@@ -234,15 +226,19 @@ Prefab:
     - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
       propertyPath: m_enemyGoalBounds
       value: 
-      objectReference: {fileID: 1076872953}
+      objectReference: {fileID: 1191084274}
     - target: {fileID: 11426180, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
       propertyPath: _path_renderer_root
       value: 
       objectReference: {fileID: 1285087775}
-    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: proto_team
+    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: _panelManager
       value: 
-      objectReference: {fileID: 122958, guid: c24fa09b9bee54ec9b33eb22f1854a46, type: 2}
+      objectReference: {fileID: 1573188531}
+    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: _fsmDebugger
+      value: 
+      objectReference: {fileID: 882577298}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
   m_IsPrefabParent: 0
@@ -433,6 +429,11 @@ Transform:
 --- !u!61 &1076872953 stripped
 BoxCollider2D:
   m_PrefabParentObject: {fileID: 6150218, guid: 7966cd997bfa14d2fbee3b44970a31f0,
+    type: 2}
+  m_PrefabInternal: {fileID: 2012756317}
+--- !u!61 &1191084274 stripped
+BoxCollider2D:
+  m_PrefabParentObject: {fileID: 6169346, guid: 7966cd997bfa14d2fbee3b44970a31f0,
     type: 2}
   m_PrefabInternal: {fileID: 2012756317}
 --- !u!1 &1285087775
@@ -789,7 +790,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 490250, guid: 7966cd997bfa14d2fbee3b44970a31f0, type: 2}
       propertyPath: m_RootOrder
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7966cd997bfa14d2fbee3b44970a31f0, type: 2}
