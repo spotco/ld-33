@@ -125,6 +125,10 @@ public class BotBase : MonoBehaviour {
 		return members[minIdx];
 	}
 	
+	public void Msg_ReceivePass() {
+		ChangeState(BotState_ReceivePass.Instance);
+	}
+	
 	public void Awake() {
 		_FSM = new FiniteStateMachine<BotBase>();
 		_steering = GetComponent<Steering>();

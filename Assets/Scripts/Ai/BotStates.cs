@@ -288,11 +288,53 @@ public class BotState_Dribble : FSMState<BotBase> {
 				throwDir /= throwDist;
 				bot.ThrowBall(throwDir, throwDist);
 				bot.ChangeState(BotState_GoHome.Instance);
+				
+				throwTarget.Msg_ReceivePass();
 			}
 		}
 	}
 	
 	public override void Exit(BotBase bot) {
-		
+		bot.Steering.SeekOff();
+	}
+}
+
+/**
+ * 
+ */
+public class BotState_ReceivePass : FSMState<BotBase> {
+	static readonly BotState_ReceivePass instance = new BotState_ReceivePass();
+	public static BotState_ReceivePass Instance {
+		get {
+			return instance;
+		}
+	}
+	static BotState_ReceivePass() { }
+	
+	private BotState_ReceivePass() { }
+	
+	public override void Enter (BotBase bot) {
+		bot.Steering.PursuitOn();
+	}
+
+	public override void Execute (BotBase bot) {
+		if (bot.FieldPosition == FieldPosition.Defender) {
+			if (bot.GetBallOwner() == bot) {
+				bot.ChangeState(BotState_Dribble.Instance);
+				return;
+			}
+			
+			if (!bot.IsBallLoose()) {
+				bot.ChangeState(BotState_GoHome.Instance);
+				return;
+			}
+		}
+			
+		bot.Steering.CurrentTarget = bot.GetBallPosition();
+		bot.Steering.CurrentEvaderVelocity = bot.GetBallVelocity();
+	}
+	
+	public override void Exit(BotBase bot) {
+		bot.Steering.PursuitOff();
 	}
 }
