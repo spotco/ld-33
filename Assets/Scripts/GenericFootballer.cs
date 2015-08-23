@@ -126,9 +126,9 @@ public class GenericFootballer : MonoBehaviour {
 		BotBase bot = this.GetComponent<BotBase>();
 		if (bot != null) {
 			Vector3 rts = _renderer.transform.localScale;
-			if (bot.Steering.CurrentVelocity.x >= 0.0f) {
+			if (bot.Steering.CurrentVelocity.x > 0.0f) {
 				rts.x = Mathf.Abs(rts.x) * 1;
-			} else {
+			} else if (bot.Steering.CurrentVelocity.x < 0.0f) {
 				rts.x = Mathf.Abs(rts.x) * -1;
 			}
 			_renderer.transform.localScale = rts;
