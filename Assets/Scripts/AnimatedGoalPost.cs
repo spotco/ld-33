@@ -38,6 +38,7 @@ public class AnimatedGoalPost : MonoBehaviour {
 
 	}
 	void Update () {
+		if (Main.IsPaused(PauseFlags.TimeOut)) return;
 		_tongue_theta += Util.dt_scale * 0.05f;
 		_tongue_theta_2 += Util.dt_scale * 0.02f;
 		_tongue.transform.localPosition = _tongue_original_position + new Vector3(0.25f * Mathf.Sin(_tongue_theta),0.1f * Mathf.Sin(_tongue_theta_2),0);

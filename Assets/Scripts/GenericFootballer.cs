@@ -254,6 +254,7 @@ public class GenericFootballer : MonoBehaviour {
 	public float get_move_speed() { return 2.0f; }
 
 	public void sim_update_bump() {
+		_cannot_stun_ct -= Util.dt_scale;
 		for (int i = 0; i < Main.LevelController.m_playerTeamFootballers.Count; i++) {
 			GenericFootballer itr = Main.LevelController.m_playerTeamFootballers[i];
 			if (itr != this) this.check_bump_with_target(itr);
@@ -287,9 +288,16 @@ public class GenericFootballer : MonoBehaviour {
 	[SerializeField] private Vector3 _stunned_vel = Vector3.zero;
 	[SerializeField] private float _stunned_mode_ct = 0;
 	[SerializeField] private float _stunned_upwards_vel = 0;
+	private float _cannot_stun_ct = 0;
 	private void apply_bump(Vector3 vel) {
-		if (_current_mode != GenericFootballerMode.Stunned) {
+		if (_current_mode != GenericFootballerMode.Stunned && _cannot_stun_ct <= 0) {
 			if (vel.magnitude == 0) vel = new Vector3(Util.rand_range(-1,1),Util.rand_range(-1,1));
+			int testct = 0;
+			while (vel.magnitude < 0.4f && testct < 20) {
+				vel = Util.vec_scale(vel,1.1f);
+				testct++;
+			}
+			_cannot_stun_ct = Util.rand_range(30,100);
 
 			_stunned_vel = vel;
 			_stunned_mode_ct = 100;
