@@ -13,10 +13,11 @@ public class TeamState_Defend : FSMState<TeamBase> {
 	private TeamState_Defend() { }
 	
 	public override void Enter (TeamBase bot) {
-		// TODO: send players to correct spots
+		
 	}
 	
 	public override void Execute (TeamBase bot) {
+		// TODO: if we have the ball, transition to attack
 	}
 	
 	public override void Exit(TeamBase bot) {

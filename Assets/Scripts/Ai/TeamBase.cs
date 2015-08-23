@@ -24,6 +24,10 @@ public class TeamBase : MonoBehaviour {
 		_defense0 = d0;
 		_defense1 = d1;
 		
+		_keeper.FieldPosition = FieldPosition.Keeper;
+		_defense0.FieldPosition = FieldPosition.Defense;
+		_defense1.FieldPosition = FieldPosition.Defense;
+		
 		_keeper.Team = this;
 		_defense0.Team = this;
 		_defense1.Team = this;
@@ -34,8 +38,9 @@ public class TeamBase : MonoBehaviour {
 	}
 	
 	public bool AreAllPlayersHome() {
-		// TODO:
-		return _keeper.IsAtHomePosition();
+		return _keeper.IsAtHomePosition() &&
+			_defense0.IsAtHomePosition() &&
+			_defense1.IsAtHomePosition();
 	}
 	
 	public void SendPlayersHome() {

@@ -41,10 +41,9 @@ public class BotState_TendGoal : FSMState<BotBase> {
 		// if (bot->BallWithinRangeForIntercept())
 		// {
 		// bot->ChangeState(bot, InterceptBall::Instance());
-		// }
 	}
 	
 	public override void Exit(BotBase bot) {
-		// bot->Steering()->InterposeOff();
+		bot.Steering.ArriveOff();
 	}
 }

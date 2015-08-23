@@ -16,6 +16,10 @@ public class BotBase : MonoBehaviour {
 		get; set;
 	}
 	
+	public FieldPosition FieldPosition {
+		get; set;
+	}
+	
 	public Steering Steering {
 		get { return _steering; }
 	}
@@ -34,18 +38,17 @@ public class BotBase : MonoBehaviour {
 	}
 	
 	public bool IsAtHomePosition() {
-		return true;
+		return Vector3.Distance(HomePosition, this.transform.localPosition) <= AiConstants.ArriveDistance;
 	}
 	
 	public void GetGoalpostPositions(out Vector3 top, out Vector3 bottom) {
-		top = Vector3.zero;
-		bottom = Vector3.zero;
-		// top = topPost.position;
-		// bottom = bottomPost.position;
+		Main.FieldController.GetRightGoalLinePositions(out top, out bottom);
 	}
 	
 	public Vector3 GetBallPosition() {
-		return GameObject.Find("Mover").transform.position;
+		// TODO: 
+		// return Main.LevelController.m_looseBalls[0].transform.position;
+		return Main.LevelController.m_playerTeamFootballers[0].transform.position;
 	}
 	
 	public void Awake() {
@@ -59,4 +62,7 @@ public class BotBase : MonoBehaviour {
 	}
 }
 
-
+public enum FieldPosition {
+	Keeper,
+	Defense,
+}

@@ -3,7 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class FieldController : MonoBehaviour {
+	[SerializeField]
+	private Transform _rightGoalLineTop;
+	[SerializeField]
+	private Transform _rightGoalLineBottom;
+	
 	List<Vector3> _regionPositions = new List<Vector3>();
+	
+	public void GetRightGoalLinePositions(out Vector3 top, out Vector3 bottom) {
+		top = _rightGoalLineTop.position;
+		bottom = _rightGoalLineBottom.position;
+	}
 	
 	public Vector3 GetRegionPosition(int region) {
 		if (region >= _regionPositions.Count) {
@@ -15,17 +25,15 @@ public class FieldController : MonoBehaviour {
 	}
 	
 	private void Awake() {
-		BoxCollider2D[] regions = this.GetComponentsInChildren<BoxCollider2D>();
-		
-		for (int i = 0; i < regions.Length; i++) {
-			Vector3 cCenter = regions[i].offset;
-			Vector3 worldPos = regions[i].transform.TransformPoint(cCenter);
-			_regionPositions.Add(worldPos);
+		// Grid.
+		{
+			BoxCollider2D[] regions = this.transform.Find("Grid").GetComponentsInChildren<BoxCollider2D>();
+			
+			for (int i = 0; i < regions.Length; i++) {
+				Vector3 cCenter = regions[i].offset;
+				Vector3 worldPos = regions[i].transform.TransformPoint(cCenter);
+				_regionPositions.Add(worldPos);
+			}
 		}
-		
-		// for (int i = 0; i < _regionPositions.Count; i++) {
-		// 	Uzu.Dbg.DrawSphere (_regionPositions[i], 50.0f, Color.red);
-		// 	Debug.Log(_regionPositions[i]);
-		// }
 	}
 }

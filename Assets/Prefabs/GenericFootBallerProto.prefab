@@ -142,8 +142,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072323439d91b4cd99f2cd114ed40108, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  topPost: {fileID: 0}
-  bottomPost: {fileID: 0}
 --- !u!114 &11477984
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -168,6 +166,9 @@ MonoBehaviour:
   _current_mode: 0
   _id: 0
   _throw_charge_ct: 0
+  _stunned_vel: {x: 0, y: 0, z: 0}
+  _stunned_mode_ct: 0
+  _stunned_upwards_vel: 0
   _command_move_to_point: {x: 0, y: 0}
   _selected_ct: 0
 --- !u!114 &11483570
@@ -181,11 +182,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e055a0feac040078b38accf6115592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _maxSpeed: 200
-  _maxForce: 100
-  _mass: 1
+  _maxSpeed: 250
+  _maxForce: 500
+  _mass: .100000001
   _slowRadius: 100
-  _stopRadius: 50
+  _stopRadius: 10
 --- !u!212 &21225608
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -270,7 +271,27 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: _maxSpeed
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: _mass
+      value: .100000001
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: _slowRadius
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: _stopRadius
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: _maxForce
+      value: 500
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 123846}
