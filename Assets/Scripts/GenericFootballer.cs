@@ -170,7 +170,7 @@ public class GenericFootballer : MonoBehaviour {
 			
 		} else if (_current_mode == GenericFootballerMode.PlayerTeamHasBall) {
 			_has_command_move_to_point = false;
-			Vector3 delta =  Util.vec_sub(Main.LevelController.GetMousePoint(),transform.position);
+			Vector3 delta =  Util.vec_sub(Main.LevelController.GetLastMousePointInBallBounds(),transform.position);
 			Vector3 dir = delta.normalized;
 			float mag = delta.magnitude;
 			Main.LevelController.m_pathRenderer.clear_path(_id);

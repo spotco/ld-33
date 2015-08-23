@@ -5,7 +5,7 @@ using System.Collections;
 public class LooseBall : MonoBehaviour {
 
 	[SerializeField] public Vector2 _vel; 
-	[SerializeField] private float _z, _vz;
+	[SerializeField] public float _z, _vz;
 	[SerializeField] private GameObject _ball;
 	[SerializeField] private float _initial_uncatchable_ct;
 
@@ -14,7 +14,7 @@ public class LooseBall : MonoBehaviour {
 		_vel = vel;
 		_z = 0;
 		_vz = Mathf.Min(vel.magnitude * 0.25f,15);
-		_initial_uncatchable_ct = 40;
+		_initial_uncatchable_ct = 20;
 	}
 
 	private void set_ball_z(float z) {
@@ -23,8 +23,14 @@ public class LooseBall : MonoBehaviour {
 	}
 
 	public void sim_update() {
+		Vector3 pre_position = transform.position;
 		Vector2 fvel = Util.vec_scale(_vel,Util.dt_scale);
 		transform.position = Util.vec_add(transform.position,fvel);
+		if (!Main.LevelController.m_ballBounds.OverlapPoint(transform.position)) {
+			transform.position = pre_position;
+			_vel.x *= -0.15f;
+			_vel.y *= -0.15f;
+		}
 
 		_vz -= 0.05f * Util.dt_scale;
 		_z += _vz;

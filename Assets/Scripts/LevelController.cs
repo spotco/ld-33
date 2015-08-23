@@ -9,6 +9,7 @@ public class LevelController : MonoBehaviour {
 	[SerializeField] private GameObject proto_looseBall;
 	[SerializeField] private GameObject proto_mouseTarget;
 	[SerializeField] private GameObject proto_bloodParticle;
+	[SerializeField] private GameObject proto_referee;
 
 	enum LevelControllerMode {
 		GamePlay,
@@ -16,6 +17,7 @@ public class LevelController : MonoBehaviour {
 	}
 
 	[SerializeField] public BoxCollider2D m_gameBounds;
+	[SerializeField] public BoxCollider2D m_ballBounds;
 	[SerializeField] public AnimatedGoalPost m_playerGoal;
 	[SerializeField] public AnimatedGoalPost m_enemyGoal;
 
@@ -37,6 +39,8 @@ public class LevelController : MonoBehaviour {
 	
 	private TeamBase m_playerTeam;
 	private TeamBase m_enemyTeam;
+
+	private Referee m_topReferee, m_bottomReferee;
 	
 	private GameObject m_mouseTargetIcon;
 	private float m_mouseTargetIconTheta;
@@ -73,6 +77,11 @@ public class LevelController : MonoBehaviour {
 		m_currentMode = LevelControllerMode.GamePlay;
 		m_mouseTargetIcon = Util.proto_clone(proto_mouseTarget);
 		m_particles = SPParticleSystem.cons_anchor(Main.Instance._particleRoot.transform);
+
+		m_topReferee = Util.proto_clone(proto_referee).GetComponent<Referee>();
+		m_topReferee.sim_initialize(Referee.RefereeMode.Top);
+		m_bottomReferee = Util.proto_clone(proto_referee).GetComponent<Referee>();
+		m_bottomReferee.sim_initialize(Referee.RefereeMode.Bottom);
 	}
 
 	public void Update () {
@@ -107,7 +116,7 @@ public class LevelController : MonoBehaviour {
 
 			mouse_target_anim_speed = 2.0f;
 			m_mouseTargetIcon.SetActive(true);
-			Vector3 mouse_pt = this.GetMousePoint();
+			Vector3 mouse_pt = GetLastMousePointInBallBounds();
 			m_mouseTargetIcon.transform.position = mouse_pt;
 			m_mouseTargetIcon.transform.localScale = Util.valv(50.0f);
 
@@ -166,6 +175,8 @@ public class LevelController : MonoBehaviour {
 
 				}
 			}
+			m_bottomReferee.sim_update();
+			m_topReferee.sim_update();
 
 
 		} else if (m_currentMode == LevelControllerMode.Timeout) {
@@ -182,7 +193,7 @@ public class LevelController : MonoBehaviour {
 
 			Main.GameCamera.SetManualOffset(new Vector3(0,0,0));
 			Main.GameCamera.SetTargetZoom(800);
-			Vector3 mouse_pt = this.GetMousePoint();
+			Vector3 mouse_pt = GetLastMousePointInBallBounds();
 			GenericFootballer select_tar = this.IsPointTouchFootballer(mouse_pt,m_playerTeamFootballers);
 			if (select_tar != null) {
 				m_mouseTargetIcon.SetActive(false);
@@ -300,10 +311,35 @@ public class LevelController : MonoBehaviour {
 		gamePlane.Raycast(ray,out rayout);
 		return Util.vec_add(ray.origin,Util.vec_scale(ray.direction,rayout));
 	}
+
+	private Vector3 _last_mouse_point_in_ball_bounds;
+	public Vector3 GetLastMousePointInBallBounds() {
+		Vector3 mpt = this.GetMousePoint();
+		if (m_ballBounds.OverlapPoint(mpt)) {
+			_last_mouse_point_in_ball_bounds = mpt;
+		
+		} else {
+			_last_mouse_point_in_ball_bounds = closest_point_in_bounds((mpt-Main.GameCamera.GetCurrentPosition()).normalized, mpt.magnitude);
+
+		}
+		return _last_mouse_point_in_ball_bounds;
+	}
+
+	private Vector3 closest_point_in_bounds(Vector3 dir, float mag) {
+		float itr = 0.025f;
+		for (float pct = 0.0f; pct <= 1.0f; pct += itr) {
+			Vector3 ppos = Util.vec_scale(dir,mag*pct) + Main.GameCamera.GetCurrentPosition();
+			if (!m_ballBounds.OverlapPoint(ppos)) {
+				return Util.vec_scale(dir,mag*(pct-itr)) + Main.GameCamera.GetCurrentPosition();
+			}
+
+		}
+		return Util.vec_scale(dir,mag) + Main.GameCamera.GetCurrentPosition();
+	}
 	
 	private bool IsClickAndPoint(out Vector2 point) {
 		if (Input.GetMouseButtonDown(0)) {
-			point = GetMousePoint();
+			point = GetLastMousePointInBallBounds();
 			return true;
 		}
 		point = Vector2.zero;

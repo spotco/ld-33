@@ -28,7 +28,8 @@ public class Main : Uzu.Main
 	
   protected override void OnMainBegin ()
   {
-		Application.targetFrameRate = 60;
+	Application.targetFrameRate = 60;
+	Cursor.visible = false;
     _instance = (Main)Uzu.Main.Instance;
     
     // InitGraphicsSettings ();
