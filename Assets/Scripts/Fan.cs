@@ -10,10 +10,9 @@ public class Fan : MonoBehaviour {
 	
 	private float _jumpAmount;
 	private float _jumpDuration;
-	private Transform _targetTransform;
+	[SerializeField] private Transform _targetTransform;
 	
 	private void Awake() {
-		_targetTransform = transform.Find("Root");
 		
 		// _jumpAmount = Random.Range(_jumpRange.x, _jumpRange.y);
 		
