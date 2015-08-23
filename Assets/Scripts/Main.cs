@@ -22,6 +22,9 @@ public class Main : Uzu.Main
 	public static FieldController FieldController {
 		get { return _instance._fieldController; }
 	}
+	public static FSMDebugger FSMDebugger {
+		get { return _instance._fsmDebugger; }
+	}
 	
   protected override void OnMainBegin ()
   {
@@ -84,4 +87,6 @@ public class Main : Uzu.Main
 	[SerializeField]
 	private AudioController _audioController;
 	private FieldController _fieldController;
+	[SerializeField]
+	private FSMDebugger _fsmDebugger;
 }

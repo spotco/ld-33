@@ -128,6 +128,7 @@ MonoBehaviour:
   _panelManager: {fileID: 0}
   _levelController: {fileID: 11446726}
   _audioController: {fileID: 11441226}
+  _fsmDebugger: {fileID: 0}
 --- !u!114 &11446726
 MonoBehaviour:
   m_ObjectHideFlags: 1

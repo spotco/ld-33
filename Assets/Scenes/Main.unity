@@ -213,12 +213,16 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 468822, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
       propertyPath: _panelManager
       value: 
       objectReference: {fileID: 1573188531}
+    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: _fsmDebugger
+      value: 
+      objectReference: {fileID: 882577298}
     - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
       propertyPath: m_gameBounds
       value: 
@@ -412,6 +416,12 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 39ada084925074503a045ed5ee746fac, type: 2}
   m_IsPrefabParent: 0
+--- !u!114 &882577298 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 11434588, guid: 9d1f7adf3c8234a0abf14f94826b7f80,
+    type: 2}
+  m_PrefabInternal: {fileID: 1860532143}
+  m_Script: {fileID: 11500000, guid: a9ea697ee88ed46938dc85664956d716, type: 3}
 --- !u!4 &900393897 stripped
 Transform:
   m_PrefabParentObject: {fileID: 431438, guid: 33861681dfec64620a8e7c496d06dccb, type: 2}

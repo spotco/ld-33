@@ -5,11 +5,15 @@ using UnityEngine;
  * team strategy (defense, offense, etc).
  */
 public class TeamBase : MonoBehaviour {
-	private FiniteStateMachine<TeamBase> FSM;
+	private FiniteStateMachine<TeamBase> _FSM;
 	
 	private BotBase _keeper;
 	private BotBase _defense0;
 	private BotBase _defense1;
+	
+	public FiniteStateMachine<TeamBase> DBG_FSM {
+		get { return _FSM; }
+	}
 	
 	public Team Team {
 		get; set;
@@ -42,16 +46,16 @@ public class TeamBase : MonoBehaviour {
 	}
 	
 	public void ChangeState(FSMState<TeamBase> s) {
-		FSM.ChangeState(s);
+		_FSM.ChangeState(s);
 	}
 		
 	public void Awake() {
-		FSM = new FiniteStateMachine<TeamBase>();
-		FSM.Configure(this, TeamState_Wait.Instance);
+		_FSM = new FiniteStateMachine<TeamBase>();
+		_FSM.Configure(this, TeamState_Wait.Instance);
 	}
  
 	public void Update() {
-		FSM.Update();
+		_FSM.Update();
 	}
 }
 
