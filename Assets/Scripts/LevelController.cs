@@ -132,7 +132,7 @@ public class LevelController : MonoBehaviour {
 				}
 				m_currentMode = LevelControllerMode.Timeout;
 				m_timeoutSelectedFootballer = null;
-
+				Main.Pause(PauseFlags.TimeOut);
 			}
 
 			for (int i = m_looseBalls.Count-1; i >= 0; i--) {
@@ -205,6 +205,7 @@ public class LevelController : MonoBehaviour {
 					GenericFootballer itr = this.m_playerTeamFootballers[i];
 					itr.timeout_end();
 				}
+				Main.Unpause(PauseFlags.TimeOut);
 			}
 		}
 

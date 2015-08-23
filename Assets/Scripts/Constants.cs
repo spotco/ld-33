@@ -23,6 +23,7 @@ public static class PauseFlags
 	// /// Used for pausing the level/phase color change effect lerping.
 	// /// </summary>
 	// public const int LevelEffects = 1 << 4;
+	public const int TimeOut = 1 << 5;
 }
 
 public static class PanelIds {
