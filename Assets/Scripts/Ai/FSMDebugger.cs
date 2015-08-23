@@ -4,19 +4,12 @@ using UnityEngine.UI;
 
 public class FSMDebugger : MonoBehaviour {
 	[SerializeField]
-	private BotBase _bot;
-	[SerializeField]
 	private TeamBase _team;
 	
 	[SerializeField]
-	private Text _botText;
-	[SerializeField]
 	private Text _teamText;
-	
-	public BotBase Bot {
-		get { return _bot; }
-		set { _bot = value; }
-	}
+	[SerializeField]
+	private Text[] _botTexts;
 	
 	public TeamBase Team {
 		get { return _team; }
@@ -24,18 +17,19 @@ public class FSMDebugger : MonoBehaviour {
 	}
 	
 	private void Update() {
-		if (_bot != null) {
-			var fsm = _bot.DBG_FSM;
-			_botText.text = fsm.CurrentState.Name;
-		} else {
-			_botText.text = "-";
+		if (_team == null) {
+			_teamText.text = "-";
+			for (int i = 0; i < _botTexts.Length; i++) {
+				_botTexts[i].text = "-";
+			}
+			return;
 		}
 		
-		if (_team != null) {
-			var fsm = _team.DBG_FSM;
-			_teamText.text = fsm.CurrentState.Name;
-		} else {
-			_teamText.text = "-";
+		var fsm = _team.DBG_FSM;
+		_teamText.text = fsm.CurrentState.Name;
+		var members = _team.TeamMembers;
+		for (int i = 0; i < members.Count; i++) {
+			 _botTexts[i].text = members[i].DBG_FSM.CurrentState.Name;
 		}
 	}
 }

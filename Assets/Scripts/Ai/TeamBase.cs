@@ -78,8 +78,8 @@ public class TeamBase : MonoBehaviour {
 		_keeper.GoToRegion(16);
 		_defense0.GoToRegion(12);
 		_defense1.GoToRegion(14);
-		_forward0.GoToRegion(0);
-		_forward1.GoToRegion(0);
+		_forward0.GoToRegion(9);
+		_forward1.GoToRegion(11);
 	}
 	
 	public void ChangeState(FSMState<TeamBase> s) {
