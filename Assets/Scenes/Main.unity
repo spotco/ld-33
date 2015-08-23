@@ -239,6 +239,10 @@ Prefab:
       propertyPath: _path_renderer_root
       value: 
       objectReference: {fileID: 1285087775}
+    - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: proto_team
+      value: 
+      objectReference: {fileID: 122958, guid: c24fa09b9bee54ec9b33eb22f1854a46, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
   m_IsPrefabParent: 0
