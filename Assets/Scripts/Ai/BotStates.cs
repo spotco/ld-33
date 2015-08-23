@@ -74,7 +74,7 @@ public class BotState_Intercept : FSMState<BotBase> {
 	private BotState_Intercept() { }
 	
 	public override void Enter (BotBase bot) {
-		bot.Steering.SeekOn();
+		bot.Steering.PursuitOn();
 	}
 	
 	public override void Execute (BotBase bot) {
@@ -90,10 +90,11 @@ public class BotState_Intercept : FSMState<BotBase> {
 		}
 		
 		bot.Steering.CurrentTarget = bot.GetBallPosition();
+		bot.Steering.CurrentEvaderVelocity = bot.GetBallVelocity();
 	}
 	
 	public override void Exit(BotBase bot) {
-		bot.Steering.SeekOff();
+		bot.Steering.PursuitOff();
 	}
 }
 

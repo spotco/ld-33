@@ -56,6 +56,10 @@ public class BotBase : MonoBehaviour {
 		return Main.LevelController.currentBallPosition();
 	}
 	
+	public Vector3 GetBallVelocity() {
+		return Main.LevelController.currentLooseBallVelocity();
+	}
+	
 	public bool IsBallLoose() {
 		return GetBallOwner() == null;
 	}
