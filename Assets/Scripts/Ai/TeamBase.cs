@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 /**
  * Responsible for controlling members of a team, and dictating overall
@@ -11,12 +12,28 @@ public class TeamBase : MonoBehaviour {
 	private BotBase _defense0;
 	private BotBase _defense1;
 	
+	private List<BotBase> _teamMembers = new List<BotBase>();
+	
 	public FiniteStateMachine<TeamBase> DBG_FSM {
 		get { return _FSM; }
 	}
 	
 	public Team Team {
 		get; set;
+	}
+	
+	public List<BotBase> TeamMembers {
+		get { return _teamMembers; }
+	}
+	
+	public List<BotBase> GetTeamExcept(BotBase exceptBot) {
+		List<BotBase> members = new List<BotBase>();
+		for (int i = 0; i < _teamMembers.Count; i++) {
+			if (exceptBot != _teamMembers[i]) {
+				members.Add(_teamMembers[i]);
+			}
+		}
+		return members;
 	}
 	
 	public void SetPlayers(BotBase keeper, BotBase d0, BotBase d1) {
@@ -28,9 +45,14 @@ public class TeamBase : MonoBehaviour {
 		_defense0.FieldPosition = FieldPosition.Defense;
 		_defense1.FieldPosition = FieldPosition.Defense;
 		
-		_keeper.Team = this;
-		_defense0.Team = this;
-		_defense1.Team = this;
+		_teamMembers.Clear();
+		_teamMembers.Add(_keeper);
+		_teamMembers.Add(_defense0);
+		_teamMembers.Add(_defense1);
+		
+		foreach (BotBase bot in _teamMembers) {
+			bot.Team = this;
+		}
 	}
 	
 	public void StartKickoff() {

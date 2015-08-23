@@ -60,6 +60,10 @@ public class BotBase : MonoBehaviour {
 		return Main.LevelController.currentLooseBallVelocity();
 	}
 	
+	public void ThrowBall(Vector3 dir, float speed) {
+		this.GetComponent<GenericFootballer>().throw_ball(dir, speed);
+	}
+	
 	public bool IsBallLoose() {
 		return GetBallOwner() == null;
 	}
@@ -70,6 +74,20 @@ public class BotBase : MonoBehaviour {
 			return footballer.GetComponent<BotBase>();
 		}
 		return null;
+	}
+	
+	public BotBase GetClosestTeammate() {
+		var members = Team.GetTeamExcept(this);
+		float minDist = float.MaxValue;
+		int minIdx = -1;
+		for (int i = 0; i < members.Count; i++) {
+			float dist = Vector3.Distance(this.transform.position, members[i].transform.position);
+			if (dist < minDist) {
+				minDist = dist;
+				minIdx = i;
+			}
+		}
+		return members[minIdx];
 	}
 	
 	public void Awake() {

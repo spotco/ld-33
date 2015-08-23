@@ -108,13 +108,22 @@ public class BotState_PutBallBackInPlay : FSMState<BotBase> {
 	static BotState_PutBallBackInPlay() { }
 	
 	private BotState_PutBallBackInPlay() { }
-	
+		
 	public override void Enter (BotBase bot) {
 		
 	}
 	
 	public override void Execute (BotBase bot) {
+		// Throw the ball.
+		if (bot.GetBallOwner() == bot) {
+			BotBase throwTarget = bot.GetClosestTeammate();
+			Vector3 throwDir = throwTarget.transform.position - bot.transform.position;
+			float throwDist = throwDir.magnitude;
+			throwDir /= throwDist;
+			bot.ThrowBall(throwDir, throwDist);
+		}
 		
+		bot.ChangeState(BotState_GoHome.Instance);
 	}
 	
 	public override void Exit(BotBase bot) {

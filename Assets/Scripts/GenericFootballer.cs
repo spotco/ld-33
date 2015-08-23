@@ -169,13 +169,7 @@ public class GenericFootballer : MonoBehaviour {
 				
 			} else if (!Input.GetMouseButton(0) && _ball_charging) {
 				if (_throw_charge_ct > 100) {
-					
-					float vel = Mathf.Clamp(_throw_charge_ct/2000.0f * 6 + 3,3,10);
-					Main.LevelController.CreateLooseBall(
-						this.transform.position,
-						Util.vec_scale(dir,vel)
-						);
-					Main.LevelController.m_playerTeamFootballersWithBall.Remove(this);
+					throw_ball(dir, _throw_charge_ct);
 				}
 				_ball_charging = false;
 				_throw_charge_ct = 0;
@@ -213,6 +207,16 @@ public class GenericFootballer : MonoBehaviour {
 			rts.x = Mathf.Abs(rts.x) * -1;
 		}
 		_renderer.transform.localScale = rts;
+	}
+	
+	public void throw_ball(Vector3 dir, float charge_ct) {
+		float vel = Mathf.Clamp(charge_ct/2000.0f * 6 + 3,3,10);
+		Main.LevelController.CreateLooseBall(
+			this.transform.position,
+			Util.vec_scale(dir,vel)
+			);
+		Main.LevelController.m_playerTeamFootballersWithBall.Remove(this);
+		Main.LevelController.m_enemyTeamFootballersWithBall.Remove(this);
 	}
 
 	public void sim_update_bump() {
