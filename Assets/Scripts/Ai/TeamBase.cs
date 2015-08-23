@@ -23,6 +23,11 @@ public class TeamBase : MonoBehaviour {
 	public Team Team {
 		get; set;
 	}
+	public Team OtherTeam {
+		get {
+			return Team == Team.PlayerTeam ? Team.EnemyTeam : Team.PlayerTeam;
+		}
+	}
 	
 	public List<BotBase> TeamMembers {
 		get { return _teamMembers; }
@@ -36,6 +41,22 @@ public class TeamBase : MonoBehaviour {
 			}
 		}
 		return members;
+	}
+	
+	public Team GetBallTeamOwner() {
+		BotBase owner = GetBallOwner();
+		if (owner != null) {
+			return owner.Team;
+		}
+		return Team.None;
+	}
+	
+	public BotBase GetBallOwner() {
+		GenericFootballer footballer = Main.LevelController.nullableCurrentFootballerWithBall();
+		if (footballer != null) {
+			return footballer.GetComponent<BotBase>();
+		}
+		return null;
 	}
 	
 	public void SetPlayers(BotBase keeper, BotBase d0, BotBase d1, BotBase f0, BotBase f1) {

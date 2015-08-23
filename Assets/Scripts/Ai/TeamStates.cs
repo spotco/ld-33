@@ -12,15 +12,17 @@ public class TeamState_Attack : FSMState<TeamBase> {
 	
 	private TeamState_Attack() { }
 	
-	public override void Enter (TeamBase bot) {
+	public override void Enter (TeamBase team) {
 		
 	}
 	
-	public override void Execute (TeamBase bot) {
-		// TODO: if we lose the ball, transition to defense
+	public override void Execute (TeamBase team) {
+		if (team.GetBallTeamOwner() == team.OtherTeam) {
+			team.ChangeState(TeamState_Defend.Instance);
+		}
 	}
 	
-	public override void Exit(TeamBase bot) {
+	public override void Exit(TeamBase team) {
 	}
 }
 
@@ -39,15 +41,17 @@ public class TeamState_Defend : FSMState<TeamBase> {
 	
 	private TeamState_Defend() { }
 	
-	public override void Enter (TeamBase bot) {
+	public override void Enter (TeamBase team) {
 		
 	}
 	
-	public override void Execute (TeamBase bot) {
-		// TODO: if we have the ball, transition to attack
+	public override void Execute (TeamBase team) {
+		if (team.GetBallTeamOwner() == team.Team) {
+			team.ChangeState(TeamState_Attack.Instance);
+		}
 	}
 	
-	public override void Exit(TeamBase bot) {
+	public override void Exit(TeamBase team) {
 	}
 }
 
