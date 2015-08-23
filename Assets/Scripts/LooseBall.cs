@@ -43,7 +43,7 @@ public class LooseBall : MonoBehaviour {
 		this.set_ball_z(_z);
 
 		this._initial_uncatchable_ct -= Util.dt_scale;
-		if (this._initial_uncatchable_ct <= 0) {
+		if (this._initial_uncatchable_ct <= 0 && _z < 50) {
 			for (int i = 0; i < Main.LevelController.m_playerTeamFootballers.Count; i++) {
 				GenericFootballer itr = Main.LevelController.m_playerTeamFootballers[i];
 				if (itr.can_pickup_ball() && itr.collider_contains(this.GetComponent<CircleCollider2D>())) {

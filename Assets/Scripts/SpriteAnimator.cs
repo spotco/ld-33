@@ -31,6 +31,7 @@ public class SpriteAnimator : MonoBehaviour {
 	}
 
 	void Update () {
+		if (Main.IsPaused(PauseFlags.TimeOut)) return;
 		if (!this._anim_name_to_anim.ContainsKey(this._current_anim_name)) return;
 		SpriteAnimator_Animation animation = this._anim_name_to_anim[this._current_anim_name];
 		if (_i >= animation._frames.Count) _i = 0;
