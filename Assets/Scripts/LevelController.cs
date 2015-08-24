@@ -63,7 +63,6 @@ public class LevelController : MonoBehaviour {
 			m_playerTeam.SetPlayers(keeper, d0, d1, f0, f1);
 		}
 
-		/*
 		{
 			BotBase keeper = this.CreateFootballer(m_enemyTeam, new Vector3(900,-400),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.EnemyGoalie));
 			BotBase d0 = this.CreateFootballer(m_enemyTeam, new Vector3(778,-277),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Enemy3));
@@ -77,7 +76,6 @@ public class LevelController : MonoBehaviour {
 				Main.FSMDebugger.Team = m_enemyTeam;
 			}
 		}
-		*/
 
 		
 		m_playerTeamFootballersWithBall.Add(m_playerTeamFootballers[0]);

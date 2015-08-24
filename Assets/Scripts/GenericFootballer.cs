@@ -5,11 +5,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CircleCollider2D))]
 public class GenericFootballer : MonoBehaviour {
 
-	[SerializeField] private Sprite _image_noball;
-	[SerializeField] private Sprite _image_holding_ball;
-	[SerializeField] private Sprite _image_enemy_noball;
-	[SerializeField] private Sprite _image_enemy_holding_ball;
-
 	[SerializeField] private SpriteRenderer _renderer;
 	[SerializeField] private float _waitdelay;
 	public void set_wait_delay(float tar) {

@@ -9,6 +9,7 @@ public class LooseBall : MonoBehaviour {
 	[SerializeField] private GameObject _ball;
 	[SerializeField] private float _initial_uncatchable_ct;
 	[SerializeField] private SpriteRenderer _renderer;
+	private SpriteAnimator _animator;
 
 	public void sim_initialize(Vector2 position, Vector2 vel) {
 		this.transform.position = position;
@@ -16,6 +17,12 @@ public class LooseBall : MonoBehaviour {
 		_z = 0;
 		_vz = Mathf.Min(vel.magnitude * 0.25f,15);
 		_initial_uncatchable_ct = 20;
+		_animator = this.gameObject.AddComponent<SpriteAnimator>();
+		_animator.add_anim(
+			"ball",SpriteResourceDB.get_ball_anim(),5
+		);
+		_animator._tar = _renderer;
+		_animator.play_anim("ball");
 	}
 
 	public void Update() {

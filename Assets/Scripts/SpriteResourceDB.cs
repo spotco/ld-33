@@ -12,6 +12,7 @@ public enum FootballerResourceKey {
 public class SpriteResourceDB {
 
 	private static Dictionary<FootballerResourceKey,FootballerAnimResource> _footballer_key_to_anim_resc;
+	private static List<Sprite> _ball_anim;
 
 	private static void Initialize() {
 		_footballer_key_to_anim_resc = new Dictionary<FootballerResourceKey, FootballerAnimResource>();
@@ -238,12 +239,22 @@ public class SpriteResourceDB {
 			}
 		};
 		_footballer_key_to_anim_resc[FootballerResourceKey.EnemyGoalie].load_keys_to_frames();
+
+		_ball_anim = new List<Sprite>();
+		FootballerAnimResource.keys_to_frames(new List<string>(){
+			"Ball/Ball__000",
+			"Ball/Ball__001",
+			"Ball/Ball__002",
+			"Ball/Ball__003"
+		},_ball_anim);
 	}
 
 	public static FootballerAnimResource get_footballer_anim_resource(FootballerResourceKey key) {
 		if (_footballer_key_to_anim_resc == null) SpriteResourceDB.Initialize();
 		return _footballer_key_to_anim_resc[key];
 	}
+
+	public static List<Sprite> get_ball_anim() { return _ball_anim; }
 
 }
 
@@ -271,7 +282,7 @@ public class FootballerAnimResource {
 		this.keys_to_frames(_windup_resc_keys,_windup_frames);
 	}
 
-	private void keys_to_frames(List<string> keys, List<Sprite> frames) {
+	public static void keys_to_frames(List<string> keys, List<Sprite> frames) {
 		for (int i = 0; i < keys.Count; i++) {
 			string itr_key = keys[i];
 			Sprite val = Resources.Load<Sprite>(itr_key);
