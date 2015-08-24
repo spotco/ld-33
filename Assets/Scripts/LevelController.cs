@@ -120,7 +120,6 @@ public class LevelController : MonoBehaviour {
 			Main.FSMDebugger.Team = m_enemyTeam;
 		}
 		
-		m_playerTeamFootballersWithBall.Add(m_playerTeamFootballers[0]);
 		if (m_mouseTargetIcon == null) {
 			m_mouseTargetIcon = Util.proto_clone(proto_mouseTarget);
 		}
@@ -173,6 +172,11 @@ public class LevelController : MonoBehaviour {
 			});
 			
 			m_matchOpeningAnimIds.Add(animId);
+		}
+		
+		{
+			m_topReferee.transform.position = Main.FieldController.GetFieldCenter();
+			CreateLooseBall(m_topReferee.transform.position, Vector3.zero);
 		}
 	}
 	
@@ -394,6 +398,16 @@ public class LevelController : MonoBehaviour {
 			if (m_matchOpeningAnimIds.Count == 0) {
 				m_currentMode = LevelControllerMode.GamePlay;
 				m_mouseTargetIcon.SetActive(true);
+				
+				// throw it in
+				if (m_looseBalls.Count > 0) {
+					LooseBall lb = m_looseBalls[0];
+					Vector3 throwDir = m_playerTeamFootballers[0].transform.position - lb.transform.position;
+					throwDir.Normalize();
+					
+					lb.sim_initialize(lb.transform.position, throwDir * 4.0f);
+				}
+				
 				m_enemyTeam.StartMatch();
 			}
 		}
