@@ -3,9 +3,10 @@ using System.Collections;
 
 public class Referee : MonoBehaviour {
 
-	[SerializeField] public GameObject m_RefereeTopStart;
+	[SerializeField] public GameObject m_center;
 	[SerializeField] public GameObject m_RefereeTopBase;
-	[SerializeField] public GameObject m_RefereeBottomStart;
+	[SerializeField] public GameObject m_leftGoalLine;
+	[SerializeField] public GameObject m_rightGoalLine;
 	[SerializeField] public GameObject m_RefereeBottomBase;
 
 	[SerializeField] private SpriteRenderer _renderer;
@@ -15,7 +16,7 @@ public class Referee : MonoBehaviour {
 		Bottom
 	}
 	public RefereeMode _self_mode;
-	private Vector3 _startpos,_basepos;
+	private Vector3 _center,_basepos,_left_goal_line,_right_goal_line;
 
 	public void Update() {
 		_renderer.sortingOrder = (int)(-transform.position.y * 100);	
@@ -24,10 +25,14 @@ public class Referee : MonoBehaviour {
 	public void sim_initialize(RefereeMode mode) {
 		_self_mode = mode;
 		if (_self_mode == RefereeMode.Bottom) {
-			_startpos = m_RefereeBottomStart.transform.position;
+			_center = m_center.transform.position;
+			_left_goal_line = m_leftGoalLine.transform.position;
+			_right_goal_line = m_rightGoalLine.transform.position;
 			_basepos = m_RefereeBottomBase.transform.position;
 		} else {
-			_startpos = m_RefereeTopStart.transform.position;
+			_center = m_center.transform.position;
+			_left_goal_line = m_leftGoalLine.transform.position;
+			_right_goal_line = m_rightGoalLine.transform.position;
 			_basepos = m_RefereeTopBase.transform.position;
 		}
 		this.transform.position = _basepos;
@@ -40,13 +45,18 @@ public class Referee : MonoBehaviour {
 		Vector3 current_ball_pos = Main.LevelController.currentBallPosition();
 		Vector3 target_pos = transform.position;
 		if (current_ball_pos.magnitude != 0) {
-			if (_self_mode == RefereeMode.Bottom && current_ball_pos.y < _basepos.y) {
-				target_pos = current_ball_pos;
-			} else if (_self_mode == RefereeMode.Top && current_ball_pos.y > _basepos.y) {
-				target_pos = current_ball_pos;
+			if (!Main.LevelController.m_gameBounds.OverlapPoint(current_ball_pos)) {
+				if (_self_mode == RefereeMode.Bottom && current_ball_pos.y < _center.y) {
+					target_pos = current_ball_pos;
+				} else if (_self_mode == RefereeMode.Top && current_ball_pos.y > _center.y) {
+					target_pos = current_ball_pos;
+				} else {
+					target_pos = new Vector3(current_ball_pos.x,_basepos.y,_basepos.z);
+				}
 			} else {
-				target_pos = new Vector3(current_ball_pos.x,_basepos.y,_basepos.z);
+				target_pos = new Vector3(current_ball_pos.x,_basepos.y + (_self_mode == RefereeMode.Top?40:-40),_basepos.z);
 			}
+
 		}
 		float speed = _movespeed * Util.dt_scale;
 		Vector3 delta =  Util.vec_sub(target_pos,transform.position);
@@ -65,9 +75,28 @@ public class Referee : MonoBehaviour {
 				itr._vz = 3;
 				itr._z = 0;
 				if (_self_mode == RefereeMode.Top) {
-					itr._vel = Util.vec_scale((new Vector2(Util.rand_range(-1,1),-1)).normalized,4);
+					if (itr.transform.position.x < _left_goal_line.x) {
+						itr._vel = Util.vec_scale((new Vector2(1,Util.rand_range(-0.15f,0))).normalized,4);
+
+					} else if (itr.transform.position.x > _right_goal_line.x) {
+						itr._vel = Util.vec_scale((new Vector2(-1,Util.rand_range(-0.15f,0))).normalized,4);
+
+					} else {
+						itr._vel = Util.vec_scale((new Vector2(Util.rand_range(-1,1),-1)).normalized,4);
+					}
+
+
 				} else {
-					itr._vel = Util.vec_scale((new Vector2(Util.rand_range(-1,1),1)).normalized,4);
+					if (itr.transform.position.x < _left_goal_line.x) {
+						itr._vel = Util.vec_scale((new Vector2(1,Util.rand_range(0,0.15f))).normalized,4);
+
+					} else if (itr.transform.position.x > _right_goal_line.x) {
+						itr._vel = Util.vec_scale((new Vector2(-1,Util.rand_range(0,0.15f))).normalized,4);
+
+					} else {
+						itr._vel = Util.vec_scale((new Vector2(Util.rand_range(-1,1),1)).normalized,4);
+					}
+
 				}
 
 			}

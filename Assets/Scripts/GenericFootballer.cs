@@ -270,7 +270,14 @@ public class GenericFootballer : MonoBehaviour {
 		}
 		
 		Vector3 rts = _renderer.transform.localScale;
-		if (transform.position.x > last_pos.x) {
+		if (Main.LevelController.footballer_has_ball(this) && _ball_charging) {
+			if (Main.LevelController.GetLastMousePointInBallBounds().x > transform.position.x) {
+				rts.x = Mathf.Abs(rts.x) * 1;
+			} else {
+				rts.x = Mathf.Abs(rts.x) * -1;
+			}
+
+		} else if (transform.position.x > last_pos.x) {
 			rts.x = Mathf.Abs(rts.x) * 1;
 		} else if (transform.position.x < last_pos.x) {
 			rts.x = Mathf.Abs(rts.x) * -1;
