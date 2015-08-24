@@ -73,11 +73,33 @@ public class LevelController : MonoBehaviour {
 		_player_team_score = 3;
 		_enemy_team_score = 2;
 		_quarter_display = "1ST";
-
+		
 		if (CurrentDifficulty == Difficulty.Easy) {
-			
+			{
+				int[] regions = { 7, 6, 8 };
+				FootballerResourceKey[] keys = { FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1 };
+				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender };
+				SpawnTeam(7, m_playerTeam, regions, keys, fps);
+			}
+			{
+				int[] regions = { 16, 12, 14 };
+				FootballerResourceKey[] keys = { FootballerResourceKey.EnemyGoalie, FootballerResourceKey.Enemy3, FootballerResourceKey.Enemy3 };
+				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender };
+				SpawnTeam(10, m_enemyTeam, regions, keys, fps);
+			}
 		} else if (CurrentDifficulty == Difficulty.Normal) {
-			
+			{
+				int[] regions = { 7, 3, 4, 5 };
+				FootballerResourceKey[] keys = { FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1 };
+				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender, FieldPosition.Attacker };
+				SpawnTeam(7, m_playerTeam, regions, keys, fps);
+			}
+			{
+				int[] regions = { 16, 12, 14, 13 };
+				FootballerResourceKey[] keys = { FootballerResourceKey.EnemyGoalie, FootballerResourceKey.Enemy3, FootballerResourceKey.Enemy3, FootballerResourceKey.Enemy2 };
+				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender, FieldPosition.Attacker };
+				SpawnTeam(10, m_enemyTeam, regions, keys, fps);
+			}
 		} else {
 			{
 				int[] regions = { 7, 3, 5, 6, 8 };
