@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 public class LevelController : MonoBehaviour {
 
@@ -11,7 +12,7 @@ public class LevelController : MonoBehaviour {
 	[SerializeField] private GameObject proto_bloodParticle;
 	[SerializeField] private GameObject proto_referee;
 
-	enum LevelControllerMode {
+	public enum LevelControllerMode {
 		GamePlay,
 		Timeout
 	}
@@ -36,7 +37,7 @@ public class LevelController : MonoBehaviour {
 
 	public SPParticleSystem m_particles;
 
-	private LevelControllerMode m_currentMode;
+	public LevelControllerMode m_currentMode;
 	
 	private TeamBase m_playerTeam;
 	private TeamBase m_enemyTeam;
@@ -53,7 +54,10 @@ public class LevelController : MonoBehaviour {
 		
 		m_playerTeam = this.CreateTeam(Team.PlayerTeam);
 		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
-		
+
+		this.set_time_remaining_seconds(30);
+		_player_team_score = 3;
+		_enemy_team_score = 2;
 		{
 			BotBase keeper = this.CreateFootballer(m_playerTeam, new Vector3(0,0),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
 			BotBase d0 = this.CreateFootballer(m_playerTeam, new Vector3(-300,-300),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
@@ -144,6 +148,7 @@ public class LevelController : MonoBehaviour {
 		Util.dt_scale = dt_scale;
 
 		if (m_currentMode == LevelControllerMode.GamePlay) {
+			_time_remaining -= TimeSpan.FromSeconds(Time.deltaTime).Ticks;
 			m_particles.i_update(this);
 			if (m_playerTeamFootballersWithBall.Count > 0) {
 				Main.GameCamera.SetTargetPos(m_playerTeamFootballersWithBall[0].transform.position);
@@ -294,14 +299,6 @@ public class LevelController : MonoBehaviour {
 
 	}
 
-	private void enemy_goal_score() {
-		Debug.Log("ENEMY GOAL");
-	}
-
-	private void player_goal_score() {
-		Debug.Log ("PLAYER GOAL");
-	}
-	
 	private BotBase _prev_ball_owner;
 
 	public void CreateLooseBall(Vector2 start, Vector2 vel) {
@@ -467,6 +464,32 @@ public class LevelController : MonoBehaviour {
 		}
 		return Vector3.zero;
 	}
+
+	private void enemy_goal_score() {
+		_enemy_team_score++;
+	}
+	
+	private void player_goal_score() {
+		_player_team_score++;
+	}
+
+	public void set_time_remaining_seconds(int seconds) {
+		TimeSpan ticks = new TimeSpan(0,0,0,seconds);
+		_time_remaining = ticks.Ticks;
+	}
+
+	private void sim_update_time() {
+
+	}
+
+	public string get_time_remaining_formatted() {
+		TimeSpan ts = TimeSpan.FromTicks(_time_remaining);
+		return  string.Format(@"{0:0}:{1:00}:{2:000}",ts.Minutes,ts.Seconds,ts.Milliseconds);
+	}
+
+	public int _player_team_score = 0;
+	public int _enemy_team_score = 0;
+	public long _time_remaining = 0;
 }
 
 public enum Team {
