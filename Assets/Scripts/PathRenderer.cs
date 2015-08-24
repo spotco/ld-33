@@ -182,6 +182,13 @@ public class PathRenderer : MonoBehaviour {
 		_id_to_objs.clear(id);
 	}
 	
+	public void clear_paths() {
+		var keys = _id_to_objs.keys();
+		foreach (var key in keys) {
+			clear_path(key);
+		}
+	}
+	
 	private Dictionary<int, float> _id_to_theta = new Dictionary<int, float>();
 	public void Update() {
 		foreach(int id in _id_to_objs.keys()) {

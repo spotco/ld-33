@@ -45,7 +45,10 @@ public class LevelController : MonoBehaviour {
 	
 	private GameObject m_mouseTargetIcon;
 	private float m_mouseTargetIconTheta;
+		
 	public void StartLevel() {
+		ResetLevel();
+		
 		m_pathRenderer = this.GetComponent<PathRenderer>();
 		
 		m_playerTeam = this.CreateTeam(Team.PlayerTeam);
@@ -76,13 +79,60 @@ public class LevelController : MonoBehaviour {
 		
 		m_playerTeamFootballersWithBall.Add(m_playerTeamFootballers[0]);
 		m_currentMode = LevelControllerMode.GamePlay;
-		m_mouseTargetIcon = Util.proto_clone(proto_mouseTarget);
-		m_particles = SPParticleSystem.cons_anchor(Main.Instance._particleRoot.transform);
-
-		m_topReferee = Util.proto_clone(proto_referee).GetComponent<Referee>();
+		if (m_mouseTargetIcon == null) {
+			m_mouseTargetIcon = Util.proto_clone(proto_mouseTarget);
+		}
+		if (m_particles == null) {
+			m_particles = SPParticleSystem.cons_anchor(Main.Instance._particleRoot.transform);
+		}
+		
+		if (m_topReferee == null) {
+			m_topReferee = Util.proto_clone(proto_referee).GetComponent<Referee>();
+			m_bottomReferee = Util.proto_clone(proto_referee).GetComponent<Referee>();
+		}
 		m_topReferee.sim_initialize(Referee.RefereeMode.Top);
-		m_bottomReferee = Util.proto_clone(proto_referee).GetComponent<Referee>();
 		m_bottomReferee.sim_initialize(Referee.RefereeMode.Bottom);
+	}
+	
+	private void ResetLevel() {
+		if (m_pathRenderer != null) {
+			m_pathRenderer.clear_paths();
+		}
+		
+		if (m_playerTeam != null) {
+			TeamBase team = m_playerTeam.GetComponent<TeamBase>();
+			foreach (BotBase member in team.TeamMembers) {
+				GameObject.Destroy(member.gameObject);
+			}
+			GameObject.Destroy(m_playerTeam.gameObject);
+		}
+		
+		if (m_enemyTeam != null) {
+			TeamBase team = m_enemyTeam.GetComponent<TeamBase>();
+			foreach (BotBase member in team.TeamMembers) {
+				GameObject.Destroy(member.gameObject);
+			}
+			GameObject.Destroy(m_enemyTeam.gameObject);
+		}
+		
+		if (m_looseBalls != null) {
+			for (int i = 0; i < m_looseBalls.Count; i++) {
+				GameObject.Destroy(m_looseBalls[i].gameObject);
+			}
+			m_looseBalls.Clear();
+		}
+		
+		m_playerTeamFootballers.Clear();
+		m_enemyTeamFootballers.Clear();
+		
+		m_playerTeamFootballersWithBall.Clear();
+		m_enemyTeamFootballersWithBall.Clear();
+		
+		// Memory cleanup.
+		{
+			System.GC.Collect();
+			Resources.UnloadUnusedAssets();
+		}
 	}
 
 	public void Update () {
@@ -423,3 +473,4 @@ public enum Team {
 	EnemyTeam,
 	None
 }
+
