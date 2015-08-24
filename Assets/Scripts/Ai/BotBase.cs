@@ -48,8 +48,7 @@ public class BotBase : MonoBehaviour {
 		get; set;
 	}
 	
-	public void GoToRegion(int region) {
-		HomePosition = Main.FieldController.GetRegionPosition(region);
+	public void Msg_GoHome() {
 		ChangeState(BotState_GoHome.Instance);
 	}
 	

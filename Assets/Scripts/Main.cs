@@ -46,7 +46,9 @@ public class Main : Uzu.Main
   
   protected override void OnMainBegin2 ()
   {
-		Main.LevelController.CurrentDifficulty = Difficulty.Hard;
+		Main.LevelController.CurrentDifficulty = Difficulty.Easy;
+		// Main.LevelController.CurrentDifficulty = Difficulty.Normal;
+		// Main.LevelController.CurrentDifficulty = Difficulty.Hard;
 		
     // State initialization.
     {

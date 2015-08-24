@@ -64,6 +64,10 @@ public class TeamBase : MonoBehaviour {
 	
 	public void StartMatch() {
 		ChangeState(TeamState_Defend.Instance);
+		
+		foreach (BotBase bot in this.TeamMembers) {
+			bot.Msg_GoHome();
+		}
 	}
 	
 	/*
