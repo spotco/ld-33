@@ -29,6 +29,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _MNM_logo: {fileID: 0}
+  _zoomexit_target: {fileID: 0}
+  _zoomexit_start: {fileID: 0}
+  _camera_fade: {fileID: 0}
 --- !u!222 &22240064
 CanvasRenderer:
   m_ObjectHideFlags: 1
