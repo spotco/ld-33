@@ -28,6 +28,7 @@ public class ChatManager : MonoBehaviour {
 
 	public void clear_messages() {
 		_messages.Clear();
+		_ids.Clear();
 		_text_scroll.clear();
 		this.set_img_alpha(0);
 		this._img_tar_alpha = 0;

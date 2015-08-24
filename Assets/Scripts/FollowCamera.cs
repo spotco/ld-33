@@ -35,7 +35,8 @@ public class FollowCamera : MonoBehaviour {
 	public Vector3 GetCurrentPosition() {
 		return _cachedPosition + _manualOffset;
 	}
-	
+
+	Vector3 _start_pos;
 	void Awake() {
 		_offset_dir = transform.localPosition.normalized;
 		_zoom = _target_zoom = transform.localPosition.magnitude;
@@ -43,6 +44,19 @@ public class FollowCamera : MonoBehaviour {
 		_cachedCamera = this.GetComponent<Camera>();
 		_currentTargetPos = this.transform.localPosition;
 		_manualOffset = Vector3.zero;
+		_start_pos = this.transform.position;
+	}
+
+	public void reset() {
+		this.transform.position = _start_pos;
+
+		_offset_dir = transform.localPosition.normalized;
+		_zoom = _target_zoom = transform.localPosition.magnitude;
+		_cachedPosition = Vector3.zero;
+		_cachedCamera = this.GetComponent<Camera>();
+		_currentTargetPos = this.transform.localPosition;
+		_manualOffset = Vector3.zero;
+		_start_pos = this.transform.position;
 	}
 	
 	void LateUpdate () {

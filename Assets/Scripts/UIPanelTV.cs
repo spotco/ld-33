@@ -16,6 +16,7 @@ public class UIPanelTV : Uzu.UiPanel {
 	}
 
 	public override void OnEnter(Uzu.PanelEnterContext context) {
+		Main.AudioController.PlayBgm(AudioClipIds.MenuBgm);
 		gameObject.SetActive(true);
 		Main.GameCamera.gameObject.SetActive(false);
 		Main.Instance._tvCamera.gameObject.SetActive(true);
@@ -26,6 +27,7 @@ public class UIPanelTV : Uzu.UiPanel {
 		_camera_fade.set_alpha(0);
 		_camera_fade.set_target_alpha(0);
 
+		_chats.clear_messages();
 		if (Main._current_repeat_reason == RepeatReason.None) {
 			if (Main._current_level == GameLevel.Level1) {
 				_chats.push_message("Welcome back to Monday Night Monsters!",2);
@@ -48,12 +50,23 @@ public class UIPanelTV : Uzu.UiPanel {
 				_chats.push_message("The score's tied, with three minutes on the clock.",2);
 				_chats.push_message("Can the Blues end the half on a strong note?",2);
 				_chats.push_message("(You've got three minutes to score a goal.)",2);
-				_chats.push_message("(You've got three minutes to score a goal.)",2);
-				_chats.push_message("The players ",2);
+				_chats.push_message("The players are back on the field. Let's watch.",2);
+
+			} else if (Main._current_level == GameLevel.Level3) {
+				_chats.push_message("Who would have guessed? It's down to the final two minutes...",2);
+				_chats.push_message("And both teams are in a dead heat.",2);
+				_chats.push_message("Can the hometown favorites, the Blues, pull through?",2);
+				_chats.push_message("(Time to pull out all the stops.)",1);
+				_chats.push_message("The players are back on the field. Let's watch.",2);
 
 			} else {
-
+				_chats.push_message("And as expected, the hometown heroes...",2);
+				_chats.push_message("Pull through and win in dramatic fashon!",2);
+				_chats.push_message("Tune in next week for more Monday Night Monsters!",2);
+				_chats.push_message("And coming up next...Ludum Dare?",2);
+				_chats.push_message("(Thanks for playing!)",1);
 			}
+
 		} else {
 			if (Main._current_repeat_reason == RepeatReason.ScoredOn) {
 				_chats.push_message("What a shock! The Reds broke away and scored last minute!",2);
@@ -110,9 +123,27 @@ public class UIPanelTV : Uzu.UiPanel {
 			_anim_t += Util.dt_scale * 0.05f;
 			Main.Instance._tvCamera.transform.position = Vector3.Lerp(_zoomexit_start.transform.position,_zoomexit_target.transform.position,_anim_t);
 			if (_anim_t >= 1) {
-				Main.PanelManager.ChangeCurrentPanel(PanelIds.Game);
-				Main.LevelController.CurrentDifficulty = Difficulty.Normal;
-				Main.LevelController.StartLevel(LevelController.StartMode.Sequence);
+				if (Main._current_level == GameLevel.Level1) {
+					Main.PanelManager.ChangeCurrentPanel(PanelIds.Game);
+					Main.LevelController.CurrentDifficulty = Difficulty.Easy;
+					Main.LevelController.StartLevel(LevelController.StartMode.Sequence);
+					UiPanelGame.inst.show_popup_message(0);
+
+				} else if (Main._current_level == GameLevel.Level2) {
+					Main.PanelManager.ChangeCurrentPanel(PanelIds.Game);
+					Main.LevelController.CurrentDifficulty = Difficulty.Normal;
+					Main.LevelController.StartLevel(LevelController.StartMode.Sequence);
+					UiPanelGame.inst.show_popup_message(0);
+
+				} else if (Main._current_level == GameLevel.Level3) {
+					Main.PanelManager.ChangeCurrentPanel(PanelIds.Game);
+					Main.LevelController.CurrentDifficulty = Difficulty.Hard;
+					Main.LevelController.StartLevel(LevelController.StartMode.Sequence);
+					UiPanelGame.inst.show_popup_message(0);
+				} else {
+					Main._current_level = GameLevel.Level1;
+					Main.PanelManager.ChangeCurrentPanel(PanelIds.Tv);
+				}
 
 			}
 		}

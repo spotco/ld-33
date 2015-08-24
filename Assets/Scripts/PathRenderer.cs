@@ -110,6 +110,13 @@ public class Util {
 		return cp0 * p0 + cp1 * p1 + cp2 * p2 + cp3 * p3;
 	}
 
+	public static Vector2 bezier_val_for_t(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, float t) {
+		return new Vector2(
+			bezier_val_for_t(p0.x,p1.x,p2.x,p3.x,t),
+			bezier_val_for_t(p0.y,p1.y,p2.y,p3.y,t)
+		);
+	}
+
 	public static Vector3 bezier_val_for_t(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t) {
 		return new Vector3(
 			bezier_val_for_t(p0.x,p1.x,p2.x,p3.x,t),

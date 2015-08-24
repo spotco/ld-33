@@ -15,7 +15,8 @@ public class LevelController : MonoBehaviour {
 	public enum LevelControllerMode {
 		Opening,
 		GamePlay,
-		Timeout
+		Timeout,
+		GoalZoomOut
 	}
 	
 	public enum StartMode {
@@ -65,7 +66,7 @@ public class LevelController : MonoBehaviour {
 		
 	public void StartLevel(StartMode startMode = StartMode.Sequence) {
 		ResetLevel();
-		
+		_last_mouse_point_in_ball_bounds = Vector3.zero;
 		Debug.Log("Start level: " + CurrentDifficulty);
 		
 		m_pathRenderer = this.GetComponent<PathRenderer>();
@@ -111,7 +112,7 @@ public class LevelController : MonoBehaviour {
 				SpawnTeam(10, m_enemyTeam, regions, keys, fps);
 			}
 		} else {
-			this.set_time_remaining_seconds(150);
+			this.set_time_remaining_seconds(120);
 			_player_team_score = 4;
 			_enemy_team_score = 4;
 			_quarter_display = "4TH";
@@ -263,6 +264,7 @@ public class LevelController : MonoBehaviour {
 			System.GC.Collect();
 			Resources.UnloadUnusedAssets();
 		}
+		Main.GameCamera.reset();
 	}
 	
 	private void SpawnTeam(int centerRegion, TeamBase team,
@@ -284,11 +286,28 @@ public class LevelController : MonoBehaviour {
 
 	public void Update () {
 		if (Main.PanelManager.CurrentPanelId != PanelIds.Game) return;
+			
 
 		float mouse_target_anim_speed = 0.3f;
+		if (m_currentMode == LevelControllerMode.GoalZoomOut) {
+			UiPanelGame.inst._fadein.set_target_alpha(1);
+			Main.GameCamera.SetTargetPos(_goalzoomoutfocuspos);
+			Main.GameCamera.SetTargetZoom(300);
+			if (UiPanelGame.inst._fadein.is_transition_finished()) {
+				this.ResetLevel();
+				Main.PanelManager.ChangeCurrentPanel(PanelIds.Tv);
+			}
 
-		if (m_currentMode == LevelControllerMode.GamePlay) {
+		} else if (m_currentMode == LevelControllerMode.GamePlay) {
 			_time_remaining = Math.Max(0,_time_remaining-TimeSpan.FromSeconds(Time.deltaTime).Ticks);
+			if (_time_remaining <= 0) {
+				m_currentMode = LevelControllerMode.GoalZoomOut;
+				
+				Main._current_repeat_reason = RepeatReason.Timeout;
+				UiPanelGame.inst.show_popup_message(2);
+				_goalzoomoutfocuspos = Main.GameCamera.GetCurrentPosition();
+				return;
+			}
 			m_particles.i_update(this);
 			if (m_playerTeamFootballersWithBall.Count > 0) {
 				Main.GameCamera.SetTargetPos(m_playerTeamFootballersWithBall[0].transform.position);
@@ -358,17 +377,18 @@ public class LevelController : MonoBehaviour {
 				if (m_enemyGoal.box_collider().OverlapPoint(itr.transform.position)) {
 					this.blood_anim_at(itr.transform.position);
 					m_looseBalls.Remove(itr);
+					this.enemy_goal_score(itr.transform.position);
 					Destroy(itr.gameObject);
 					m_enemyGoal.play_eat_anim(40);
-					this.enemy_goal_score();
+
 
 				}
 				if (m_playerGoal.box_collider().OverlapPoint(itr.transform.position)) {
 					this.blood_anim_at(itr.transform.position);
 					m_looseBalls.Remove(itr);
+					this.player_goal_score(itr.transform.position);
 					Destroy(itr.gameObject);
 					m_playerGoal.play_eat_anim(40);
-					this.player_goal_score();
 
 				}
 			}
@@ -435,6 +455,14 @@ public class LevelController : MonoBehaviour {
 				Main.Unpause(PauseFlags.TimeOut);
 			}
 		} else if (m_currentMode == LevelControllerMode.Opening) {
+			mouse_target_anim_speed = 2.0f;
+			m_mouseTargetIcon.SetActive(true);
+			_last_mouse_point_in_ball_bounds = new Vector3(200,200,0); //i dont even
+			Vector3 mouse_pt = GetLastMousePointInBallBounds();
+			m_mouseTargetIcon.transform.position = mouse_pt;
+			m_mouseTargetIcon.transform.localScale = Util.valv(50.0f);
+
+
 			if (m_matchOpeningAnimIds.Count == 0) {
 				m_currentMode = LevelControllerMode.GamePlay;
 				m_mouseTargetIcon.SetActive(true);
@@ -545,7 +573,7 @@ public class LevelController : MonoBehaviour {
 		return Util.vec_add(ray.origin,Util.vec_scale(ray.direction,rayout));
 	}
 
-	private Vector3 _last_mouse_point_in_ball_bounds;
+	public Vector3 _last_mouse_point_in_ball_bounds;
 	public Vector3 GetLastMousePointInBallBounds() {
 		Vector3 mpt = this.GetMousePoint();
 		if (m_gameBounds.OverlapPoint(mpt)) {
@@ -633,21 +661,9 @@ public class LevelController : MonoBehaviour {
 		return Vector3.zero;
 	}
 
-	private void enemy_goal_score() {
-		_enemy_team_score++;
-	}
-	
-	private void player_goal_score() {
-		_player_team_score++;
-	}
-
 	public void set_time_remaining_seconds(int seconds) {
 		TimeSpan ticks = new TimeSpan(0,0,0,seconds);
 		_time_remaining = ticks.Ticks;
-	}
-
-	private void sim_update_time() {
-
 	}
 
 	public string get_time_remaining_formatted() {
@@ -659,6 +675,32 @@ public class LevelController : MonoBehaviour {
 	public int _enemy_team_score = 0;
 	public long _time_remaining = 0;
 	public string _quarter_display = "1ST";
+
+	private Vector3 _goalzoomoutfocuspos;
+	private void enemy_goal_score(Vector3 tar) {
+		if (Main._current_level == GameLevel.Level1) {
+			Main._current_level = GameLevel.Level2;
+		} else if (Main._current_level == GameLevel.Level2) {
+			Main._current_level = GameLevel.Level3;
+		} else {
+			Main._current_level = GameLevel.End;
+		}
+		_enemy_team_score++;
+		m_currentMode = LevelControllerMode.GoalZoomOut;
+		Main._current_repeat_reason = RepeatReason.None;
+		UiPanelGame.inst.show_popup_message(1);
+		_goalzoomoutfocuspos = tar;
+	}
+	
+	private void player_goal_score(Vector3 tar) {
+		_player_team_score++;
+		m_currentMode = LevelControllerMode.GoalZoomOut;
+
+		Main._current_repeat_reason = RepeatReason.ScoredOn;
+		UiPanelGame.inst.show_popup_message(1);
+		_goalzoomoutfocuspos = tar;
+	}
+
 }
 
 public enum Team {
