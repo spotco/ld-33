@@ -15,4 +15,5 @@ public static class PanelIds {
 
 public static class AudioClipIds {
 	public const string MenuBgm = "MenuBgm";
+	public const string GameBgm = "GameBgm";
 }
