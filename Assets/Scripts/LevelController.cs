@@ -208,6 +208,8 @@ public class LevelController : MonoBehaviour {
 			Vector3 pos = Main.FieldController.GetFieldCenter();
 			CreateLooseBall(pos, Vector3.zero);
 		}
+		
+		m_enemyTeam.StartMatch();
 	}
 	
 	private void ResetLevel() {
