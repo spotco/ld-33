@@ -46,10 +46,10 @@ public class Main : Uzu.Main
   
   protected override void OnMainBegin2 ()
   {
+		Main.LevelController.CurrentDifficulty = Difficulty.Hard;
+		
     // State initialization.
     {
-      // Pause (PauseFlags.Ai);
-      
       // _panelManager.ChangeCurrentPanel (PanelIds.Main);	
       _panelManager.ChangeCurrentPanel (PanelIds.Game);	
     }

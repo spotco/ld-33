@@ -7,6 +7,7 @@ public class UiPanelGame : Uzu.UiPanel {
 	[SerializeField] private MultiText _home_score;
 	[SerializeField] private MultiText _away_score;
 	[SerializeField] private MultiText _time_text;
+	[SerializeField] private MultiText _quarter_text;
 	[SerializeField] private Image _pause_icon;
 
 	public override void OnInitialize() {
@@ -26,6 +27,7 @@ public class UiPanelGame : Uzu.UiPanel {
 		_time_text.set_string("0:00:00");
 		set_pause_icon_alpha(0);
 		_tar_pause_icon_alpha = 0;
+		_quarter_text.set_string(Main.LevelController._quarter_display);
 		Main.LevelController.StartLevel();
 	}
 	
@@ -44,6 +46,7 @@ public class UiPanelGame : Uzu.UiPanel {
 		_home_score.set_string(Main.LevelController._player_team_score+"");
 		_away_score.set_string(Main.LevelController._enemy_team_score+"");
 		_time_text.set_string(Main.LevelController.get_time_remaining_formatted());
+		_quarter_text.set_string(Main.LevelController._quarter_display);
 
 		if (Input.GetKeyDown(KeyCode.R)) {
 			Main.LevelController.StartLevel();
