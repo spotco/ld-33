@@ -250,7 +250,7 @@ public class BotState_Roam : FSMState<BotBase> {
 	
 	private Vector3 GetRoamPosition(BotBase bot) {
 		Vector3 dir = Uzu.Math.RandomOnUnitCircle();
-		float offset = Random.Range(20.0f, 40.0f);
+		float offset = Random.Range(40.0f, 60.0f);
 		return bot.HomePosition + dir * offset;
 	}
 	
