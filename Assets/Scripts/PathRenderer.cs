@@ -214,6 +214,10 @@ public class PathRenderer : MonoBehaviour {
 			if (itr_list.sprite.name != "move_arrow_cross") {
 				Color itr_list_color = itr_list.color;
 				float aval = Mathf.Pow(1-(Mathf.Abs(i_list-val))/list.Count,4.0f);
+				
+				// HACK: cap to prevent path points from exploding in size
+				aval = Mathf.Min(aval, 1.0f);
+				
 				itr_list_color.a = Mathf.Max(aval,0.25f);
 				itr_list.color = itr_list_color;
 				itr_list.transform.localScale = Util.valv((0.75f + aval * 0.5f)*20.0f);
