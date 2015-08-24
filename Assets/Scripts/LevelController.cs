@@ -119,6 +119,9 @@ public class LevelController : MonoBehaviour {
 	private void DoMatchOpening() {
 		m_currentMode = LevelControllerMode.Opening;
 		
+		// hide cursor
+		m_mouseTargetIcon.SetActive(false);
+		
 		List<BotBase> allBots = new List<BotBase>(
 			m_playerTeam.TeamMembers.Count + m_enemyTeam.TeamMembers.Count);
 		allBots.AddRange(m_playerTeam.TeamMembers);
@@ -366,6 +369,7 @@ public class LevelController : MonoBehaviour {
 		} else if (m_currentMode == LevelControllerMode.Opening) {
 			if (m_matchOpeningAnimIds.Count == 0) {
 				m_currentMode = LevelControllerMode.GamePlay;
+				m_mouseTargetIcon.SetActive(true);
 				m_enemyTeam.StartMatch();
 			}
 		}
