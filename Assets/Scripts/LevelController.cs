@@ -525,7 +525,7 @@ public class LevelController : MonoBehaviour {
 		if (Input.GetKey(KeyCode.Alpha3)) tar = 2;
 		if (Input.GetKey(KeyCode.Alpha4)) tar = 3;
 		if (Input.GetKey(KeyCode.Alpha5)) tar = 4;
-		if (tar != -1) {
+		if (tar != -1 && tar < m_playerTeamFootballers.Count) {
 			m_timeoutSelectedFootballer = m_playerTeamFootballers[tar];
 		}
 	}
