@@ -21,6 +21,8 @@ public class AudioController : MonoBehaviour
 
 	public void PlayBgm (string clipId)
 	{
+		StopBgm();
+		
 		// Play sound.
 		{
 			Uzu.AudioController.PlayOptions options = new Uzu.AudioController.PlayOptions ();
