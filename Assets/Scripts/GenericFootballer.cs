@@ -34,6 +34,18 @@ public class GenericFootballer : MonoBehaviour {
 	[SerializeField] private int _id = 0;
 
 	private SpriteAnimator _animator;
+	public void force_play_animation(string anim) {
+		_animator.play_anim(anim);
+	}
+	public void force_facing_direction(bool to_right) {
+		Vector3 rts = _renderer.transform.localScale;
+		if (to_right) {
+			rts.x = Mathf.Abs(rts.x);
+		} else {
+			rts.x = -Mathf.Abs(rts.x);
+		}
+		_renderer.transform.localScale = rts;
+	}
 	
 	public void sim_initialize(FootballerAnimResource anims) {
 		_id = ++__alloct;

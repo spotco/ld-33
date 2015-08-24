@@ -12,6 +12,7 @@ public class LevelController : MonoBehaviour {
 	[SerializeField] private GameObject proto_referee;
 
 	enum LevelControllerMode {
+		Opening,
 		GamePlay,
 		Timeout
 	}
@@ -33,6 +34,8 @@ public class LevelController : MonoBehaviour {
 	//Nullable
 	public GenericFootballer m_timeoutSelectedFootballer;
 	public List<LooseBall> m_looseBalls = new List<LooseBall>();
+	
+	public List<int> m_matchOpeningAnimIds = new List<int>();
 
 	public SPParticleSystem m_particles;
 
@@ -45,41 +48,50 @@ public class LevelController : MonoBehaviour {
 	
 	private GameObject m_mouseTargetIcon;
 	private float m_mouseTargetIconTheta;
+	
+	private Difficulty _currentDifficulty;
+	public Difficulty CurrentDifficulty {
+		get { return _currentDifficulty; }
+		set {
+			_currentDifficulty = value;
+		}
+	}
 		
 	public void StartLevel() {
 		ResetLevel();
+		
+		Debug.Log("Start level: " + CurrentDifficulty);
 		
 		m_pathRenderer = this.GetComponent<PathRenderer>();
 		
 		m_playerTeam = this.CreateTeam(Team.PlayerTeam);
 		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
 		
-		{
-			BotBase keeper = this.CreateFootballer(m_playerTeam, new Vector3(0,0),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
-			BotBase d0 = this.CreateFootballer(m_playerTeam, new Vector3(-300,-300),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
-			BotBase d1 = this.CreateFootballer(m_playerTeam, new Vector3(-300,0),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
-			BotBase f0 = this.CreateFootballer(m_playerTeam, new Vector3(0,-300),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
-			BotBase f1 = this.CreateFootballer(m_playerTeam, new Vector3(-600,-300),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
-			m_playerTeam.SetPlayers(keeper, d0, d1, f0, f1);
-		}
-
-		{
-			BotBase keeper = this.CreateFootballer(m_enemyTeam, new Vector3(900,-400),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.EnemyGoalie));
-			BotBase d0 = this.CreateFootballer(m_enemyTeam, new Vector3(778,-277),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Enemy3));
-			BotBase d1 = this.CreateFootballer(m_enemyTeam, new Vector3(778, -453),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Enemy3));
-			BotBase f0 = this.CreateFootballer(m_enemyTeam, new Vector3(525,-277),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Enemy2));
-			BotBase f1 = this.CreateFootballer(m_enemyTeam, new Vector3(525,-453),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Enemy2));
-			m_enemyTeam.SetPlayers(keeper, d0, d1, f0, f1);
-			m_enemyTeam.StartKickoff();
+		if (CurrentDifficulty == Difficulty.Easy) {
 			
-			if (Main.FSMDebugger != null) {
-				Main.FSMDebugger.Team = m_enemyTeam;
+		} else if (CurrentDifficulty == Difficulty.Normal) {
+			
+		} else {
+			{
+				int[] regions = { 7, 3, 5, 6, 8 };
+				FootballerResourceKey[] keys = { FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1 };
+				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender, FieldPosition.Attacker, FieldPosition.Attacker };
+				SpawnTeam(7, m_playerTeam, regions, keys, fps);
+			}
+			{
+				int[] regions = { 16, 12, 14, 9, 11 };
+				FootballerResourceKey[] keys = { FootballerResourceKey.EnemyGoalie, FootballerResourceKey.Enemy3, FootballerResourceKey.Enemy3, FootballerResourceKey.Enemy2, FootballerResourceKey.Enemy2 };
+				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender, FieldPosition.Attacker, FieldPosition.Attacker };
+				SpawnTeam(10, m_enemyTeam, regions, keys, fps);
 			}
 		}
-
+		
+		// Debugging.
+		if (Main.FSMDebugger != null) {
+			Main.FSMDebugger.Team = m_enemyTeam;
+		}
 		
 		m_playerTeamFootballersWithBall.Add(m_playerTeamFootballers[0]);
-		m_currentMode = LevelControllerMode.GamePlay;
 		if (m_mouseTargetIcon == null) {
 			m_mouseTargetIcon = Util.proto_clone(proto_mouseTarget);
 		}
@@ -93,12 +105,53 @@ public class LevelController : MonoBehaviour {
 		}
 		m_topReferee.sim_initialize(Referee.RefereeMode.Top);
 		m_bottomReferee.sim_initialize(Referee.RefereeMode.Bottom);
+		
+		DoMatchOpening();
+	}
+	
+	private void DoMatchOpening() {
+		m_currentMode = LevelControllerMode.Opening;
+		
+		List<BotBase> allBots = new List<BotBase>(
+			m_playerTeam.TeamMembers.Count + m_enemyTeam.TeamMembers.Count);
+		allBots.AddRange(m_playerTeam.TeamMembers);
+		allBots.AddRange(m_enemyTeam.TeamMembers);
+		
+		for (int i = 0; i < allBots.Count; i++) {
+			BotBase bot = allBots[i];
+			GenericFootballer footballer = bot.GetComponent<GenericFootballer>();
+			footballer.force_play_animation(FootballerAnimResource.ANIM_RUN);
+			footballer.force_facing_direction(bot.HomePosition.x >= bot.transform.position.x ? true : false);
+			
+			float d = Vector3.Distance(bot.transform.position, bot.HomePosition);
+			float r = Random.Range(200.0f, 220.0f);
+			float t = d / r;
+			
+			LTDescr animDesc = LeanTween.move(
+				bot.gameObject,
+				bot.HomePosition,
+				t)
+				.setEase(LeanTweenType.linear);
+			int animId = animDesc.id;
+			animDesc.setOnComplete(() => {
+				footballer.force_play_animation(FootballerAnimResource.ANIM_IDLE);
+				footballer.force_facing_direction(bot.Team == Team.PlayerTeam ? true : false);
+				
+				m_matchOpeningAnimIds.Remove(animId);
+			});
+			
+			m_matchOpeningAnimIds.Add(animId);
+		}
+		
+		// m_enemyTeam.StartMatch();
 	}
 	
 	private void ResetLevel() {
 		if (m_pathRenderer != null) {
 			m_pathRenderer.clear_paths();
 		}
+		
+		m_matchOpeningAnimIds.Clear();
 		
 		if (m_playerTeam != null) {
 			TeamBase team = m_playerTeam.GetComponent<TeamBase>();
@@ -134,6 +187,23 @@ public class LevelController : MonoBehaviour {
 			System.GC.Collect();
 			Resources.UnloadUnusedAssets();
 		}
+	}
+	
+	private void SpawnTeam(int centerRegion, TeamBase team,
+		int[] regions, FootballerResourceKey[] resources, FieldPosition[] fieldPositions) {
+		const float startOffset = 100.0f;
+		Vector3 centerPos = Main.FieldController.GetRegionPosition(centerRegion);
+		float deltaAngle = Mathf.Deg2Rad * (360.0f / regions.Length);
+		List<BotBase> bots = new List<BotBase>(regions.Length);
+		for (int i = 0; i < regions.Length; i++) {
+			BotBase bot = this.CreateFootballer(team,
+				centerPos + Uzu.Math.RadiansToDirectionVector(deltaAngle * i) * startOffset,
+				SpriteResourceDB.get_footballer_anim_resource(resources[i]));
+			bot.HomePosition = Main.FieldController.GetRegionPosition(regions[i]);
+			bot.FieldPosition = fieldPositions[i];
+			bots.Add(bot);
+		}
+		team.SetPlayers(bots);
 	}
 
 	public void Update () {
@@ -286,6 +356,10 @@ public class LevelController : MonoBehaviour {
 					itr.timeout_end();
 				}
 				Main.Unpause(PauseFlags.TimeOut);
+			}
+		} else if (m_currentMode == LevelControllerMode.Opening) {
+			if (m_matchOpeningAnimIds.Count == 0) {
+				m_currentMode = LevelControllerMode.GamePlay;
 			}
 		}
 
@@ -475,3 +549,8 @@ public enum Team {
 	None
 }
 
+public enum Difficulty {
+	Easy,
+	Normal,
+	Hard
+}
