@@ -188,7 +188,7 @@ public class BotState_Idle : FSMState<BotBase> {
 			if (bot.GetBallTeamOwner() == bot.Team) {
 				// If a teammate already has it, do nothing.
 			} else {
-				if (bot.GetBallDistance() <= BotConstants.DefenderChaseDistance) {
+				if (Vector3.Distance(bot.HomePosition, bot.GetBallPosition()) <= BotConstants.DefenderChaseDistance) {
 					bot.ChangeState(BotState_ChaseBall.Instance);
 					return;
 				}
@@ -384,7 +384,7 @@ public class BotState_ChaseBall : FSMState<BotBase> {
 	public override void Execute (BotBase bot) {
 		if (bot.FieldPosition == FieldPosition.Defender) {
 			// Too far - go home.
-			if (bot.GetBallDistance() > BotConstants.DefenderChaseDistance) {
+			if (Vector3.Distance(bot.HomePosition, bot.GetBallPosition()) > BotConstants.DefenderChaseDistance) {
 				bot.ChangeState(BotState_GoHome.Instance);
 				return;
 			}
