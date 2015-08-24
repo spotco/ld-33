@@ -54,7 +54,8 @@ public class Main : Uzu.Main
     {
       // _panelManager.ChangeCurrentPanel (PanelIds.Main);	
       _panelManager.ChangeCurrentPanel (PanelIds.Game);	
-    }
+	  //_panelManager.ChangeCurrentPanel(PanelIds.Tv);
+	}
   }
 	
 	#region Pause functionality.
@@ -96,5 +97,12 @@ public class Main : Uzu.Main
 
 	[SerializeField]
 	public GameObject _particleRoot;
-	
+
+	[SerializeField]
+	public Camera _tvCamera;
+
+	public void Update() {
+		float dt_scale = (1/60.0f)/(Time.deltaTime);
+		Util.dt_scale = dt_scale;
+	}
 }

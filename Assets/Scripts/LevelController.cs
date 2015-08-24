@@ -240,8 +240,6 @@ public class LevelController : MonoBehaviour {
 		if (Main.PanelManager.CurrentPanelId != PanelIds.Game) return;
 
 		float mouse_target_anim_speed = 0.3f;
-		float dt_scale = (1/60.0f)/(Time.deltaTime);
-		Util.dt_scale = dt_scale;
 
 		if (m_currentMode == LevelControllerMode.GamePlay) {
 			_time_remaining = Math.Max(0,_time_remaining-TimeSpan.FromSeconds(Time.deltaTime).Ticks);

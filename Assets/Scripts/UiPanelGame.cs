@@ -9,6 +9,7 @@ public class UiPanelGame : Uzu.UiPanel {
 	[SerializeField] private MultiText _time_text;
 	[SerializeField] private MultiText _quarter_text;
 	[SerializeField] private Image _pause_icon;
+	[SerializeField] private CameraFade _fadein;
 
 	public override void OnInitialize() {
 	}
@@ -29,6 +30,8 @@ public class UiPanelGame : Uzu.UiPanel {
 		_tar_pause_icon_alpha = 0;
 		_quarter_text.set_string(Main.LevelController._quarter_display);
 		Main.LevelController.StartLevel();
+		_fadein.set_alpha(1.0f);
+		_fadein.set_target_alpha(0.0f);
 	}
 	
 	public override void OnExit(Uzu.PanelExitContext context) {

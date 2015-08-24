@@ -130,6 +130,7 @@ MonoBehaviour:
   _audioController: {fileID: 11441226}
   _fsmDebugger: {fileID: 0}
   _particleRoot: {fileID: 0}
+  _tvCamera: {fileID: 0}
 --- !u!114 &11446726
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -159,6 +160,12 @@ MonoBehaviour:
   m_enemyTeamFootballersWithBall: []
   m_timeoutSelectedFootballer: {fileID: 0}
   m_looseBalls: []
+  m_matchOpeningAnimIds: 
+  m_currentMode: 0
+  _player_team_score: 0
+  _enemy_team_score: 0
+  _time_remaining: 0
+  _quarter_display: 1ST
 --- !u!114 &11460724
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -10,6 +10,7 @@ public static class PauseFlags
 public static class PanelIds {
   public const string Main = "MainPanel";
   public const string Game = "GamePanel";
+  public const string Tv = "TVPanel";
 }
 
 public static class AudioClipIds {
