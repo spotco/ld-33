@@ -149,8 +149,6 @@ public class LevelController : MonoBehaviour {
 			
 			m_matchOpeningAnimIds.Add(animId);
 		}
-		
-		// m_enemyTeam.StartMatch();
 	}
 	
 	private void ResetLevel() {
@@ -368,6 +366,7 @@ public class LevelController : MonoBehaviour {
 		} else if (m_currentMode == LevelControllerMode.Opening) {
 			if (m_matchOpeningAnimIds.Count == 0) {
 				m_currentMode = LevelControllerMode.GamePlay;
+				m_enemyTeam.StartMatch();
 			}
 		}
 

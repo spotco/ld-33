@@ -226,7 +226,9 @@ public class BotState_Idle : FSMState<BotBase> {
 			}
 		}
 		
-		bot.ChangeState(BotState_Roam.Instance);
+		if (bot.FieldPosition != FieldPosition.Keeper) {
+			bot.ChangeState(BotState_Roam.Instance);
+		}
 	}
 	
 	public override void Exit(BotBase bot) {
