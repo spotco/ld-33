@@ -8,12 +8,18 @@ public class Referee : MonoBehaviour {
 	[SerializeField] public GameObject m_RefereeBottomStart;
 	[SerializeField] public GameObject m_RefereeBottomBase;
 
+	[SerializeField] private SpriteRenderer _renderer;
+
 	public enum RefereeMode {
 		Top, 
 		Bottom
 	}
 	public RefereeMode _self_mode;
 	private Vector3 _startpos,_basepos;
+
+	public void Update() {
+		_renderer.sortingOrder = (int)(-transform.position.y * 100);
+	}
 
 	public void sim_initialize(RefereeMode mode) {
 		_self_mode = mode;

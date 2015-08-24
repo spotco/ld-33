@@ -68,6 +68,8 @@ public class GenericFootballer : MonoBehaviour {
 	}
 
 	void Update() {
+		_renderer.sortingOrder = (int)(-transform.position.y * 100);
+
 		float reticule_anim_speed = 0.5f;
 		float reticule_scale = 200;
 		Color tar = Color.white;
@@ -323,10 +325,12 @@ public class GenericFootballer : MonoBehaviour {
 		if (_current_mode != GenericFootballerMode.Stunned && _cannot_stun_ct <= 0) {
 			if (vel.magnitude == 0) vel = new Vector3(Util.rand_range(-1,1),Util.rand_range(-1,1));
 			int testct = 0;
-			while (vel.magnitude < 0.4f && testct < 20) {
+			while (vel.magnitude < 2.0f && testct < 20) {
 				vel = Util.vec_scale(vel,1.1f);
 				testct++;
 			}
+			vel = Util.vec_rotate_rad(vel,Util.rand_range(-1.0f,1.0f));
+
 			_cannot_stun_ct = Util.rand_range(30,100);
 			Main.LevelController.blood_anim_at(hit_spot,4);
 			_stunned_vel = vel;
@@ -336,7 +340,7 @@ public class GenericFootballer : MonoBehaviour {
 			if (Main.LevelController.footballer_has_ball(this)) {
 				Main.LevelController.CreateLooseBall(
 					this.transform.position,
-					Util.vec_rotate_rad(Util.vec_scale(vel,1.8f),Util.rand_range(-1.4f,1.4f))
+					Util.vec_rotate_rad(Util.vec_scale(vel.normalized,3.5f),Util.rand_range(-1.4f,1.4f))
 				);
 				Main.LevelController.m_playerTeamFootballersWithBall.Remove(this);
 				Main.LevelController.m_enemyTeamFootballersWithBall.Remove(this);

@@ -8,6 +8,7 @@ public class LooseBall : MonoBehaviour {
 	[SerializeField] public float _z, _vz;
 	[SerializeField] private GameObject _ball;
 	[SerializeField] private float _initial_uncatchable_ct;
+	[SerializeField] private SpriteRenderer _renderer;
 
 	public void sim_initialize(Vector2 position, Vector2 vel) {
 		this.transform.position = position;
@@ -15,6 +16,10 @@ public class LooseBall : MonoBehaviour {
 		_z = 0;
 		_vz = Mathf.Min(vel.magnitude * 0.25f,15);
 		_initial_uncatchable_ct = 20;
+	}
+
+	public void Update() {
+		_renderer.sortingOrder = (int)(-transform.position.y * 100)+1;
 	}
 
 	private void set_ball_z(float z) {

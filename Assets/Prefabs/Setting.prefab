@@ -17964,7 +17964,9 @@ MonoBehaviour:
   m_RefereeTopBase: {fileID: 192438}
   m_RefereeBottomStart: {fileID: 115890}
   m_RefereeBottomBase: {fileID: 154918}
+  _renderer: {fileID: 21270502}
   _self_mode: 0
+  _movespeed: 8
 --- !u!114 &11422264
 MonoBehaviour:
   m_ObjectHideFlags: 1

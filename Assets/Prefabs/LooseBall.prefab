@@ -116,6 +116,7 @@ MonoBehaviour:
   _vz: 0
   _ball: {fileID: 188538}
   _initial_uncatchable_ct: 0
+  _renderer: {fileID: 21256114}
 --- !u!212 &21211920
 SpriteRenderer:
   m_ObjectHideFlags: 1
@@ -174,7 +175,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: _renderer
+      value: 
+      objectReference: {fileID: 21256114}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 164902}
