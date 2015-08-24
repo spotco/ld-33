@@ -75,9 +75,9 @@ public class TeamState_Kickoff : FSMState<TeamBase> {
 	}
 	
 	public override void Execute (TeamBase team) {
-		if (team.AreAllPlayersHome()) {
+		// if (team.AreAllPlayersHome()) {
 			team.ChangeState(TeamState_Defend.Instance);
-		}
+		// }
 	}
 	
 	public override void Exit(TeamBase team) {

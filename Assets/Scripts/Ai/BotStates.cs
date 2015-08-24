@@ -250,7 +250,7 @@ public class BotState_Roam : FSMState<BotBase> {
 	
 	private Vector3 GetRoamPosition(BotBase bot) {
 		Vector3 dir = Uzu.Math.RandomOnUnitCircle();
-		float offset = Random.Range(20.0f, 40.0f);
+		float offset = Random.Range(40.0f, 60.0f);
 		return bot.HomePosition + dir * offset;
 	}
 	
@@ -324,12 +324,40 @@ public class BotState_Pressure : FSMState<BotBase> {
 	private BotState_Pressure() { }
 	
 	public override void Enter (BotBase bot) {
+		// Somewhere in offensive territory...
+		Vector3 pressurePos = (Main.FieldController.GetRegionPosition(0) +
+			Main.FieldController.GetRegionPosition(8)) * 0.5f;
+		bot.Steering.ArriveOn();
+		bot.Steering.CurrentTarget = pressurePos;
 	}
 	
 	public override void Execute (BotBase bot) {
+		if (bot.FieldPosition != FieldPosition.Attacker) {
+			Debug.LogWarning("Non attacker shouldn't be here...");
+			return;
+		}
+		
+		// Other team has the ball.
+		if (bot.GetBallTeamOwner() == bot.OtherTeam) {
+			bot.ChangeState(BotState_ChaseBall.Instance);
+			return;
+		}
+		
+		// Arrived.
+		if (Vector3.Distance(bot.Steering.CurrentTarget, bot.transform.position) <= BotConstants.ArriveDistance) {
+			bot.ChangeState(BotState_Idle.Instance);
+			return;
+		}
+		
+		// If we overshoot ball position, stop.
+		if (bot.transform.position.x < bot.GetBallPosition().x) {
+			bot.ChangeState(BotState_Idle.Instance);
+			return;
+		}
 	}
 	
 	public override void Exit(BotBase bot) {
+		bot.Steering.ArriveOff();
 	}
 }
 
@@ -392,6 +420,12 @@ public class BotState_ChaseBall : FSMState<BotBase> {
 					bot.ChangeState(BotState_GoHome.Instance);
 					return;
 				}
+			}
+			
+			// Someone else from our team has the ball.
+			if (bot.GetBallTeamOwner() == bot.Team) {
+				bot.ChangeState(BotState_Pressure.Instance);
+				return;
 			}
 		}
 				
