@@ -17,6 +17,11 @@ public class LevelController : MonoBehaviour {
 		GamePlay,
 		Timeout
 	}
+	
+	public enum StartMode {
+		Sequence,
+		Immediate,
+	}
 
 	[SerializeField] public BoxCollider2D m_gameBounds;
 	[SerializeField] public BoxCollider2D m_ballBounds;
@@ -58,7 +63,7 @@ public class LevelController : MonoBehaviour {
 		}
 	}
 		
-	public void StartLevel() {
+	public void StartLevel(StartMode startMode = StartMode.Sequence) {
 		ResetLevel();
 		
 		Debug.Log("Start level: " + CurrentDifficulty);
@@ -134,10 +139,17 @@ public class LevelController : MonoBehaviour {
 		m_topReferee.sim_initialize(Referee.RefereeMode.Top);
 		m_bottomReferee.sim_initialize(Referee.RefereeMode.Bottom);
 		
-		DoMatchOpening();
+		switch (startMode) {
+			case StartMode.Sequence:
+				DoMatchOpeningSequence();
+				break;
+			case StartMode.Immediate:
+				DoMatchOpeningImmediate();
+				break;
+		}
 	}
 	
-	private void DoMatchOpening() {
+	private void DoMatchOpeningSequence() {
 		m_currentMode = LevelControllerMode.Opening;
 		
 		// hide cursor
@@ -177,6 +189,24 @@ public class LevelController : MonoBehaviour {
 		{
 			m_topReferee.transform.position = Main.FieldController.GetFieldCenter();
 			CreateLooseBall(m_topReferee.transform.position, Vector3.zero);
+		}
+	}
+	
+	private void DoMatchOpeningImmediate() {
+		m_currentMode = LevelControllerMode.GamePlay;
+		
+		List<BotBase> allBots = new List<BotBase>(
+			m_playerTeam.TeamMembers.Count + m_enemyTeam.TeamMembers.Count);
+		allBots.AddRange(m_playerTeam.TeamMembers);
+		allBots.AddRange(m_enemyTeam.TeamMembers);
+		
+		for (int i = 0; i < allBots.Count; i++) {
+			allBots[i].transform.position = allBots[i].HomePosition;
+		}
+		
+		{
+			Vector3 pos = Main.FieldController.GetFieldCenter();
+			CreateLooseBall(pos, Vector3.zero);
 		}
 	}
 	
