@@ -15,4 +15,10 @@ public class UiPanelGame : Uzu.UiPanel {
 	public override void OnExit(Uzu.PanelExitContext context) {
 		gameObject.SetActive(false);
 	}
+	
+	private void Update() {
+		if (Input.GetKeyDown(KeyCode.R)) {
+			Main.LevelController.StartLevel();
+		}
+	}
 }
