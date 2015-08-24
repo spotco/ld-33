@@ -74,12 +74,13 @@ public class LevelController : MonoBehaviour {
 		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
 
 
-		this.set_time_remaining_seconds(30);
-		_player_team_score = 3;
-		_enemy_team_score = 2;
-		_quarter_display = "1ST";
+		this.set_time_remaining_seconds(300);
 		
 		if (CurrentDifficulty == Difficulty.Easy) {
+			this.set_time_remaining_seconds(300);
+			_player_team_score = 0;
+			_enemy_team_score = 0;
+			_quarter_display = "1ST";
 			{
 				int[] regions = { 7, 6, 8 };
 				FootballerResourceKey[] keys = { FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1 };
@@ -93,6 +94,10 @@ public class LevelController : MonoBehaviour {
 				SpawnTeam(10, m_enemyTeam, regions, keys, fps);
 			}
 		} else if (CurrentDifficulty == Difficulty.Normal) {
+			this.set_time_remaining_seconds(200);
+			_player_team_score = 2;
+			_enemy_team_score = 2;
+			_quarter_display = "2ND";
 			{
 				int[] regions = { 7, 3, 4, 5 };
 				FootballerResourceKey[] keys = { FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1 };
@@ -106,6 +111,10 @@ public class LevelController : MonoBehaviour {
 				SpawnTeam(10, m_enemyTeam, regions, keys, fps);
 			}
 		} else {
+			this.set_time_remaining_seconds(150);
+			_player_team_score = 4;
+			_enemy_team_score = 4;
+			_quarter_display = "4TH";
 			{
 				int[] regions = { 7, 3, 5, 6, 8 };
 				FootballerResourceKey[] keys = { FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1, FootballerResourceKey.Player1 };
@@ -138,7 +147,9 @@ public class LevelController : MonoBehaviour {
 		}
 		m_topReferee.sim_initialize(Referee.RefereeMode.Top);
 		m_bottomReferee.sim_initialize(Referee.RefereeMode.Bottom);
-		
+
+		Main.GameCamera.SetTargetPos(new Vector3(0,-300,0));
+		Main.GameCamera.SetTargetZoom(800);
 		switch (startMode) {
 			case StartMode.Sequence:
 				DoMatchOpeningSequence();
@@ -151,7 +162,6 @@ public class LevelController : MonoBehaviour {
 	
 	private void DoMatchOpeningSequence() {
 		m_currentMode = LevelControllerMode.Opening;
-		
 		// hide cursor
 		m_mouseTargetIcon.SetActive(false);
 		

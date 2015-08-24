@@ -30,6 +30,8 @@ public class Main : Uzu.Main
   {
 	Application.targetFrameRate = 60;
 	Cursor.visible = false;
+	Main._current_level = GameLevel.Level1;
+		Main._current_repeat_reason = RepeatReason.None;
 	SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1);
     _instance = (Main)Uzu.Main.Instance;
     
@@ -105,4 +107,19 @@ public class Main : Uzu.Main
 		float dt_scale = (1/60.0f)/(Time.deltaTime);
 		Util.dt_scale = dt_scale;
 	}
+
+	public static GameLevel _current_level;
+	public static RepeatReason _current_repeat_reason;
+}
+
+public enum GameLevel {
+	Level1,
+	Level2,
+	Level3
+}
+
+public enum RepeatReason {
+	Timeout,
+	ScoredOn,
+	None
 }

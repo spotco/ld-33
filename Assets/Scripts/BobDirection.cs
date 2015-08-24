@@ -30,12 +30,22 @@ public class BobDirection : MonoBehaviour {
 
 		_vt = Util.rand_range(_vt_min,_vt_max);
 		_start_target_pos = _target.position;
+		_enabled = true;
 	}
 	
 
 	void Update () {
 		if (Main.IsPaused(PauseFlags.TimeOut)) return;
 		_t += _vt * Util.dt_scale;
-		_target.transform.position = _start_target_pos + new Vector3(0,(Mathf.Sin(_t)+1)*0.5f*(_x_max-_x_min) + _x_min,0);
+		if (_enabled) {
+			_target.transform.position = _start_target_pos + new Vector3(0,(Mathf.Sin(_t)+1)*0.5f*(_x_max-_x_min) + _x_min,0);
+		} else {
+			_target.transform.position = _start_target_pos;
+		}
+	}
+
+	private bool _enabled;
+	public void set_enabled(bool tar) {
+		_enabled = tar;
 	}
 }
