@@ -50,9 +50,14 @@ public class UiPanelGame : Uzu.UiPanel {
 		_away_score.set_string(Main.LevelController._enemy_team_score+"");
 		_time_text.set_string(Main.LevelController.get_time_remaining_formatted());
 		_quarter_text.set_string(Main.LevelController._quarter_display);
-
+		
+		#if UNITY_EDITOR
 		if (Input.GetKeyDown(KeyCode.R)) {
-			Main.LevelController.StartLevel();
+			Main.LevelController.StartLevel(LevelController.StartMode.Sequence);
 		}
+		if (Input.GetKeyDown(KeyCode.T)) {
+			Main.LevelController.StartLevel(LevelController.StartMode.Immediate);
+		}
+		#endif
 	}
 }

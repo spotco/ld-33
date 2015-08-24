@@ -30,6 +30,10 @@ public class FieldController : MonoBehaviour {
 		return new Vector3(width, height, 0.0f);
 	}
 	
+	public Vector3 GetFieldCenter() {
+		return (_regionPositions[7] + _regionPositions[10]) * 0.5f;
+	}
+	
 	public int GetRegion(Vector3 pos) {
 		float minDist = float.MaxValue;
 		int minIdx = -1;
