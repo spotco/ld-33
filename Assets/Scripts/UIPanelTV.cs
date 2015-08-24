@@ -61,7 +61,7 @@ public class UIPanelTV : Uzu.UiPanel {
 
 			} else {
 				_chats.push_message("And as expected, the hometown heroes...",2);
-				_chats.push_message("Pull through and win in dramatic fashon!",2);
+				_chats.push_message("Pull through and win in dramatic fashion!",2);
 				_chats.push_message("Tune in next week for more Monday Night Monsters!",2);
 				_chats.push_message("And coming up next...Ludum Dare?",2);
 				_chats.push_message("(Thanks for playing!)",1);
