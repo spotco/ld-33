@@ -52,20 +52,21 @@ public class LevelController : MonoBehaviour {
 		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
 		
 		{
-			BotBase keeper = this.CreateFootballer(m_playerTeam, new Vector3(0,0));
-			BotBase d0 = this.CreateFootballer(m_playerTeam, new Vector3(-300,-300));
-			BotBase d1 = this.CreateFootballer(m_playerTeam, new Vector3(-300,0));
-			BotBase f0 = this.CreateFootballer(m_playerTeam, new Vector3(0,-300));
-			BotBase f1 = this.CreateFootballer(m_playerTeam, new Vector3(-600,-300));
+			BotBase keeper = this.CreateFootballer(m_playerTeam, new Vector3(0,0),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
+			BotBase d0 = this.CreateFootballer(m_playerTeam, new Vector3(-300,-300),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
+			BotBase d1 = this.CreateFootballer(m_playerTeam, new Vector3(-300,0),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
+			BotBase f0 = this.CreateFootballer(m_playerTeam, new Vector3(0,-300),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
+			BotBase f1 = this.CreateFootballer(m_playerTeam, new Vector3(-600,-300),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1));
 			m_playerTeam.SetPlayers(keeper, d0, d1, f0, f1);
 		}
 
+
 		{
-			BotBase keeper = this.CreateFootballer(m_enemyTeam, new Vector3(900,-400));
-			BotBase d0 = this.CreateFootballer(m_enemyTeam, new Vector3(778,-277));
-			BotBase d1 = this.CreateFootballer(m_enemyTeam, new Vector3(778, -453));
-			BotBase f0 = this.CreateFootballer(m_enemyTeam, new Vector3(525,-277));
-			BotBase f1 = this.CreateFootballer(m_enemyTeam, new Vector3(525,-453));
+			BotBase keeper = this.CreateFootballer(m_enemyTeam, new Vector3(900,-400),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.EnemyGoalie));
+			BotBase d0 = this.CreateFootballer(m_enemyTeam, new Vector3(778,-277),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Enemy3));
+			BotBase d1 = this.CreateFootballer(m_enemyTeam, new Vector3(778, -453),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Enemy3));
+			BotBase f0 = this.CreateFootballer(m_enemyTeam, new Vector3(525,-277),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Enemy2));
+			BotBase f1 = this.CreateFootballer(m_enemyTeam, new Vector3(525,-453),SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Enemy2));
 			m_enemyTeam.SetPlayers(keeper, d0, d1, f0, f1);
 			m_enemyTeam.StartKickoff();
 			
@@ -73,6 +74,7 @@ public class LevelController : MonoBehaviour {
 				Main.FSMDebugger.Team = m_enemyTeam;
 			}
 		}
+
 		
 		m_playerTeamFootballersWithBall.Add(m_playerTeamFootballers[0]);
 		m_currentMode = LevelControllerMode.GamePlay;
@@ -300,11 +302,11 @@ public class LevelController : MonoBehaviour {
 		return rtv;
 	}
 	
-	private BotBase CreateFootballer(TeamBase team, Vector3 pos) {
+	private BotBase CreateFootballer(TeamBase team, Vector3 pos, FootballerAnimResource anims) {
 		GameObject neu_obj = Util.proto_clone(proto_genericFootballer);
 		GenericFootballer rtv = neu_obj.GetComponent<GenericFootballer>();
 		rtv.transform.position = pos;
-		rtv.sim_initialize();
+		rtv.sim_initialize(anims);
 		if (team.Team == Team.PlayerTeam) {
 			m_playerTeamFootballers.Add(rtv);
 		} else {

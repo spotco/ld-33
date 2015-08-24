@@ -9,11 +9,11 @@ public class SpriteAnimator : MonoBehaviour {
 		public float _speed;
 	}
 
-	[SerializeField] private SpriteRenderer _tar;
+	[SerializeField] public SpriteRenderer _tar;
 	private Dictionary<string,SpriteAnimator_Animation> _anim_name_to_anim = new Dictionary<string,SpriteAnimator_Animation>();
 	private float _ct;
 	private int _i;
-	private string _current_anim_name = "";
+	[SerializeField] private string _current_anim_name = "";
 
 	public void add_anim(string name, List<Sprite> frames, float speed) {
 		_anim_name_to_anim[name] = new SpriteAnimator_Animation() {
@@ -34,10 +34,12 @@ public class SpriteAnimator : MonoBehaviour {
 		if (Main.IsPaused(PauseFlags.TimeOut)) return;
 		if (!this._anim_name_to_anim.ContainsKey(this._current_anim_name)) return;
 		SpriteAnimator_Animation animation = this._anim_name_to_anim[this._current_anim_name];
+		if (animation._frames.Count == 0) return;
+		if (animation._speed <= 0) return;
+
 		if (_i >= animation._frames.Count) _i = 0;
 		_tar.sprite = animation._frames[_i];
 		_ct -= Util.dt_scale;
-
 		while (_ct <= 0) {
 			_ct += animation._speed;
 			_i++;

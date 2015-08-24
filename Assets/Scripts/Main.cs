@@ -30,6 +30,7 @@ public class Main : Uzu.Main
   {
 	Application.targetFrameRate = 60;
 	Cursor.visible = false;
+	SpriteResourceDB.get_footballer_anim_resource(FootballerResourceKey.Player1);
     _instance = (Main)Uzu.Main.Instance;
     
     // InitGraphicsSettings ();

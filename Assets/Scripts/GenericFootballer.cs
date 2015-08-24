@@ -37,8 +37,10 @@ public class GenericFootballer : MonoBehaviour {
 
 	private static int __alloct = 0;
 	[SerializeField] private int _id = 0;
+
+	private SpriteAnimator _animator;
 	
-	public void sim_initialize() {
+	public void sim_initialize(FootballerAnimResource anims) {
 		_id = ++__alloct;
 		_current_mode = GenericFootballerMode.Idle;
 		Color color = _select_reticule.color;
@@ -47,24 +49,33 @@ public class GenericFootballer : MonoBehaviour {
 		this.set_select_reticule_alpha(0);
 		_throw_charge_ct = 0;
 		this.update_calculated_velocity();
+
+		_animator = this.gameObject.AddComponent<SpriteAnimator>();
+		_animator._tar = _renderer;
+		anims.animations_add_to_animator(_animator);
+		_animator.play_anim(FootballerAnimResource.ANIM_IDLE);
+
 	}
 
 	public void sim_update_image() {
-		if (Main.LevelController.get_footballer_team(this) == Team.PlayerTeam) {
-			if (Main.LevelController.footballer_has_ball(this)) {
-				_renderer.sprite = _image_holding_ball;
-			} else {
-				_renderer.sprite = _image_noball;
-			}
+		if (_current_mode == GenericFootballerMode.Stunned) {
+			_animator.play_anim(FootballerAnimResource.ANIM_HURT);
 
-		} else if (Main.LevelController.get_footballer_team(this) == Team.EnemyTeam) {
-			if (Main.LevelController.footballer_has_ball(this)) {
-				_renderer.sprite = _image_enemy_holding_ball;
+		} else if (Main.LevelController.footballer_has_ball(this)) {
+			if (_ball_charging) {
+				_animator.play_anim(FootballerAnimResource.ANIM_HOLD);
 			} else {
-				_renderer.sprite = _image_enemy_noball;
+				_animator.play_anim(FootballerAnimResource.ANIM_RUN_BALL);
 			}
-
+		} else {
+			if (this.get_calculated_velocity().magnitude > 0f) {
+				_animator.play_anim(FootballerAnimResource.ANIM_RUN);
+			} else {
+				_animator.play_anim(FootballerAnimResource.ANIM_IDLE);
+			}
 		}
+
+
 	}
 
 	void Update() {
@@ -234,7 +245,6 @@ public class GenericFootballer : MonoBehaviour {
 				
 			} else {
 				_throw_charge_ct = 0;
-				
 				float scf = Mathf.Clamp(mag,0,200)/200.0f;
 				float speed = 2.0f * Util.dt_scale;
 				dir.Scale(Util.valv(scf*speed));

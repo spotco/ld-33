@@ -18,7 +18,7 @@ public class Referee : MonoBehaviour {
 	private Vector3 _startpos,_basepos;
 
 	public void Update() {
-		_renderer.sortingOrder = (int)(-transform.position.y * 100);
+		_renderer.sortingOrder = (int)(-transform.position.y * 100);	
 	}
 
 	public void sim_initialize(RefereeMode mode) {
