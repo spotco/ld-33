@@ -111,7 +111,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 22466796}
-  - 222: {fileID: 22282820}
   m_Layer: 5
   m_Name: Panel (1)
   m_TagString: Untagged
@@ -281,7 +280,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 22456838}
-  - 222: {fileID: 22285142}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -331,7 +329,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 224: {fileID: 22469124}
-  - 222: {fileID: 22254888}
   - 114: {fileID: 11425084}
   m_Layer: 5
   m_Name: QuarterDisplay
@@ -1091,12 +1088,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 143154}
---- !u!222 &22254888
-CanvasRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 184358}
 --- !u!222 &22260958
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -1121,12 +1112,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 153610}
---- !u!222 &22282820
-CanvasRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 135292}
 --- !u!222 &22283620
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -1139,12 +1124,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 147070}
---- !u!222 &22285142
-CanvasRenderer:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 161844}
 --- !u!222 &22287684
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -1338,8 +1317,8 @@ RectTransform:
   m_RootOrder: 1
   m_AnchorMin: {x: .5, y: 0}
   m_AnchorMax: {x: .5, y: 1}
-  m_AnchoredPosition: {x: -268, y: -349.100006}
-  m_SizeDelta: {x: 278, y: -710.099976}
+  m_AnchoredPosition: {x: -263, y: -221.529999}
+  m_SizeDelta: {x: 289, y: -454.950012}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22463888
 RectTransform:
@@ -1412,8 +1391,8 @@ RectTransform:
   m_RootOrder: 2
   m_AnchorMin: {x: .5, y: 0}
   m_AnchorMax: {x: .5, y: 1}
-  m_AnchoredPosition: {x: -23, y: -348.299988}
-  m_SizeDelta: {x: 278, y: -710.099976}
+  m_AnchoredPosition: {x: -15, y: -221}
+  m_SizeDelta: {x: 294, y: -456}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22468240
 RectTransform:
@@ -1446,10 +1425,10 @@ RectTransform:
   - {fileID: 22485998}
   m_Father: {fileID: 22476866}
   m_RootOrder: 5
-  m_AnchorMin: {x: .5, y: 0}
-  m_AnchorMax: {x: .5, y: 1}
-  m_AnchoredPosition: {x: 476.299988, y: -348.299988}
-  m_SizeDelta: {x: 78.8000031, y: -710.099976}
+  m_AnchorMin: {x: .5, y: .5}
+  m_AnchorMax: {x: .5, y: .5}
+  m_AnchoredPosition: {x: 470, y: -220.910004}
+  m_SizeDelta: {x: 106, y: -59.0040016}
   m_Pivot: {x: .5, y: .5}
 --- !u!224 &22472122
 RectTransform:
