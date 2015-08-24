@@ -233,7 +233,9 @@ public class LevelController : MonoBehaviour {
 		if (m_playerTeam != null) {
 			TeamBase team = m_playerTeam.GetComponent<TeamBase>();
 			foreach (BotBase member in team.TeamMembers) {
-				GameObject.Destroy(member.gameObject);
+				if (member != null) {
+					GameObject.Destroy(member.gameObject);
+				}
 			}
 			GameObject.Destroy(m_playerTeam.gameObject);
 		}
@@ -241,7 +243,9 @@ public class LevelController : MonoBehaviour {
 		if (m_enemyTeam != null) {
 			TeamBase team = m_enemyTeam.GetComponent<TeamBase>();
 			foreach (BotBase member in team.TeamMembers) {
-				GameObject.Destroy(member.gameObject);
+				if (member != null) {
+					GameObject.Destroy(member.gameObject);
+				}
 			}
 			GameObject.Destroy(m_enemyTeam.gameObject);
 		}
