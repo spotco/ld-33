@@ -178,9 +178,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AudioClips:
-  - {fileID: 8300000, guid: 8873ad28e243a48ae96cadddcb668119, type: 3}
+  - {fileID: 8300000, guid: 588a02f8a8dd04d9ca353443be919972, type: 3}
+  - {fileID: 8300000, guid: bafa8ab13a033437ab233ba28f3a7849, type: 3}
   AudioClipIds:
   - MenuBgm
+  - GameBgm
 --- !u!114 &11472460
 MonoBehaviour:
   m_ObjectHideFlags: 1
