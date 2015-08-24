@@ -351,7 +351,7 @@ public class LevelController : MonoBehaviour {
 			Main.GameCamera.SetTargetZoom(800);
 			Vector3 mouse_pt = GetLastMousePointInBallBounds();
 			GenericFootballer select_tar = this.IsPointTouchFootballer(mouse_pt,m_playerTeamFootballers);
-			if (select_tar != null && select_tar.can_take_commands()) {
+			if (!Input.GetMouseButton(0) && select_tar != null && select_tar.can_take_commands()) {
 				m_mouseTargetIcon.SetActive(false);
 				select_tar.SetSelectedForAFrame();
 			} else {
@@ -369,11 +369,13 @@ public class LevelController : MonoBehaviour {
 			keyboard_switch_timeout_selected_footballer();
 
 			Vector2 click_pt;
-			if (this.IsClickAndPoint(out click_pt)) {
+			if (this.IsClickAndPointDown(out click_pt)) {
 				GenericFootballer clicked_footballer = IsPointTouchFootballer(click_pt,m_playerTeamFootballers);
 				if (clicked_footballer != null) {
 					m_timeoutSelectedFootballer = clicked_footballer;
-				} else if (m_timeoutSelectedFootballer != null && !this.footballer_has_ball(m_timeoutSelectedFootballer)) {
+				}
+			} else if (this.IsClickAndPoint(out click_pt)) {
+				if (m_timeoutSelectedFootballer != null && !this.footballer_has_ball(m_timeoutSelectedFootballer)) {
 					m_timeoutSelectedFootballer.CommandMoveTo(click_pt);
 				}
 			}
@@ -500,8 +502,18 @@ public class LevelController : MonoBehaviour {
 		return _last_mouse_point_in_ball_bounds;
 	}
 	
-	private bool IsClickAndPoint(out Vector2 point) {
+	private bool IsClickAndPointDown(out Vector2 point) {
 		if (Input.GetMouseButtonDown(0)) {
+			point = GetLastMousePointInBallBounds();
+			return true;
+		}
+		point = Vector2.zero;
+		return false;
+	}
+
+	
+	private bool IsClickAndPoint(out Vector2 point) {
+		if (Input.GetMouseButton(0)) {
 			point = GetLastMousePointInBallBounds();
 			return true;
 		}

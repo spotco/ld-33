@@ -373,6 +373,9 @@ public class GenericFootballer : MonoBehaviour {
 				_throw_charge_ct = 0;
 			}
 			
+			// reset previous command
+			_has_command_move_to_point = false;
+			
 			// ai event
 			GetComponent<BotBase>().Msg_Stunned();
 		}
