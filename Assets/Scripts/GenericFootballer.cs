@@ -241,7 +241,7 @@ public class GenericFootballer : MonoBehaviour {
 			} else {
 				_throw_charge_ct = 0;
 				float scf = Mathf.Clamp(mag,0,200)/200.0f;
-				float speed = this.get_move_speed() * Util.dt_scale;
+				float speed = this.get_move_speed_active() * Util.dt_scale;
 				dir.Scale(Util.valv(scf*speed));
 				transform.position = Util.vec_add(transform.position,dir);
 			}
@@ -290,7 +290,8 @@ public class GenericFootballer : MonoBehaviour {
 		Main.LevelController.m_enemyTeamFootballersWithBall.Remove(this);
 	}
 
-	public float get_move_speed() { return 2.5f; }
+	public float get_move_speed() { return 3.5f; }
+	public float get_move_speed_active() { return 2.5f; }
 
 	public void sim_update_bump() {
 		_cannot_stun_ct -= Util.dt_scale;
