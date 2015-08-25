@@ -414,7 +414,10 @@ public class GenericFootballer : MonoBehaviour {
 	public void CommandMoveTo(Vector2 pos) {
 		if (!this.can_take_commands()) return;
 		_command_move_to_point = pos;
-		_current_mode = GenericFootballerMode.CommandMoving;
+		
+		if (_current_mode != GenericFootballerMode.Stunned) {
+			_current_mode = GenericFootballerMode.CommandMoving;
+		}
 		_has_command_move_to_point = true;
 
 		Main.LevelController.m_pathRenderer.clear_path(_id);
@@ -440,7 +443,6 @@ public class GenericFootballer : MonoBehaviour {
 	public bool can_pickup_ball() { return this._current_mode != GenericFootballerMode.Stunned && this._current_mode != GenericFootballerMode.MoveBackIntoBounds; }
 	public bool can_take_commands() { 
 		return 
-			this._current_mode != GenericFootballerMode.Stunned && 
 				this._current_mode != GenericFootballerMode.MoveBackIntoBounds && 
 				this._current_mode != GenericFootballerMode.PlayerTeamHasBall; 
 	}
