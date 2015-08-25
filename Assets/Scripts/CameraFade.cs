@@ -22,4 +22,8 @@ public class CameraFade : MonoBehaviour {
 	void Update () {
 		set_alpha(Util.drpt(this.GetComponent<SpriteRenderer>().color.a,_target_alpha,1/20.0f));
 	}
+
+	public float get_alpha() {
+		return this.GetComponent<SpriteRenderer>().color.a;
+	}
 }

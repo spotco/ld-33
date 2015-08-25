@@ -74,6 +74,7 @@ public class LevelController : MonoBehaviour {
 		m_playerTeam = this.CreateTeam(Team.PlayerTeam);
 		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
 
+		reset_tutorial();
 
 		this.set_time_remaining_seconds(300);
 		
@@ -288,9 +289,29 @@ public class LevelController : MonoBehaviour {
 		team.SetPlayers(bots);
 	}
 
-	public void Update () {
+	public bool _tut_has_issued_command = false;
+	public bool _tut_has_passed = false;
+	private void reset_tutorial() {
+		_tut_has_issued_command = false;
+		_tut_has_passed = false;
+	}
+
+	public void Update() {
 		if (Main.PanelManager.CurrentPanelId != PanelIds.Game) return;
-			
+
+		if (Main._current_level == GameLevel.Level1 && UiPanelGame.inst.can_take_message() && m_currentMode != LevelControllerMode.Opening) {
+			if (!_tut_has_issued_command) {
+				if (m_currentMode != LevelControllerMode.Timeout) {
+					UiPanelGame.inst._chats.push_message("Hold space to call time out!");
+
+				} else {
+					UiPanelGame.inst._chats.push_message("Click and drag your teammates to give commands!");
+				}
+
+			} else if (!_tut_has_passed) {
+				UiPanelGame.inst._chats.push_message("Click and hold when not timeout to pass!");
+			}
+		}
 
 		float mouse_target_anim_speed = 0.3f;
 		if (m_currentMode == LevelControllerMode.GoalZoomOut) {
@@ -393,6 +414,7 @@ public class LevelController : MonoBehaviour {
 					this.player_goal_score(itr.transform.position);
 					Destroy(itr.gameObject);
 					m_playerGoal.play_eat_anim(40);
+					UiPanelGame.inst._chats.clear_messages();
 
 				}
 			}
@@ -401,6 +423,7 @@ public class LevelController : MonoBehaviour {
 
 
 		} else if (m_currentMode == LevelControllerMode.Timeout) {
+
 
 			Vector3 screen = Main.GameCamera.GetComponent<Camera>().WorldToScreenPoint(this.GetLastMousePointInBallBounds());
 			screen.z = 0;
@@ -446,6 +469,7 @@ public class LevelController : MonoBehaviour {
 				}
 			} else if (this.IsClickAndPoint(out click_pt)) {
 				if (m_timeoutSelectedFootballer != null && !this.footballer_has_ball(m_timeoutSelectedFootballer)) {
+					_tut_has_issued_command = true;
 					m_timeoutSelectedFootballer.CommandMoveTo(click_pt);
 				}
 			}

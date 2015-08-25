@@ -713,18 +713,6 @@ Prefab:
       propertyPath: _fadein
       value: 
       objectReference: {fileID: 1018539268}
-    - target: {fileID: 22424994, guid: 9d1f7adf3c8234a0abf14f94826b7f80, type: 2}
-      propertyPath: m_AnchorMin.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22424994, guid: 9d1f7adf3c8234a0abf14f94826b7f80, type: 2}
-      propertyPath: m_AnchorMax.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 22424994, guid: 9d1f7adf3c8234a0abf14f94826b7f80, type: 2}
-      propertyPath: m_AnchoredPosition.x
-      value: -54.4999695
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9d1f7adf3c8234a0abf14f94826b7f80, type: 2}
   m_IsPrefabParent: 0

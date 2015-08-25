@@ -294,6 +294,9 @@ public class GenericFootballer : MonoBehaviour {
 	
 	public void throw_ball(Vector3 dir, float charge_ct) {
 		float vel = Mathf.Clamp(charge_ct/2000.0f * 10 + 6,6,18);
+		if (Main.LevelController._tut_has_issued_command) {
+			Main.LevelController._tut_has_passed = true;
+		}
 		Main.LevelController.CreateLooseBall(
 			this.transform.position,
 			Util.vec_scale(dir,vel)

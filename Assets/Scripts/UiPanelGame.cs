@@ -16,6 +16,8 @@ public class UiPanelGame : Uzu.UiPanel {
 	[SerializeField] private Image _pause_icon;
 	[SerializeField] public CameraFade _fadein;
 
+	[SerializeField] public ChatManager _chats;
+
 	public override void OnInitialize() {
 		inst = this;
 	}
@@ -76,6 +78,8 @@ public class UiPanelGame : Uzu.UiPanel {
 			popup_set_alpha(0);
 		}
 	}
+
+	public bool can_take_message() { return _chats._messages.Count == 0 && _chats._ct <= 0Ω; }
 
 	private void popup_set_alpha(float val) {
 		Color c = _popup_message.color;
