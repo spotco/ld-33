@@ -79,7 +79,7 @@ public class UiPanelGame : Uzu.UiPanel {
 		}
 	}
 
-	public bool can_take_message() { return _chats._messages.Count == 0 && _chats._ct <= 0Ω; }
+	public bool can_take_message() { return _chats._messages.Count == 0 && _chats._ct <= 0; }
 
 	private void popup_set_alpha(float val) {
 		Color c = _popup_message.color;
