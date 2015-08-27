@@ -16,6 +16,7 @@ public class UIPanelTV : Uzu.UiPanel {
 	}
 
 	public override void OnEnter(Uzu.PanelEnterContext context) {
+		Main.AudioController.PlayEffect("crowd");
 		Main.AudioController.PlayBgm(AudioClipIds.MenuBgm);
 		gameObject.SetActive(true);
 		Main.GameCamera.gameObject.SetActive(false);
@@ -127,19 +128,17 @@ public class UIPanelTV : Uzu.UiPanel {
 					Main.PanelManager.ChangeCurrentPanel(PanelIds.Game);
 					Main.LevelController.CurrentDifficulty = Difficulty.Easy;
 					Main.LevelController.StartLevel(LevelController.StartMode.Sequence);
-					UiPanelGame.inst.show_popup_message(0);
 
 				} else if (Main._current_level == GameLevel.Level2) {
 					Main.PanelManager.ChangeCurrentPanel(PanelIds.Game);
 					Main.LevelController.CurrentDifficulty = Difficulty.Normal;
 					Main.LevelController.StartLevel(LevelController.StartMode.Sequence);
-					UiPanelGame.inst.show_popup_message(0);
 
 				} else if (Main._current_level == GameLevel.Level3) {
 					Main.PanelManager.ChangeCurrentPanel(PanelIds.Game);
 					Main.LevelController.CurrentDifficulty = Difficulty.Hard;
 					Main.LevelController.StartLevel(LevelController.StartMode.Sequence);
-					UiPanelGame.inst.show_popup_message(0);
+
 				} else {
 					Main._current_level = GameLevel.Level1;
 					Main.PanelManager.ChangeCurrentPanel(PanelIds.Tv);

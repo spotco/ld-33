@@ -74,6 +74,7 @@ public class Referee : MonoBehaviour {
 			if (Vector3.Distance(itr.transform.position,this.transform.position) < 40 && itr._vel.magnitude < 0.1f) {
 				itr._vz = 3;
 				itr._z = 0;
+				Main.AudioController.PlayEffect("sfx_throw");
 				if (_self_mode == RefereeMode.Top) {
 					if (itr.transform.position.x < _left_goal_line.x) {
 						itr._vel = Util.vec_scale((new Vector2(1,Util.rand_range(-0.15f,0))).normalized,4);

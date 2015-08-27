@@ -27,9 +27,11 @@ public class ChatManager : MonoBehaviour {
 	}
 
 	public void clear_messages() {
+		_text_scroll.finish();
 		_messages.Clear();
 		_ids.Clear();
 		_text_scroll.clear();
+		_ct = 0;
 		this.set_img_alpha(0);
 		this._img_tar_alpha = 0;
 	}

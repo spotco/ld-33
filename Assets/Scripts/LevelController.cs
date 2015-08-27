@@ -55,6 +55,11 @@ public class LevelController : MonoBehaviour {
 	
 	private GameObject m_mouseTargetIcon;
 	private float m_mouseTargetIconTheta;
+	private void mouse_target_icon_set_alpha(float val) {
+		Color c = m_mouseTargetIcon.GetComponent<SpriteRenderer>().color;
+		c.a = val;
+		m_mouseTargetIcon.GetComponent<SpriteRenderer>().color = c;
+	}
 	
 	private Difficulty _currentDifficulty;
 	public Difficulty CurrentDifficulty {
@@ -65,7 +70,10 @@ public class LevelController : MonoBehaviour {
 	}
 		
 	public void StartLevel(StartMode startMode = StartMode.Sequence) {
+		Main.AudioController.PlayEffect("crowd");
 		ResetLevel();
+		_last_mouse_position = new Vector3(0,-300,0);
+		_last_mouse_point_in_ball_bounds = new Vector3(0,0,0); //i dont even
 		_last_mouse_point_in_ball_bounds = Vector3.zero;
 		Debug.Log("Start level: " + CurrentDifficulty);
 		
@@ -161,11 +169,14 @@ public class LevelController : MonoBehaviour {
 				break;
 		}
 	}
-	
+
+	private float _countdown_ct;
+	private float _last_countdown_ct;
 	private void DoMatchOpeningSequence() {
 		m_currentMode = LevelControllerMode.Opening;
+		_countdown_ct = 0;
 		// hide cursor
-		m_mouseTargetIcon.SetActive(false);
+		//m_mouseTargetIcon.SetActive(false);
 		
 		List<BotBase> allBots = new List<BotBase>(
 			m_playerTeam.TeamMembers.Count + m_enemyTeam.TeamMembers.Count);
@@ -181,6 +192,8 @@ public class LevelController : MonoBehaviour {
 			float d = Vector3.Distance(bot.transform.position, bot.HomePosition);
 			float r = Util.rand_range(200.0f, 220.0f);
 			float t = d / r;
+			_countdown_ct = Math.Max(_countdown_ct,t);
+			_last_countdown_ct = _countdown_ct;
 			
 			LTDescr animDesc = LeanTween.move(
 				bot.gameObject,
@@ -297,7 +310,9 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public void Update() {
+
 		if (Main.PanelManager.CurrentPanelId != PanelIds.Game) return;
+		this.update_mouse_point();
 
 		if (Main._current_level == GameLevel.Level1 && UiPanelGame.inst.can_take_message() && m_currentMode != LevelControllerMode.Opening) {
 			if (!_tut_has_issued_command) {
@@ -309,7 +324,7 @@ public class LevelController : MonoBehaviour {
 				}
 
 			} else if (!_tut_has_passed) {
-				UiPanelGame.inst._chats.push_message("Click and hold when not timeout to pass!");
+				UiPanelGame.inst._chats.push_message("Click, hold and release out of timeout to pass!");
 			}
 		}
 
@@ -356,7 +371,8 @@ public class LevelController : MonoBehaviour {
 
 
 			mouse_target_anim_speed = 2.0f;
-			m_mouseTargetIcon.SetActive(true);
+			mouse_target_icon_set_alpha(1.0f);
+			//m_mouseTargetIcon.SetActive(true);
 			Vector3 mouse_pt = GetLastMousePointInBallBounds();
 			m_mouseTargetIcon.transform.position = mouse_pt;
 			m_mouseTargetIcon.transform.localScale = Util.valv(50.0f);
@@ -379,6 +395,8 @@ public class LevelController : MonoBehaviour {
 					Destroy(itr.gameObject);
 					m_enemyGoal.play_eat_anim(40);
 					m_playerGoal.play_eat_anim(40);
+					Main.AudioController.PlayEffect("sfx_hit");
+
 				}
 			}
 
@@ -395,6 +413,11 @@ public class LevelController : MonoBehaviour {
 				m_currentMode = LevelControllerMode.Timeout;
 				m_timeoutSelectedFootballer = null;
 				Main.Pause(PauseFlags.TimeOut);
+
+				if (!_tut_has_issued_command) {
+					UiPanelGame.inst._chats.clear_messages();
+				}
+				Main.AudioController.PlayEffect("sfx_pause");
 			}
 
 			for (int i = m_looseBalls.Count-1; i >= 0; i--) {
@@ -405,7 +428,7 @@ public class LevelController : MonoBehaviour {
 					this.enemy_goal_score(itr.transform.position);
 					Destroy(itr.gameObject);
 					m_enemyGoal.play_eat_anim(40);
-
+					Main.AudioController.PlayEffect("sfx_goal");
 
 				}
 				if (m_playerGoal.box_collider().OverlapPoint(itr.transform.position)) {
@@ -415,6 +438,8 @@ public class LevelController : MonoBehaviour {
 					Destroy(itr.gameObject);
 					m_playerGoal.play_eat_anim(40);
 					UiPanelGame.inst._chats.clear_messages();
+					Main.AudioController.PlayEffect("sfx_goal");
+
 
 				}
 			}
@@ -445,10 +470,12 @@ public class LevelController : MonoBehaviour {
 			Vector3 mouse_pt = GetLastMousePointInBallBounds();
 			GenericFootballer select_tar = this.IsPointTouchFootballer(mouse_pt,m_playerTeamFootballers);
 			if (!Input.GetMouseButton(0) && select_tar != null && select_tar.can_take_commands()) {
-				m_mouseTargetIcon.SetActive(false);
+				mouse_target_icon_set_alpha(0.4f);
+				//m_mouseTargetIcon.SetActive(false);
 				select_tar.SetSelectedForAFrame();
 			} else {
-				m_mouseTargetIcon.SetActive(true);
+				mouse_target_icon_set_alpha(1.0f);
+				//m_mouseTargetIcon.SetActive(true);
 			}
 			m_mouseTargetIcon.transform.position = mouse_pt;
 			m_mouseTargetIcon.transform.localScale = Util.valv(75.0f);
@@ -481,11 +508,26 @@ public class LevelController : MonoBehaviour {
 					itr.timeout_end();
 				}
 				Main.Unpause(PauseFlags.TimeOut);
+				Main.AudioController.PlayEffect("sfx_unpause");
 			}
 		} else if (m_currentMode == LevelControllerMode.Opening) {
 			mouse_target_anim_speed = 2.0f;
-			m_mouseTargetIcon.SetActive(true);
-			_last_mouse_point_in_ball_bounds = new Vector3(200,200,0); //i dont even
+			//m_mouseTargetIcon.SetActive(true);
+			mouse_target_icon_set_alpha(1.0f);
+
+			_countdown_ct -= Time.deltaTime;
+			if (_countdown_ct < 4f && _last_countdown_ct > 4f) {
+				UiPanelGame.inst._chats.push_message("3...");
+				Main.AudioController.PlayEffect("sfx_ready");
+			} else if (_countdown_ct < 3f && _last_countdown_ct > 3f) {
+				UiPanelGame.inst._chats.push_message("2...");
+				Main.AudioController.PlayEffect("sfx_ready");
+			} else if (_countdown_ct < 2f && _last_countdown_ct > 2f) {
+				UiPanelGame.inst._chats.push_message("1...");
+				Main.AudioController.PlayEffect("sfx_ready");
+			}
+			_last_countdown_ct = _countdown_ct;
+
 			Vector3 mouse_pt = GetLastMousePointInBallBounds();
 			m_mouseTargetIcon.transform.position = mouse_pt;
 			m_mouseTargetIcon.transform.localScale = Util.valv(50.0f);
@@ -493,7 +535,7 @@ public class LevelController : MonoBehaviour {
 
 			if (m_matchOpeningAnimIds.Count == 0) {
 				m_currentMode = LevelControllerMode.GamePlay;
-				m_mouseTargetIcon.SetActive(true);
+				//m_mouseTargetIcon.SetActive(true);
 				
 				// throw it in
 				if (m_looseBalls.Count > 0) {
@@ -502,6 +544,8 @@ public class LevelController : MonoBehaviour {
 					throwDir.Normalize();
 					
 					lb.sim_initialize(lb.transform.position, throwDir * 4.0f);
+					UiPanelGame.inst.show_popup_message(0);
+					Main.AudioController.PlayEffect("sfx_go");
 				}
 				
 				m_enemyTeam.StartMatch();
@@ -592,13 +636,27 @@ public class LevelController : MonoBehaviour {
 			m_particles.add_particle(tmp);
 		}
 	}
-	
+
+	public Vector3 _last_mouse_position;
 	public Vector3 GetMousePoint() {
+		/*
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		Plane gamePlane = new Plane(new Vector3(0,0,-1),new Vector3(0,0,0));
 		float rayout;
 		gamePlane.Raycast(ray,out rayout);
 		return Util.vec_add(ray.origin,Util.vec_scale(ray.direction,rayout));
+		*/
+		return _last_mouse_position;
+	}
+
+	public void update_mouse_point() {
+		Vector3 vp_point = Main.GameCamera.GetComponent<Camera>().WorldToViewportPoint(_last_mouse_position);
+		float scf = Mathf.Clamp(1.0f - Vector2.Distance(new Vector2(0.5f,0.5f),vp_point),0,1) * 0.075f;
+
+		_last_mouse_position.x += Input.GetAxis ("Mouse X") * Screen.width * scf;
+		_last_mouse_position.y += Input.GetAxis ("Mouse Y") * Screen.height * scf;
+
+
 	}
 
 	public Vector3 _last_mouse_point_in_ball_bounds;
