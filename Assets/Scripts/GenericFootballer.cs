@@ -297,6 +297,7 @@ public class GenericFootballer : MonoBehaviour {
 		if (Main.LevelController._tut_has_issued_command) {
 			Main.LevelController._tut_has_passed = true;
 		}
+		Main.AudioController.PlayEffect("sfx_throw");
 		Main.LevelController.CreateLooseBall(
 			this.transform.position,
 			Util.vec_scale(dir,vel)
@@ -340,7 +341,7 @@ public class GenericFootballer : MonoBehaviour {
 				(transform.position.y + tar.transform.position.y)/2,
 				(transform.position.z + tar.transform.position.z)/2
 			);
-			this.apply_bump(Util.vec_scale(bump_vel,-1),hit_spot);
+			this.apply_bump(Util.vec_scale(bump_vel,-1),hit_spot,true);
 			tar.apply_bump(bump_vel,hit_spot);
 		}
 	}
@@ -349,8 +350,11 @@ public class GenericFootballer : MonoBehaviour {
 	[SerializeField] private float _stunned_mode_ct = 0;
 	[SerializeField] private float _stunned_upwards_vel = 0;
 	private float _cannot_stun_ct = 0;
-	private void apply_bump(Vector3 vel, Vector3 hit_spot) {
+	private void apply_bump(Vector3 vel, Vector3 hit_spot, bool do_sfx = false) {
 		if (_current_mode != GenericFootballerMode.Stunned && _cannot_stun_ct <= 0) {
+			if (do_sfx) {
+				Main.AudioController.PlayEffect("sfx_hit");
+			}
 			if (vel.magnitude == 0) vel = new Vector3(Util.rand_range(-1,1),Util.rand_range(-1,1));
 			int testct = 0;
 			while (vel.magnitude < 2.0f && testct < 20) {
@@ -377,7 +381,7 @@ public class GenericFootballer : MonoBehaviour {
 			}
 			
 			// reset previous command
-			_has_command_move_to_point = false;
+			//_has_command_move_to_point = false;
 			
 			// ai event
 			GetComponent<BotBase>().Msg_Stunned();

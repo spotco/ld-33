@@ -107,7 +107,7 @@ public class Main : Uzu.Main
 		float dt_scale = (1/60.0f)/(Time.deltaTime);
 		Util.dt_scale = dt_scale;
 		Cursor.visible = false;
-		Cursor.lockState = CursorLockMode.Confined;
+		Cursor.lockState = CursorLockMode.Locked;
 	}
 
 	public static GameLevel _current_level;

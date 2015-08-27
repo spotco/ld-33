@@ -60,6 +60,8 @@ public class LooseBall : MonoBehaviour {
 				GenericFootballer itr = Main.LevelController.m_playerTeamFootballers[i];
 				if (itr.can_pickup_ball() && itr.collider_contains(this.GetComponent<CircleCollider2D>())) {
 					Main.LevelController.PickupLooseBall(this,itr);
+					Main.AudioController.PlayEffect("sfx_pickup");
+
 					return;
 				}
 			}
@@ -67,6 +69,7 @@ public class LooseBall : MonoBehaviour {
 				GenericFootballer itr = Main.LevelController.m_enemyTeamFootballers[i];
 				if (itr.can_pickup_ball() && itr.collider_contains(this.GetComponent<CircleCollider2D>())) {
 					Main.LevelController.PickupLooseBall(this,itr);
+					Main.AudioController.PlayEffect("sfx_pickup");
 					return;
 				}
 			}

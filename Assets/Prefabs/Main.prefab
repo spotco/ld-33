@@ -162,6 +162,10 @@ MonoBehaviour:
   m_looseBalls: []
   m_matchOpeningAnimIds: 
   m_currentMode: 0
+  _tut_has_issued_command: 0
+  _tut_has_passed: 0
+  _last_mouse_position: {x: 0, y: 0, z: 0}
+  _last_mouse_point_in_ball_bounds: {x: 0, y: 0, z: 0}
   _player_team_score: 0
   _enemy_team_score: 0
   _time_remaining: 0
@@ -180,9 +184,27 @@ MonoBehaviour:
   AudioClips:
   - {fileID: 8300000, guid: 588a02f8a8dd04d9ca353443be919972, type: 3}
   - {fileID: 8300000, guid: bafa8ab13a033437ab233ba28f3a7849, type: 3}
+  - {fileID: 8300000, guid: 33bf05d3e75eb4b2a9cbeca3391b0e81, type: 3}
+  - {fileID: 8300000, guid: c129eaf071e9b41fc9b6416b14e8b93b, type: 3}
+  - {fileID: 8300000, guid: 268300d00d7584cb184a9aea9d1fc822, type: 3}
+  - {fileID: 8300000, guid: 5dccebf5dd97a4ccc81ef00b5d474bb2, type: 3}
+  - {fileID: 8300000, guid: 0687a90b0a9a248bdaa23969f8981565, type: 3}
+  - {fileID: 8300000, guid: 40fc1530c9d894e56a4044bab5cdaadd, type: 3}
+  - {fileID: 8300000, guid: 989e32362f2e64203ac71ddca0dc5ce6, type: 3}
+  - {fileID: 8300000, guid: 274a365fe6fd345de84143e7fc535a27, type: 3}
+  - {fileID: 8300000, guid: 02b15c822bf22494bb39dde246281cfb, type: 3}
   AudioClipIds:
   - MenuBgm
   - GameBgm
+  - sfx_pickup
+  - sfx_hit
+  - sfx_goal
+  - sfx_throw
+  - crowd
+  - sfx_ready
+  - sfx_go
+  - sfx_pause
+  - sfx_unpause
 --- !u!114 &11472460
 MonoBehaviour:
   m_ObjectHideFlags: 1

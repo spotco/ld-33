@@ -198,6 +198,79 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 239ac44175b9d4ce1ad214d2f80285f2, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &272203391 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 120610, guid: 7966cd997bfa14d2fbee3b44970a31f0, type: 2}
+  m_PrefabInternal: {fileID: 1610779071}
+--- !u!82 &272203393
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 272203391}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 00fe1c01d43e5409fb15ec961c12183b, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!1001 &301786291
 Prefab:
   m_ObjectHideFlags: 0
@@ -237,6 +310,26 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: _panelManager
+      value: 
+      objectReference: {fileID: 1573188531}
+    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: _fsmDebugger
+      value: 
+      objectReference: {fileID: 322339007}
+    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: _particleRoot
+      value: 
+      objectReference: {fileID: 1870365452}
+    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: _tvCamera
+      value: 
+      objectReference: {fileID: 9649877}
+    - target: {fileID: 11426180, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
+      propertyPath: _path_renderer_root
+      value: 
+      objectReference: {fileID: 1285087775}
     - target: {fileID: 11446726, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
       propertyPath: proto_referee
       value: 
@@ -261,26 +354,6 @@ Prefab:
       propertyPath: m_enemyGoal
       value: 
       objectReference: {fileID: 1191084275}
-    - target: {fileID: 11426180, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: _path_renderer_root
-      value: 
-      objectReference: {fileID: 1285087775}
-    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: _panelManager
-      value: 
-      objectReference: {fileID: 1573188531}
-    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: _fsmDebugger
-      value: 
-      objectReference: {fileID: 322339007}
-    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: _particleRoot
-      value: 
-      objectReference: {fileID: 1870365452}
-    - target: {fileID: 11446616, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
-      propertyPath: _tvCamera
-      value: 
-      objectReference: {fileID: 9649877}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8e9f2d4fa12b0442a9aa4a375c4fcb42, type: 2}
   m_IsPrefabParent: 0
