@@ -6,12 +6,18 @@ public class ChatManager : MonoBehaviour {
 
 	[SerializeField] public ScrollText _text_scroll;
 	[SerializeField] Image _img;
+	[SerializeField] List<Image> _additional_images;
 	private float _img_tar_alpha = 0;
 	private void set_img_alpha(float val) {
 		Color c= _img.color;
 		c.a=val;
 		_img.color = c;
 		_text_scroll._text.set_alpha(val);
+		if (_additional_images != null) {
+			for (int i = 0; i < _additional_images.Count; i++) {
+				_additional_images[i].color = c;
+			}
+		}
 	}
 
 	public void Awake() {

@@ -317,14 +317,17 @@ public class LevelController : MonoBehaviour {
 		if (Main._current_level == GameLevel.Level1 && UiPanelGame.inst.can_take_message() && m_currentMode != LevelControllerMode.Opening) {
 			if (!_tut_has_issued_command) {
 				if (m_currentMode != LevelControllerMode.Timeout) {
-					UiPanelGame.inst._chats.push_message("Hold space to call time out!");
+					UiPanelGame.inst._chats.push_message("Hold space to enter timeout!",2);
 
 				} else {
-					UiPanelGame.inst._chats.push_message("Click and drag your teammates to give commands!");
+					UiPanelGame.inst._chats.push_message("Click and drag teammates in timeout to give commands!",1);
 				}
 
 			} else if (!_tut_has_passed) {
-				UiPanelGame.inst._chats.push_message("Click, hold and release out of timeout to pass!");
+				if (get_footballer_team(nullableCurrentFootballerWithBall()) == Team.PlayerTeam) {
+					UiPanelGame.inst._chats.push_message("Click, hold and release out of timeout to pass!",2);
+				}
+				
 			}
 		}
 
@@ -333,6 +336,7 @@ public class LevelController : MonoBehaviour {
 			UiPanelGame.inst._fadein.set_target_alpha(1);
 			Main.GameCamera.SetTargetPos(_goalzoomoutfocuspos);
 			Main.GameCamera.SetTargetZoom(300);
+			m_particles.i_update(this);
 			if (UiPanelGame.inst._fadein.is_transition_finished()) {
 				this.ResetLevel();
 				Main.PanelManager.ChangeCurrentPanel(PanelIds.Tv);
@@ -385,6 +389,7 @@ public class LevelController : MonoBehaviour {
 			for (int i = this.m_playerTeamFootballers.Count-1; i >= 0; i--) {
 				GenericFootballer itr = this.m_playerTeamFootballers[i];	
 				itr.sim_update();
+				/*
 				if (m_enemyGoal.box_collider().OverlapPoint(itr.transform.position) || m_playerGoal.box_collider().OverlapPoint(itr.transform.position)) {
 					if (this.footballer_has_ball(itr)) {
 						this.m_playerTeamFootballersWithBall.Remove(itr);
@@ -398,6 +403,7 @@ public class LevelController : MonoBehaviour {
 					Main.AudioController.PlayEffect("sfx_hit");
 
 				}
+				*/
 			}
 
 			for (int i = 0; i < this.m_enemyTeamFootballers.Count; i++) {
@@ -418,6 +424,7 @@ public class LevelController : MonoBehaviour {
 					UiPanelGame.inst._chats.clear_messages();
 				}
 				Main.AudioController.PlayEffect("sfx_pause");
+				UiPanelGame.inst.bgm_audio_set_paused_mode(true);
 			}
 
 			for (int i = m_looseBalls.Count-1; i >= 0; i--) {
@@ -509,21 +516,22 @@ public class LevelController : MonoBehaviour {
 				}
 				Main.Unpause(PauseFlags.TimeOut);
 				Main.AudioController.PlayEffect("sfx_unpause");
+				UiPanelGame.inst.bgm_audio_set_paused_mode(false);
 			}
 		} else if (m_currentMode == LevelControllerMode.Opening) {
 			mouse_target_anim_speed = 2.0f;
 			//m_mouseTargetIcon.SetActive(true);
 			mouse_target_icon_set_alpha(1.0f);
-
+			m_particles.i_update(this);
 			_countdown_ct -= Time.deltaTime;
 			if (_countdown_ct < 4f && _last_countdown_ct > 4f) {
-				UiPanelGame.inst._chats.push_message("3...");
+				UiPanelGame.inst._chats.push_message("3...",2);
 				Main.AudioController.PlayEffect("sfx_ready");
 			} else if (_countdown_ct < 3f && _last_countdown_ct > 3f) {
-				UiPanelGame.inst._chats.push_message("2...");
+				UiPanelGame.inst._chats.push_message("2...",1);
 				Main.AudioController.PlayEffect("sfx_ready");
 			} else if (_countdown_ct < 2f && _last_countdown_ct > 2f) {
-				UiPanelGame.inst._chats.push_message("1...");
+				UiPanelGame.inst._chats.push_message("1...",2);
 				Main.AudioController.PlayEffect("sfx_ready");
 			}
 			_last_countdown_ct = _countdown_ct;
@@ -693,7 +701,7 @@ public class LevelController : MonoBehaviour {
 	
 	private GenericFootballer IsPointTouchFootballer(Vector3 pt, List<GenericFootballer> list) {
 		for (int i = 0; i < list.Count; i++) {
-			if (list[i].ContainsPoint(pt)) return list[i];
+			if (list[i].ContainsPointClick(pt)) return list[i];
 		}
 		return null;
 	}
@@ -711,6 +719,7 @@ public class LevelController : MonoBehaviour {
 	}
 
 	public Team get_footballer_team(GenericFootballer tar) {
+		if (tar == null) return Team.None;
 		if (m_playerTeamFootballers.Contains(tar)) return Team.PlayerTeam;
 		if (m_enemyTeamFootballers.Contains(tar)) return Team.EnemyTeam;
 		return Team.None;
@@ -771,7 +780,8 @@ public class LevelController : MonoBehaviour {
 		} else {
 			Main._current_level = GameLevel.End;
 		}
-		_enemy_team_score++;
+		_player_team_score++;
+		
 		m_currentMode = LevelControllerMode.GoalZoomOut;
 		Main._current_repeat_reason = RepeatReason.None;
 		UiPanelGame.inst.show_popup_message(1);
@@ -779,9 +789,8 @@ public class LevelController : MonoBehaviour {
 	}
 	
 	private void player_goal_score(Vector3 tar) {
-		_player_team_score++;
+		_enemy_team_score++;
 		m_currentMode = LevelControllerMode.GoalZoomOut;
-
 		Main._current_repeat_reason = RepeatReason.ScoredOn;
 		UiPanelGame.inst.show_popup_message(1);
 		_goalzoomoutfocuspos = tar;

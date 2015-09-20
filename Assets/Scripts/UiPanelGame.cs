@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class UiPanelGame : Uzu.UiPanel {
 
@@ -15,6 +16,8 @@ public class UiPanelGame : Uzu.UiPanel {
 	[SerializeField] private MultiText _quarter_text;
 	[SerializeField] private Image _pause_icon;
 	[SerializeField] public CameraFade _fadein;
+	
+	[SerializeField] public GameObject _chat_head_1, _chat_head_2;
 
 	[SerializeField] public ChatManager _chats;
 
@@ -29,8 +32,31 @@ public class UiPanelGame : Uzu.UiPanel {
 		_pause_icon.color = c;
 	}
 
+	public Uzu.AudioHandle _bgm_handle;
+	[SerializeField] AudioMixerGroup _bgm_mixer_group;
+
+	private AudioMixerSnapshot _audio_normal_snapshot, _audio_paused_snapshot;
+	public void bgm_audio_set_paused_mode(bool val) {
+		if (val) {
+			_bgm_mixer_group.audioMixer.TransitionToSnapshots(new AudioMixerSnapshot[]{ _audio_paused_snapshot },new float[] { 1.0f},0.25f);
+		} else {
+			_bgm_mixer_group.audioMixer.TransitionToSnapshots(new AudioMixerSnapshot[]{ _audio_normal_snapshot },new float[] { 1.0f},0.25f);
+		}
+
+	}
+
 	public override void OnEnter(Uzu.PanelEnterContext context) {
-		Main.AudioController.PlayBgm(AudioClipIds.GameBgm);
+		_bgm_handle = Main.AudioController.PlayBgm(AudioClipIds.BGM_MAIN_LOOP);
+
+		_bgm_handle._handle_audio_source.outputAudioMixerGroup = _bgm_mixer_group;
+		
+		_audio_normal_snapshot = _bgm_mixer_group.audioMixer.FindSnapshot("Normal");
+		_audio_paused_snapshot = _bgm_mixer_group.audioMixer.FindSnapshot("Paused");
+
+		this.bgm_audio_set_paused_mode(false);
+
+		
+
 		gameObject.SetActive(true);
 		_home_score.set_string("0");
 		_home_score.set_string("0");
@@ -38,12 +64,13 @@ public class UiPanelGame : Uzu.UiPanel {
 		set_pause_icon_alpha(0);
 		_tar_pause_icon_alpha = 0;
 		_quarter_text.set_string(Main.LevelController._quarter_display);
-		Main.LevelController.StartLevel();
+		//Main.LevelController.StartLevel();
 		_fadein.set_alpha(1.0f);
 		_fadein.set_target_alpha(0.0f);
 	}
 	
 	public override void OnExit(Uzu.PanelExitContext context) {
+		_bgm_handle._handle_audio_source.outputAudioMixerGroup = null;
 		gameObject.SetActive(false);
 	}
 	
@@ -77,7 +104,32 @@ public class UiPanelGame : Uzu.UiPanel {
 		} else {
 			popup_set_alpha(0);
 		}
+		
+		if (!_chats._text_scroll.finished()) {
+			if (_chats._current_id == 1) {
+				_chat_head_1.SetActive(true);
+				_chat_head_2.SetActive(false);
+			} else {
+				_chat_head_1.SetActive(false);
+				_chat_head_2.SetActive(true);
+			}
+			if (_time_until_next_talk_sound <= 0) {
+				_time_until_next_talk_sound = 0.25f;
+				if (_chats._current_id == 1) {
+					Main.AudioController.PlayEffect("speak_0_"+((int)Util.rand_range(0,6)));
+				} else {
+					Main.AudioController.PlayEffect("speak_1_"+((int)Util.rand_range(0,6)));
+				}
+			} else {
+				_time_until_next_talk_sound -= Time.deltaTime;
+			}
+			Main.Unpause(PauseFlags.TalkingHeadStop);
+		} else {
+			_time_until_next_talk_sound = 0;
+			Main.Pause(PauseFlags.TalkingHeadStop);
+		}
 	}
+	private float _time_until_next_talk_sound;
 
 	public bool can_take_message() { return _chats._messages.Count == 0 && _chats._ct <= 0; }
 

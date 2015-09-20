@@ -182,8 +182,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AudioClips:
-  - {fileID: 8300000, guid: 588a02f8a8dd04d9ca353443be919972, type: 3}
-  - {fileID: 8300000, guid: bafa8ab13a033437ab233ba28f3a7849, type: 3}
   - {fileID: 8300000, guid: 33bf05d3e75eb4b2a9cbeca3391b0e81, type: 3}
   - {fileID: 8300000, guid: c129eaf071e9b41fc9b6416b14e8b93b, type: 3}
   - {fileID: 8300000, guid: 268300d00d7584cb184a9aea9d1fc822, type: 3}
@@ -193,9 +191,23 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 989e32362f2e64203ac71ddca0dc5ce6, type: 3}
   - {fileID: 8300000, guid: 274a365fe6fd345de84143e7fc535a27, type: 3}
   - {fileID: 8300000, guid: 02b15c822bf22494bb39dde246281cfb, type: 3}
+  - {fileID: 8300000, guid: 3ad6b36ae9ed74d509552d0890960a03, type: 3}
+  - {fileID: 8300000, guid: e5de7ffd0a46645e0a80dd0905ed52e1, type: 3}
+  - {fileID: 8300000, guid: 2b864feee449b4d69a32fec564d184e7, type: 3}
+  - {fileID: 8300000, guid: 7931532ed372648fa9721523775f4ba2, type: 3}
+  - {fileID: 8300000, guid: 649c2633f1d4c4c63aa1f376c105a0d1, type: 3}
+  - {fileID: 8300000, guid: 327a53951712845829e392bd4d90c234, type: 3}
+  - {fileID: 8300000, guid: 75b6f9c8b7c134a229561b73efa558b3, type: 3}
+  - {fileID: 8300000, guid: c8d3e71b1d4f440d799cb197fa700756, type: 3}
+  - {fileID: 8300000, guid: 501effebd6a1f45bc8a6eb1aef29a94d, type: 3}
+  - {fileID: 8300000, guid: 327af6fe941964a93867fa1439e2656a, type: 3}
+  - {fileID: 8300000, guid: fbd1b2126d62641a287b301c1732f455, type: 3}
+  - {fileID: 8300000, guid: 395fe1c403cd54d92964a2ca7926c95f, type: 3}
+  - {fileID: 8300000, guid: 52c715662648b4e1faf62866d71d628d, type: 3}
+  - {fileID: 8300000, guid: f15263d87160b4b76ab091528cd2a83c, type: 3}
+  - {fileID: 8300000, guid: cf0c669cd925549e9ac3d71fde8c6323, type: 3}
+  - {fileID: 8300000, guid: fd15d75f6bc42459eb0c19a06c07ea36, type: 3}
   AudioClipIds:
-  - MenuBgm
-  - GameBgm
   - sfx_pickup
   - sfx_hit
   - sfx_goal
@@ -205,6 +217,22 @@ MonoBehaviour:
   - sfx_go
   - sfx_pause
   - sfx_unpause
+  - bgm_fanfare
+  - bgm_main_loop
+  - bgm_menu_intro
+  - bgm_menu_loop
+  - speak_0_5
+  - speak_0_0
+  - speak_0_3
+  - speak_0_2
+  - speak_0_4
+  - speak_0_1
+  - speak_1_5
+  - speak_1_1
+  - speak_1_3
+  - speak_1_2
+  - speak_1_0
+  - speak_1_4
 --- !u!114 &11472460
 MonoBehaviour:
   m_ObjectHideFlags: 1

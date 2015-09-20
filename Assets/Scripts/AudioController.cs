@@ -19,7 +19,7 @@ public class AudioController : MonoBehaviour
 		get { return _audioController; }
 	}
 
-	public void PlayBgm (string clipId)
+	public Uzu.AudioHandle PlayBgm (string clipId)
 	{
 		StopBgm();
 		
@@ -31,6 +31,7 @@ public class AudioController : MonoBehaviour
 			options.FadeInTime = FADE_IN_TIME;
 			_activeBGMHandle = _audioController.Play (clipId, options);
 		}
+		return _activeBGMHandle;
 	}
 
 	public void StopBgm ()

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(CircleCollider2D))]
 public class GenericFootballer : MonoBehaviour {
 
+	[SerializeField] public CircleCollider2D m_clickCollider;
 	[SerializeField] private SpriteRenderer _renderer;
 	[SerializeField] private float _waitdelay;
 	public void set_wait_delay(float tar) {
@@ -87,6 +88,7 @@ public class GenericFootballer : MonoBehaviour {
 
 	void Update() {
 		_renderer.sortingOrder = (int)(-transform.position.y * 100);
+		_select_reticule.sortingOrder = _renderer.sortingOrder-1;
 
 		float reticule_anim_speed = 0.5f;
 		float reticule_scale = 200;
@@ -222,7 +224,7 @@ public class GenericFootballer : MonoBehaviour {
 			
 			if (Input.GetMouseButton(0)) {
 				_ball_charging = true;
-				_throw_charge_ct = Mathf.Min(_throw_charge_ct+Util.dt_scale*10.0f,mag);
+				_throw_charge_ct = Mathf.Clamp(Mathf.Min(_throw_charge_ct+Util.dt_scale*10.0f,mag),0,700);
 				
 				Vector3 p0 = this.transform.position;
 				Vector3 p3 = Util.vec_add(p0,Util.vec_scale(dir,_throw_charge_ct));
@@ -321,7 +323,7 @@ public class GenericFootballer : MonoBehaviour {
 		}
 
 		Vector3 imgpos = _renderer.transform.localPosition;
-		_stunned_upwards_vel -= 0.05f * Util.dt_scale;
+		_stunned_upwards_vel -= 0.085f * Util.dt_scale;
 		imgpos.y += _stunned_upwards_vel;
 		if (imgpos.y <= 0) {
 			imgpos.y = 0;
@@ -366,7 +368,7 @@ public class GenericFootballer : MonoBehaviour {
 			_cannot_stun_ct = Util.rand_range(30,100);
 			Main.LevelController.blood_anim_at(hit_spot,4);
 			_stunned_vel = vel;
-			_stunned_mode_ct = 100;
+			_stunned_mode_ct = 55;
 			_current_mode = GenericFootballerMode.Stunned;
 			_stunned_upwards_vel = 1.5f;
 			if (Main.LevelController.footballer_has_ball(this)) {
@@ -432,6 +434,10 @@ public class GenericFootballer : MonoBehaviour {
 	public bool ContainsPoint(Vector3 pt) {
 		CircleCollider2D col = this.GetComponent<CircleCollider2D>();
 		return Vector3.Distance(pt,this.transform.position) < col.radius;
+	}
+
+	public bool ContainsPointClick(Vector3 pt) {
+		return Vector3.Distance(pt,this.transform.position) < 65;
 	}
 
 	[SerializeField] private float _selected_ct;

@@ -44,6 +44,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 461458}
   - 212: {fileID: 21262720}
+  - 58: {fileID: 5840562}
   m_Layer: 9
   m_Name: New Sprite
   m_TagString: Untagged
@@ -131,6 +132,19 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 40
+--- !u!58 &5840562
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 163698}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1.1185528
 --- !u!114 &11403424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -153,13 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb3b753b4a2094470929198ae9572df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _image_noball: {fileID: 21300000, guid: 0bf212727d9304afda097c3c99dcff69, type: 3}
-  _image_holding_ball: {fileID: 21300000, guid: f5ad77236c02148ed8b5cf9a066b4794,
-    type: 3}
-  _image_enemy_noball: {fileID: 21300000, guid: dc95628d953bc43ea987f5a07a6de5ba,
-    type: 3}
-  _image_enemy_holding_ball: {fileID: 21300000, guid: 97bd085d0f343471fab5d8ad9d13faa4,
-    type: 3}
+  m_clickCollider: {fileID: 5840562}
   _renderer: {fileID: 21262720}
   _waitdelay: 0
   _select_reticule: {fileID: 21280562}
@@ -170,6 +178,7 @@ MonoBehaviour:
   _stunned_mode_ct: 0
   _stunned_upwards_vel: 0
   _command_move_to_point: {x: 0, y: 0}
+  _has_command_move_to_point: 0
   _selected_ct: 0
 --- !u!114 &11483570
 MonoBehaviour:

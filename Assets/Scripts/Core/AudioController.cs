@@ -112,8 +112,10 @@ namespace Uzu
 					}
 
 					source.Play ();
+					
+					handle._handle_audio_source = source;
 				}
-
+			
 				return handle;
 			}
 

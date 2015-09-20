@@ -16,6 +16,8 @@ public class BobDirection : MonoBehaviour {
 	private float _x;
 	private float _t;
 	private Vector3 _start_target_pos;
+	
+	[SerializeField] private bool _local;
 
 	void Start () {
 		if (_has_start_t) {
@@ -29,18 +31,32 @@ public class BobDirection : MonoBehaviour {
 		}
 
 		_vt = Util.rand_range(_vt_min,_vt_max);
-		_start_target_pos = _target.position;
+		if (!_local) {
+			_start_target_pos = _target.position;
+		} else {
+			_start_target_pos = _target.localPosition;
+		}
+		
 		_enabled = true;
 	}
 	
 
 	void Update () {
-		if (Main.IsPaused(PauseFlags.TimeOut)) return;
+		if (Main.IsPaused(PauseFlags.TimeOut) && !_local) return;
+		if (Main.IsPaused(PauseFlags.TalkingHeadStop) && _local) return;
 		_t += _vt * Util.dt_scale;
 		if (_enabled) {
-			_target.transform.position = _start_target_pos + new Vector3(0,(Mathf.Sin(_t)+1)*0.5f*(_x_max-_x_min) + _x_min,0);
+			if (!_local) {
+				_target.transform.position = _start_target_pos + new Vector3(0,(Mathf.Sin(_t)+1)*0.5f*(_x_max-_x_min) + _x_min,0);
+			} else {
+				_target.transform.localPosition = _start_target_pos + new Vector3(0,(Mathf.Sin(_t)+1)*0.5f*(_x_max-_x_min) + _x_min,0);
+			}
 		} else {
-			_target.transform.position = _start_target_pos;
+			if (!_local) {
+				_target.transform.position = _start_target_pos;
+			} else {
+				_target.transform.localPosition = _start_target_pos;
+			}
 		}
 	}
 

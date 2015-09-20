@@ -15,6 +15,7 @@ namespace Uzu
 		{
 			_id = id;
 			_index = index;
+			_handle_audio_source = null;
 		}
 
 		/// <summary>
@@ -31,5 +32,8 @@ namespace Uzu
 			get { return _index; }
 		}
 		#endregion
+		
+		public AudioSource _handle_audio_source;
+		
 	}
 }

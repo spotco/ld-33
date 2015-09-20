@@ -124,13 +124,14 @@ public class Util {
 			bezier_val_for_t(p0.z,p1.z,p2.z,p3.z,t)
 		);
 	}
-
-	public static bool box2d_contains_point(BoxCollider2D box, Vector3 point) {
-		Bounds box_bounds = box.bounds;
-		box_bounds.Expand(new Vector3(0,0,9999));
-		return box_bounds.Contains(point);
-	}
 	
+	public static float y_for_point_of_2pt_line(Vector2 pt1, Vector2 pt2, float x) {
+		//(y - y1)/(x - x1) = m
+		float m = (pt1.y - pt2.y) / (pt1.x - pt2.x);
+		//y - mx = b
+		float b = pt1.y - m * pt1.x;
+		return m * x + b;
+	}
 }
 
 
