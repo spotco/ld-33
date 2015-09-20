@@ -127,7 +127,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _panelManager: {fileID: 0}
   _levelController: {fileID: 11446726}
+  _gameCamera: {fileID: 0}
   _audioController: {fileID: 11441226}
+  _fieldController: {fileID: 0}
   _fsmDebugger: {fileID: 0}
   _particleRoot: {fileID: 0}
   _tvCamera: {fileID: 0}

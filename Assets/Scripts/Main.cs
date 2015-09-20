@@ -10,9 +10,11 @@ public class Main : Uzu.Main
 	public static LevelController LevelController {
 		get { return _instance._levelController; }
 	}
+	/*
 	public static FanController FanController {
 		get { return _instance._fanController; }
 	}
+	*/
 	public static FollowCamera GameCamera {
 		get { return _instance._gameCamera; }
 	}
@@ -40,9 +42,9 @@ public class Main : Uzu.Main
     
     // Singleton creation.
     {
-			_gameCamera = GameObject.Find("GameCamera").GetComponent<FollowCamera>();
-			_fanController = GetComponent<FanController>();
-			_fieldController = GameObject.Find("FieldController").GetComponent<FieldController>();
+			//_gameCamera = GameObject.Find("GameCamera").GetComponent<FollowCamera>();
+			//_fanController = GetComponent<FanController>();
+			//_fieldController = GameObject.Find("FieldController").GetComponent<FieldController>();
     }
   }
   
@@ -89,11 +91,11 @@ public class Main : Uzu.Main
 	private Uzu.UiPanelMgr _panelManager;
 	[SerializeField]
 	private LevelController _levelController;
-	private FollowCamera _gameCamera;
-	private FanController _fanController;
+	[SerializeField] private FollowCamera _gameCamera;
+	//private FanController _fanController;
 	[SerializeField]
 	private AudioController _audioController;
-	private FieldController _fieldController;
+	[SerializeField] private FieldController _fieldController;
 	[SerializeField]
 	private FSMDebugger _fsmDebugger;
 
