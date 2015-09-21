@@ -19,6 +19,8 @@ public class AnimatedGoalPost : MonoBehaviour {
 
 	private Vector3 _self_original_position;
 
+	[SerializeField] private List<GameObject> _confetti_spawn_point;
+
 	void Start () {
 		_self_original_position = this.transform.position;
 		_tongue_original_position = _tongue.transform.localPosition;
@@ -55,5 +57,12 @@ public class AnimatedGoalPost : MonoBehaviour {
 	private float _eat_anim_ct;
 	public void play_eat_anim(float ct) {
 		_eat_anim_ct = ct;
+	}
+
+	public void spawn_confetti() {
+		if (_confetti_spawn_point == null) return;
+		for (int i = 0; i < _confetti_spawn_point.Count; i++) {
+			Main.LevelController.confetti_particle_at(_confetti_spawn_point[i].transform.position);
+		}
 	}
 }

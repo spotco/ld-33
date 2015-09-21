@@ -31,6 +31,10 @@ public class BobDirection : MonoBehaviour {
 		}
 
 		_vt = Util.rand_range(_vt_min,_vt_max);
+		if (_target == null) {
+			Debug.Log(this.gameObject.name);
+			return;
+		}
 		if (!_local) {
 			_start_target_pos = _target.position;
 		} else {
@@ -53,6 +57,10 @@ public class BobDirection : MonoBehaviour {
 			}
 		} else {
 			if (!_local) {
+				if (_target == null) {
+					Debug.Log(this.gameObject.name);
+					return;
+				}
 				_target.transform.position = _start_target_pos;
 			} else {
 				_target.transform.localPosition = _start_target_pos;

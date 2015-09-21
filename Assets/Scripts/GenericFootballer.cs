@@ -367,6 +367,7 @@ public class GenericFootballer : MonoBehaviour {
 
 			_cannot_stun_ct = Util.rand_range(30,100);
 			Main.LevelController.blood_anim_at(hit_spot,4);
+			Main.LevelController.collision_particle_at(this.transform.position);
 			_stunned_vel = vel;
 			_stunned_mode_ct = 55;
 			_current_mode = GenericFootballerMode.Stunned;

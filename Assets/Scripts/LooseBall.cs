@@ -74,5 +74,15 @@ public class LooseBall : MonoBehaviour {
 				}
 			}
 		}
+		
+		if (_z > 1) {
+			_particle_emit_ct -= 1;
+			if (_particle_emit_ct <= 0) {
+				Main.LevelController.ball_move_particle_at(_ball.transform.position, Util.rad2deg * Mathf.Atan2(_vel.y,_vel.x));
+				_particle_emit_ct = Util.y_for_point_of_2pt_line(new Vector2(8,1),new Vector2(2,5),(new Vector3(_vel.x,_vel.y,_vz)).magnitude);
+			}
+		}
 	}
+	
+	float _particle_emit_ct = 0;
 }

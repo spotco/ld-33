@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(SpriteRenderer))]
 public class RotateFadeOutSPParticle  : MonoBehaviour, SPParticle {
@@ -32,9 +32,24 @@ public class RotateFadeOutSPParticle  : MonoBehaviour, SPParticle {
 		_renderer = this.GetComponent<SpriteRenderer>();
 		return this;
 	}
+	
+	public void set_sprite_animation(List<Sprite> frames, float speed, bool repeat = true) {
+		if (_renderer.gameObject.GetComponent<SpriteAnimator>() == null) {
+			_renderer.gameObject.AddComponent<SpriteAnimator>();
+		}
+		SpriteAnimator animator = _renderer.gameObject.GetComponent<SpriteAnimator>();
+		animator.add_anim("rotatefadeoutspparticle_anim",frames,speed);
+		animator._tar = _renderer;
+		animator.set_repeating(repeat);
+		animator.play_anim("rotatefadeoutspparticle_anim");
+	}
 
 	public void set_ctmax(float val) {
 		_ct = _ctmax = val;
+	}
+	
+	public void set_self_rotation(float val) {
+		_self_rotation = val;
 	}
 
 	public void i_update(Object context) {
@@ -42,7 +57,8 @@ public class RotateFadeOutSPParticle  : MonoBehaviour, SPParticle {
 		_ct -= Util.dt_scale;
 		this.set_opacity(Util.lerp(_alpha.x,_alpha.y,1-pct));
 		_self_rotation +=  _vr * Util.dt_scale;
-		this.set_rotation(_self_rotation);
+		_valrx += _vrx;
+		this.set_rotation(_self_rotation,_valrx);
 		this.set_scale(Util.lerp(_scmin,_scmax,pct));
 		_velocity.y -= _gravity * Util.dt_scale;
 		this.set_position(
@@ -57,10 +73,22 @@ public class RotateFadeOutSPParticle  : MonoBehaviour, SPParticle {
 		_renderer.color = c;
 
 	}
-	private void set_rotation(float val) {
-		transform.localEulerAngles = new Vector3(0,0,val);
+	private float _valrx = 0;
+	private float _vrx = 0;
+	public void set_vrx(float vrx) {
+		_vrx = vrx;
 	}
-	private void set_scale(float val) {
+	public void set_color(Vector3 color) {
+		Color c = _renderer.color;
+		c.r = color.x;
+		c.g = color.y;
+		c.b = color.z;
+		_renderer.color = c;
+	}
+	private void set_rotation(float val, float valrx) {
+		transform.localEulerAngles = new Vector3(valrx,0,val);
+	}
+	public void set_scale(float val) {
 		transform.localScale = Util.valv(val);
 	}
 	private void set_position(float x, float y) {

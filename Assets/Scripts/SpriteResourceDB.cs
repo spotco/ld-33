@@ -13,6 +13,8 @@ public class SpriteResourceDB {
 
 	private static Dictionary<FootballerResourceKey,FootballerAnimResource> _footballer_key_to_anim_resc;
 	private static List<Sprite> _ball_anim;
+	public static List<Sprite> _collision_anim;
+	public static List<Sprite> _catch_anim;
 
 	private static void Initialize() {
 		_footballer_key_to_anim_resc = new Dictionary<FootballerResourceKey, FootballerAnimResource>();
@@ -247,6 +249,23 @@ public class SpriteResourceDB {
 			"Ball/Ball__002",
 			"Ball/Ball__003"
 		},_ball_anim);
+		
+		_collision_anim = new List<Sprite>();
+		FootballerAnimResource.keys_to_frames(new List<string>(){
+			"Collision/Collide1",
+			"Collision/Collide2",
+			"Collision/Collide3",
+			"Collision/Collide4",
+		},_collision_anim);
+		
+		_catch_anim = new List<Sprite>();
+		FootballerAnimResource.keys_to_frames(new List<string>(){
+			"Catch/Catch1",
+			"Catch/Catch2",
+			"Catch/Catch3",
+			"Catch/Catch4",
+			"Catch/Catch5"
+		},_catch_anim);
 	}
 
 	public static FootballerAnimResource get_footballer_anim_resource(FootballerResourceKey key) {

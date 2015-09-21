@@ -41,4 +41,11 @@ public class SPParticleSystem {
 		}
 		_to_remove.Clear();
 	}
+	public void clear() {
+		for (int i = 0; i < _particles.Count; i++) {
+			SPParticle itr = _particles[i];
+			itr.do_remove(null);
+		}
+		_particles.Clear();
+	}
 }

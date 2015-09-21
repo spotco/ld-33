@@ -41,23 +41,41 @@ public class Referee : MonoBehaviour {
 
 	[SerializeField] public float _movespeed ;
 
+	private float _notice_particle_delay_ct;
+
 	public void sim_update() {
+		bool do_possibly_spawn_notice_particle = false;
+
 		Vector3 current_ball_pos = Main.LevelController.currentBallPosition();
 		Vector3 target_pos = transform.position;
 		if (current_ball_pos.magnitude != 0) {
 			if (!Main.LevelController.m_gameBounds.OverlapPoint(current_ball_pos)) {
 				if (_self_mode == RefereeMode.Bottom && current_ball_pos.y < _center.y) {
 					target_pos = current_ball_pos;
+					do_possibly_spawn_notice_particle = true;
 				} else if (_self_mode == RefereeMode.Top && current_ball_pos.y > _center.y) {
 					target_pos = current_ball_pos;
+					do_possibly_spawn_notice_particle = true;
 				} else {
 					target_pos = new Vector3(current_ball_pos.x,_basepos.y,_basepos.z);
+					_notice_particle_delay_ct = 0;
 				}
 			} else {
 				target_pos = new Vector3(current_ball_pos.x,_basepos.y + (_self_mode == RefereeMode.Top?40:-40),_basepos.z);
+				_notice_particle_delay_ct = 0;
 			}
-
+		} else {
+			_notice_particle_delay_ct = 0;
 		}
+
+		if (do_possibly_spawn_notice_particle) {
+			_notice_particle_delay_ct -= 1;
+			if (_notice_particle_delay_ct <= 0) {
+				Main.LevelController.ref_notice_particle_at(transform.position + new Vector3(0,120,0));
+				_notice_particle_delay_ct = 100;
+			}
+		}
+
 		float speed = _movespeed * Util.dt_scale;
 		Vector3 delta =  Util.vec_sub(target_pos,transform.position);
 		if (delta.magnitude < speed) {

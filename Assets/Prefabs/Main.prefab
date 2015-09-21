@@ -150,6 +150,15 @@ MonoBehaviour:
   proto_looseBall: {fileID: 164902, guid: dfaf8c1d0b2b4483f84670d1bc9c2192, type: 2}
   proto_mouseTarget: {fileID: 199526, guid: 4689dbc2e3b524b21b8d10e06d2afbda, type: 2}
   proto_bloodParticle: {fileID: 196250, guid: 0d53fe6f0a79a46b4aa289de983634c1, type: 2}
+  proto_ballTrailParticle: {fileID: 192692, guid: 33a0ee32b086649b58bfc86a11451ca3,
+    type: 2}
+  proto_refNoticeParticle: {fileID: 121074, guid: 41416e360e17948ec89b7ade829e3b0a,
+    type: 2}
+  proto_catchParticle: {fileID: 196068, guid: 7c30d03e717704dfb80841fcb11b028c, type: 2}
+  proto_collisionParticle: {fileID: 196068, guid: 7c30d03e717704dfb80841fcb11b028c,
+    type: 2}
+  proto_confettiParticle: {fileID: 110038, guid: 756eabdf2ef7f49f79687a596fcb3057,
+    type: 2}
   proto_referee: {fileID: 0}
   m_gameBounds: {fileID: 0}
   m_ballBounds: {fileID: 0}

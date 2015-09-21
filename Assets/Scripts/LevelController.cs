@@ -3,13 +3,32 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using System;
 
+/*
+TODO:
+new fx
+new skeleton art
+new ref art and ! icon
+mouse into goal area but not walk in
+commentator event system + crowd cheer
+title screen 
+end screen
+take a look at AI
+*/
+
 public class LevelController : MonoBehaviour {
 
 	[SerializeField] private GameObject proto_team;
 	[SerializeField] private GameObject proto_genericFootballer;
 	[SerializeField] private GameObject proto_looseBall;
 	[SerializeField] private GameObject proto_mouseTarget;
+	
 	[SerializeField] private GameObject proto_bloodParticle;
+	[SerializeField] private GameObject proto_ballTrailParticle;
+	[SerializeField] private GameObject proto_refNoticeParticle;
+	[SerializeField] private GameObject proto_catchParticle;
+	[SerializeField] private GameObject proto_collisionParticle;
+	[SerializeField] private GameObject proto_confettiParticle;
+	
 	[SerializeField] private GameObject proto_referee;
 
 	public enum LevelControllerMode {
@@ -97,12 +116,14 @@ public class LevelController : MonoBehaviour {
 				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender };
 				SpawnTeam(7, m_playerTeam, regions, keys, fps);
 			}
+			/*
 			{
 				int[] regions = { 16, 12, 14 };
 				FootballerResourceKey[] keys = { FootballerResourceKey.EnemyGoalie, FootballerResourceKey.Enemy3, FootballerResourceKey.Enemy3 };
 				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender };
 				SpawnTeam(10, m_enemyTeam, regions, keys, fps);
 			}
+			*/
 		} else if (CurrentDifficulty == Difficulty.Normal) {
 			this.set_time_remaining_seconds(200);
 			_player_team_score = 2;
@@ -276,7 +297,7 @@ public class LevelController : MonoBehaviour {
 		
 		m_playerTeamFootballersWithBall.Clear();
 		m_enemyTeamFootballersWithBall.Clear();
-		
+		if (m_particles != null) m_particles.clear();
 		// Memory cleanup.
 		{
 			System.GC.Collect();
@@ -336,6 +357,7 @@ public class LevelController : MonoBehaviour {
 			UiPanelGame.inst._fadein.set_target_alpha(1);
 			Main.GameCamera.SetTargetPos(_goalzoomoutfocuspos);
 			Main.GameCamera.SetTargetZoom(300);
+			m_enemyGoal.spawn_confetti();
 			m_particles.i_update(this);
 			if (UiPanelGame.inst._fadein.is_transition_finished()) {
 				this.ResetLevel();
@@ -343,6 +365,7 @@ public class LevelController : MonoBehaviour {
 			}
 
 		} else if (m_currentMode == LevelControllerMode.GamePlay) {
+
 			_time_remaining = Math.Max(0,_time_remaining-TimeSpan.FromSeconds(Time.deltaTime).Ticks);
 			if (_time_remaining <= 0) {
 				m_currentMode = LevelControllerMode.GoalZoomOut;
@@ -389,21 +412,6 @@ public class LevelController : MonoBehaviour {
 			for (int i = this.m_playerTeamFootballers.Count-1; i >= 0; i--) {
 				GenericFootballer itr = this.m_playerTeamFootballers[i];	
 				itr.sim_update();
-				/*
-				if (m_enemyGoal.box_collider().OverlapPoint(itr.transform.position) || m_playerGoal.box_collider().OverlapPoint(itr.transform.position)) {
-					if (this.footballer_has_ball(itr)) {
-						this.m_playerTeamFootballersWithBall.Remove(itr);
-						this.CreateLooseBall(itr.transform.position,Vector2.zero);
-					}
-					this.blood_anim_at(itr.transform.position);
-					this.m_playerTeamFootballers.RemoveAt(i);
-					Destroy(itr.gameObject);
-					m_enemyGoal.play_eat_anim(40);
-					m_playerGoal.play_eat_anim(40);
-					Main.AudioController.PlayEffect("sfx_hit");
-
-				}
-				*/
 			}
 
 			for (int i = 0; i < this.m_enemyTeamFootballers.Count; i++) {
@@ -584,6 +592,7 @@ public class LevelController : MonoBehaviour {
 	
 	public void PickupLooseBall(LooseBall looseball, GenericFootballer tar) {
 		m_looseBalls.Remove(looseball);
+		this.catch_particle_at(looseball.transform.position);
 		if (this.get_footballer_team(tar) == Team.PlayerTeam) {
 			m_playerTeamFootballersWithBall.Add(tar);
 			tar._current_mode = GenericFootballer.GenericFootballerMode.Idle;
@@ -644,16 +653,83 @@ public class LevelController : MonoBehaviour {
 			m_particles.add_particle(tmp);
 		}
 	}
+	
+	public void ball_move_particle_at(Vector3 pos, float rotation) {
+		RotateFadeOutSPParticle tmp = RotateFadeOutSPParticle.cons(proto_ballTrailParticle);
+		tmp.transform.position = pos + new Vector3(Util.rand_range(-10,10),Util.rand_range(-10,10),0);
+		tmp.set_ctmax(35);
+		float scale = Util.rand_range(25,100);
+		tmp._scmax = scale;
+		tmp._scmin = scale;
+		tmp._alpha.x = 0.6f;
+		tmp._alpha.y = 0.0f;
+		tmp._vr = 0;
+		tmp.set_self_rotation(rotation);
+		tmp._velocity.x = Util.rand_range(-2,2);
+		tmp._velocity.y = Util.rand_range(-2,2);
+		m_particles.add_particle(tmp);
+	}
+	
+	public void catch_particle_at(Vector3 pos) {
+		RotateFadeOutSPParticle tmp = RotateFadeOutSPParticle.cons(proto_catchParticle);
+		tmp.transform.position = pos;
+		tmp._scmin = 25;
+		tmp._scmax = 35;
+		tmp.set_sprite_animation(SpriteResourceDB._catch_anim,4,false);
+		tmp.set_ctmax(50);
+		tmp._alpha.x = 0.8f;
+		tmp._alpha.y = 0.0f;
+		m_particles.add_particle(tmp);
+	}
+	public void collision_particle_at(Vector3 pos) {
+		RotateFadeOutSPParticle tmp = RotateFadeOutSPParticle.cons(proto_collisionParticle);
+		tmp.transform.position = pos;
+		tmp._scmin = 25;
+		tmp._scmax = 35;
+		tmp.set_sprite_animation(SpriteResourceDB._collision_anim,4,false);
+		tmp.set_ctmax(50);
+		tmp._alpha.x = 0.8f;
+		tmp._alpha.y = 0.0f;
+		m_particles.add_particle(tmp);
+	}
+	public void confetti_particle_at(Vector3 pos) {
+		RotateFadeOutSPParticle tmp = RotateFadeOutSPParticle.cons(proto_confettiParticle);
+		tmp.transform.position = pos;
+		tmp._scmin = 65;
+		tmp._scmax = 65;
+		tmp.set_self_rotation(Util.rand_range(0,360));
+		tmp.set_ctmax(100);
+		tmp._alpha.x = 0.8f;
+		tmp._alpha.y = 0.0f;
+		tmp._velocity.x = Util.rand_range(-2,2);
+		tmp._velocity.y = Util.rand_range(5,10);
+		tmp.set_vrx(Util.rand_range(-30,30));
+		tmp._vr = Util.rand_range(-30,30);
+		float rnd = Util.rand_range(0,3);
+		if (rnd < 1) {
+			tmp.set_color(new Vector3(255.0f/255.0f,40.0f/255.0f,131.0f/255.0f));
+		} else if (rnd < 2) {
+			tmp.set_color(new Vector3(255.0f/255.0f,192.0f/255.0f,40.0f/255.0f));
+		} else {
+			tmp.set_color(new Vector3(202.0f/255.0f,40.0f/255.0f,255.0f/255.0f));
+		}
+		m_particles.add_particle(tmp);
+	}
+	public void ref_notice_particle_at(Vector3 pos) {
+		RotateFadeOutSPParticle tmp = RotateFadeOutSPParticle.cons(proto_refNoticeParticle);
+		tmp.transform.position = pos;
+		tmp._scmin = 80;
+		tmp._scmax = 120;
+		tmp.set_scale(tmp._scmin);
+		tmp.set_ctmax(60);
+		tmp._alpha.x = 0.8f;
+		tmp._alpha.y = 0.0f;
+		m_particles.add_particle(tmp);
+	}
+
 
 	public Vector3 _last_mouse_position;
 	public Vector3 GetMousePoint() {
-		/*
-		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-		Plane gamePlane = new Plane(new Vector3(0,0,-1),new Vector3(0,0,0));
-		float rayout;
-		gamePlane.Raycast(ray,out rayout);
-		return Util.vec_add(ray.origin,Util.vec_scale(ray.direction,rayout));
-		*/
 		return _last_mouse_position;
 	}
 

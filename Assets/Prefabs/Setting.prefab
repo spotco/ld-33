@@ -1885,7 +1885,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 490250}
-  - 82: {fileID: 8248914}
   m_Layer: 12
   m_Name: Setting
   m_TagString: Untagged
@@ -4959,6 +4958,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &155044
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 472532}
+  m_Layer: 0
+  m_Name: ConfettiSpawn1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &155102
 GameObject:
   m_ObjectHideFlags: 1
@@ -5202,6 +5216,21 @@ GameObject:
   - 114: {fileID: 11421616}
   m_Layer: 0
   m_Name: Fan (70)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &158248
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 463644}
+  m_Layer: 0
+  m_Name: ConfettiSpawn0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9515,6 +9544,8 @@ Transform:
   m_LocalPosition: {x: 1892, y: -355, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 463644}
+  - {fileID: 472532}
   - {fileID: 435594}
   m_Father: {fileID: 490250}
   m_RootOrder: 3
@@ -12141,7 +12172,7 @@ Transform:
   m_Children:
   - {fileID: 455294}
   m_Father: {fileID: 401672}
-  m_RootOrder: 0
+  m_RootOrder: 2
 --- !u!4 &435690
 Transform:
   m_ObjectHideFlags: 1
@@ -14319,6 +14350,18 @@ Transform:
   - {fileID: 460470}
   m_Father: {fileID: 498340}
   m_RootOrder: 0
+--- !u!4 &463644
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 158248}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -389, y: 307, z: 0}
+  m_LocalScale: {x: .800000012, y: .800000012, z: 1}
+  m_Children: []
+  m_Father: {fileID: 401672}
+  m_RootOrder: 0
 --- !u!4 &463724
 Transform:
   m_ObjectHideFlags: 1
@@ -15011,6 +15054,18 @@ Transform:
   - {fileID: 466618}
   m_Father: {fileID: 421700}
   m_RootOrder: 0
+--- !u!4 &472532
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 155044}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -389, y: -287, z: 0}
+  m_LocalScale: {x: .800000012, y: .800000012, z: 1}
+  m_Children: []
+  m_Father: {fileID: 401672}
+  m_RootOrder: 1
 --- !u!4 &472712
 Transform:
   m_ObjectHideFlags: 1
@@ -17501,75 +17556,6 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
---- !u!82 &8248914
-AudioSource:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120610}
-  m_Enabled: 0
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 00fe1c01d43e5409fb15ec961c12183b, type: 3}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
 --- !u!114 &11401882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -18757,6 +18743,9 @@ MonoBehaviour:
     type: 3}
   _tongue: {fileID: 161948}
   _top_renderer: {fileID: 21217186}
+  _confetti_spawn_point:
+  - {fileID: 158248}
+  - {fileID: 155044}
 --- !u!114 &11443560
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -19229,6 +19218,7 @@ MonoBehaviour:
     type: 3}
   _tongue: {fileID: 195286}
   _top_renderer: {fileID: 21240408}
+  _confetti_spawn_point: []
 --- !u!114 &11464380
 MonoBehaviour:
   m_ObjectHideFlags: 1
