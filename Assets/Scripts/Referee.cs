@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class Referee : MonoBehaviour {
 
@@ -9,7 +9,7 @@ public class Referee : MonoBehaviour {
 	[SerializeField] public GameObject m_rightGoalLine;
 	[SerializeField] public GameObject m_RefereeBottomBase;
 
-	[SerializeField] private SpriteRenderer _renderer;
+	[SerializeField] private List<SpriteRenderer> _renderer;
 
 	public enum RefereeMode {
 		Top, 
@@ -19,7 +19,9 @@ public class Referee : MonoBehaviour {
 	private Vector3 _center,_basepos,_left_goal_line,_right_goal_line;
 
 	public void Update() {
-		_renderer.sortingOrder = (int)(-transform.position.y * 100);	
+		for (int i = 0; i < _renderer.Count; i++) {
+			_renderer[i].sortingOrder = (int)(-transform.position.y * 100)+i;	
+		}
 	}
 
 	public void sim_initialize(RefereeMode mode) {

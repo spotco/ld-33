@@ -5,13 +5,10 @@ using System;
 
 /*
 TODO:
-new fx
-new skeleton art
-new ref art and ! icon
-mouse into goal area but not walk in
-commentator event system + crowd cheer
 title screen 
 end screen
+mouse into goal area but not walk in
+commentator event system + crowd cheer
 take a look at AI
 */
 
@@ -116,14 +113,12 @@ public class LevelController : MonoBehaviour {
 				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender };
 				SpawnTeam(7, m_playerTeam, regions, keys, fps);
 			}
-			/*
 			{
 				int[] regions = { 16, 12, 14 };
 				FootballerResourceKey[] keys = { FootballerResourceKey.EnemyGoalie, FootballerResourceKey.Enemy3, FootballerResourceKey.Enemy3 };
 				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender };
 				SpawnTeam(10, m_enemyTeam, regions, keys, fps);
 			}
-			*/
 		} else if (CurrentDifficulty == Difficulty.Normal) {
 			this.set_time_remaining_seconds(200);
 			_player_team_score = 2;

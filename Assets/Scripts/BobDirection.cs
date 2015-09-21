@@ -46,8 +46,8 @@ public class BobDirection : MonoBehaviour {
 	
 
 	void Update () {
-		if (Main.IsPaused(PauseFlags.TimeOut) && !_local) return;
-		if (Main.IsPaused(PauseFlags.TalkingHeadStop) && _local) return;
+		if (Main.IsPaused(PauseFlags.TimeOut) && !_is_talking_head) return;
+		if (Main.IsPaused(PauseFlags.TalkingHeadStop) && _local && _is_talking_head) return;
 		_t += _vt * Util.dt_scale;
 		if (_enabled) {
 			if (!_local) {
@@ -68,7 +68,8 @@ public class BobDirection : MonoBehaviour {
 		}
 	}
 
-	private bool _enabled;
+	[SerializeField] private bool _is_talking_head;
+	[SerializeField] private bool _enabled;
 	public void set_enabled(bool tar) {
 		_enabled = tar;
 	}
