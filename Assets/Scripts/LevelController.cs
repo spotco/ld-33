@@ -10,7 +10,14 @@ end screen work
 dialogue more skeleton puns
 mouse into goal area but not walk in
 commentator event system + crowd cheer
-take a look at AI
+goal bgm
+
+
+AI stuff:
+1. goalies should be able to block when ball carrier is in corner directly above/below goal
+2. defenders should chase whenever the ball carrier is anywhere on the right side of the field
+3. attackers should chase the ball carrier at all times
+4. fix bug where an AI may stop responding if it gets bumped too many times
 */
 
 public class LevelController : MonoBehaviour {
