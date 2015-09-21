@@ -270,6 +270,8 @@ MonoBehaviour:
   _start_t: 0
   _target: {fileID: 22494248}
   _local: 0
+  _is_talking_head: 0
+  _enabled: 0
 --- !u!114 &11488740
 MonoBehaviour:
   m_ObjectHideFlags: 1

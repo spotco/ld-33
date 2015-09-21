@@ -59,6 +59,7 @@ public class Main : Uzu.Main
       // _panelManager.ChangeCurrentPanel (PanelIds.Main);	
       //_panelManager.ChangeCurrentPanel (PanelIds.Game);	
 	  _panelManager.ChangeCurrentPanel(PanelIds.Tv);
+	  //_panelManager.ChangeCurrentPanel(PanelIds.Title);
 	}
   }
 	
@@ -104,6 +105,8 @@ public class Main : Uzu.Main
 
 	[SerializeField]
 	public Camera _tvCamera;
+
+	[SerializeField] public Camera _titleCamera;
 
 	public void Update() {
 		float dt_scale = (1/60.0f)/(Time.deltaTime);

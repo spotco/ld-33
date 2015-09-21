@@ -19,14 +19,20 @@ public class AudioController : MonoBehaviour
 		get { return _audioController; }
 	}
 
-	public Uzu.AudioHandle PlayBgm (string clipId)
+	public string _last_clipid = "";
+	public Uzu.AudioHandle PlayBgm (string clipId, bool loop = true)
 	{
+		if (loop && clipId == _last_clipid) {
+			return _activeBGMHandle;
+		}
+		_last_clipid = clipId;
+
 		StopBgm();
 		
 		// Play sound.
 		{
 			Uzu.AudioController.PlayOptions options = new Uzu.AudioController.PlayOptions ();
-			options.Loop = true;
+			options.Loop = loop;
 			options.Volume = BGM_VOLUME;
 			options.FadeInTime = FADE_IN_TIME;
 			_activeBGMHandle = _audioController.Play (clipId, options);

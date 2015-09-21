@@ -6,7 +6,8 @@ using System;
 /*
 TODO:
 title screen 
-end screen
+end screen work
+dialogue more skeleton puns
 mouse into goal area but not walk in
 commentator event system + crowd cheer
 take a look at AI

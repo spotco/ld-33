@@ -51,8 +51,8 @@ public class UIPanelTV : Uzu.UiPanel {
 				_chats.push_message("The score's tied, with three minutes on the clock.",2);
 				_chats.push_message("Can the Blues end the half on a strong note?",2);
 				_chats.push_message("(You've got three minutes to score a goal.)",1);
-				_chats.push_message("The players are taking back to the field.",2);
-				_chats.push_message("Let's head down to the field.",2);
+				_chats.push_message("The players are lining back up on the field.",2);
+				_chats.push_message("Who knows what could happen next?",2);
 
 			} else if (Main._current_level == GameLevel.Level3) {
 				_chats.push_message("Who would have guessed? It's down to the final two minutes...",2);

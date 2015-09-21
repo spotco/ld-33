@@ -133,6 +133,7 @@ MonoBehaviour:
   _fsmDebugger: {fileID: 0}
   _particleRoot: {fileID: 0}
   _tvCamera: {fileID: 0}
+  _titleCamera: {fileID: 0}
 --- !u!114 &11446726
 MonoBehaviour:
   m_ObjectHideFlags: 1
