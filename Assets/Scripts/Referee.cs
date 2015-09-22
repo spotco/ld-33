@@ -8,6 +8,7 @@ public class Referee : MonoBehaviour {
 	[SerializeField] public GameObject m_leftGoalLine;
 	[SerializeField] public GameObject m_rightGoalLine;
 	[SerializeField] public GameObject m_RefereeBottomBase;
+	[SerializeField] public BoxCollider2D m_RefereeGameBounds;
 
 	[SerializeField] private List<SpriteRenderer> _renderer;
 
@@ -51,7 +52,7 @@ public class Referee : MonoBehaviour {
 		Vector3 current_ball_pos = Main.LevelController.currentBallPosition();
 		Vector3 target_pos = transform.position;
 		if (current_ball_pos.magnitude != 0) {
-			if (!Main.LevelController.m_gameBounds.OverlapPoint(current_ball_pos)) {
+			if (!m_RefereeGameBounds.OverlapPoint(current_ball_pos)) {
 				if (_self_mode == RefereeMode.Bottom && current_ball_pos.y < _center.y) {
 					target_pos = current_ball_pos;
 					do_possibly_spawn_notice_particle = true;

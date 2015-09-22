@@ -167,6 +167,8 @@ MonoBehaviour:
   m_minGameBounds: {fileID: 0}
   m_playerGoal: {fileID: 0}
   m_enemyGoal: {fileID: 0}
+  _left_goal_line: {fileID: 0}
+  _right_goal_line: {fileID: 0}
   m_playerTeamFootballers: []
   m_enemyTeamFootballers: []
   m_playerTeamFootballersWithBall: []

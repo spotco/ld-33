@@ -56,9 +56,8 @@ public class Main : Uzu.Main
 		
     // State initialization.
     {
-      //_panelManager.ChangeCurrentPanel (PanelIds.Game);	
-	  //_panelManager.ChangeCurrentPanel(PanelIds.Tv);
-	  _panelManager.ChangeCurrentPanel(PanelIds.Title);
+	  _panelManager.ChangeCurrentPanel(PanelIds.Tv);
+	  //_panelManager.ChangeCurrentPanel(PanelIds.Title);
 	}
   }
 	

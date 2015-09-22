@@ -51,6 +51,8 @@ public class LevelController : MonoBehaviour {
 	[SerializeField] public BoxCollider2D m_minGameBounds;
 	[SerializeField] public AnimatedGoalPost m_playerGoal;
 	[SerializeField] public AnimatedGoalPost m_enemyGoal;
+	[SerializeField] public Transform _left_goal_line;
+	[SerializeField] public Transform _right_goal_line;
 
 	[System.NonSerialized] public PathRenderer m_pathRenderer;
 	public List<GenericFootballer> m_playerTeamFootballers = new List<GenericFootballer>();
@@ -513,6 +515,9 @@ public class LevelController : MonoBehaviour {
 			} else if (this.IsClickAndPoint(out click_pt)) {
 				if (m_timeoutSelectedFootballer != null && !this.footballer_has_ball(m_timeoutSelectedFootballer)) {
 					_tut_has_issued_command = true;
+				
+					click_pt = this.point_to_within_goallines_point(m_timeoutSelectedFootballer.transform.position,click_pt);
+
 					m_timeoutSelectedFootballer.CommandMoveTo(click_pt);
 				}
 			}
@@ -572,6 +577,37 @@ public class LevelController : MonoBehaviour {
 		m_mouseTargetIconTheta += mouse_target_anim_speed * Util.dt_scale;
 		Util.transform_set_euler_world(m_mouseTargetIcon.transform,new Vector3(0,0,m_mouseTargetIconTheta));
 
+	}
+
+	public Vector2 point_to_within_goallines_point(Vector2 start, Vector2 click_pt) {
+		if (click_pt.x > _right_goal_line.position.x) {
+			Vector2 intersection_pt = Util.line_seg_intersection_pts(
+				start,
+				click_pt,
+				new Vector2(_right_goal_line.position.x,-9999),
+				new Vector2(_right_goal_line.position.x,9999)
+			);
+			if (!float.IsNaN(intersection_pt.x)) {
+				click_pt = intersection_pt;
+			}
+
+		} else if (click_pt.x < _left_goal_line.position.x) {
+			Vector2 intersection_pt = Util.line_seg_intersection_pts(
+				start,
+				click_pt,
+				new Vector2(_left_goal_line.position.x,-9999),
+				new Vector2(_left_goal_line.position.x,9999)
+			);
+			if (!float.IsNaN(intersection_pt.x)) {
+				click_pt = intersection_pt;
+			}
+		}
+		if (click_pt.x > _right_goal_line.position.x) {
+			click_pt.x = _right_goal_line.position.x;
+		} else if (click_pt.x < _left_goal_line.position.x) {
+			click_pt.x = _left_goal_line.position.x;
+		}
+		return click_pt;
 	}
 
 	private BotBase _prev_ball_owner;

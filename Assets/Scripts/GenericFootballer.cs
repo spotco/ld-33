@@ -257,7 +257,9 @@ public class GenericFootballer : MonoBehaviour {
 				float scf = Mathf.Clamp(mag,0,200)/200.0f;
 				float speed = this.get_move_speed_active() * Util.dt_scale;
 				dir.Scale(Util.valv(scf*speed));
-				transform.position = Util.vec_add(transform.position,dir);
+				if (transform.position.x + dir.x > Main.LevelController._left_goal_line.transform.position.x && transform.position.x + dir.x < Main.LevelController._right_goal_line.transform.position.x){
+					transform.position = Util.vec_add(transform.position,dir);
+				}
 			}
 			
 		} else if (_current_mode == GenericFootballerMode.Idle) {

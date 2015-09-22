@@ -133,6 +133,7 @@ MonoBehaviour:
   m_leftGoalLine: {fileID: 0}
   m_rightGoalLine: {fileID: 0}
   m_RefereeBottomBase: {fileID: 0}
+  m_RefereeGameBounds: {fileID: 0}
   _renderer:
   - {fileID: 21294252}
   - {fileID: 21228146}
