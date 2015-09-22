@@ -156,7 +156,7 @@ public class UIPanelTV : Uzu.UiPanel {
 
 				} else {
 					Main._current_level = GameLevel.Level1;
-					Main.PanelManager.ChangeCurrentPanel(PanelIds.Tv);
+					Main.PanelManager.ChangeCurrentPanel(PanelIds.Title);
 				}
 
 			}

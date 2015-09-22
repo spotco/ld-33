@@ -5,10 +5,8 @@ using System;
 
 /*
 TODO:
-title screen 
-end screen work
-dialogue more skeleton puns
 mouse into goal area but not walk in
+dialogue more skeleton puns
 commentator event system + crowd cheer
 goal bgm
 
@@ -446,7 +444,7 @@ public class LevelController : MonoBehaviour {
 					this.enemy_goal_score(itr.transform.position);
 					Destroy(itr.gameObject);
 					m_enemyGoal.play_eat_anim(40);
-					Main.AudioController.PlayEffect("sfx_goal");
+					Main.AudioController.PlayEffect("sfx_checkpoint");
 
 				}
 				if (m_playerGoal.box_collider().OverlapPoint(itr.transform.position)) {
@@ -456,7 +454,7 @@ public class LevelController : MonoBehaviour {
 					Destroy(itr.gameObject);
 					m_playerGoal.play_eat_anim(40);
 					UiPanelGame.inst._chats.clear_messages();
-					Main.AudioController.PlayEffect("sfx_goal");
+					Main.AudioController.PlayEffect("sfx_checkpoint");
 
 
 				}
