@@ -3,7 +3,7 @@ using System.Collections;
 
 public class AudioController : MonoBehaviour
 {
-	private const int MAX_AUDIO_SOURCES = 8;
+	private const int MAX_AUDIO_SOURCES = 14;
 	
 	private const float FADE_IN_TIME = 1.0f;
 	private const float FADE_OUT_TIME = 0.1f;
