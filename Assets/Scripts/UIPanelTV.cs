@@ -31,63 +31,66 @@ public class UIPanelTV : Uzu.UiPanel {
 		_chats.clear_messages();
 		if (Main._current_repeat_reason == RepeatReason.None) {
 			if (Main._current_level == GameLevel.Level1) {
-				_chats.push_message("Welcome back to Monday Night Monsters!",2);
-				_chats.push_message("In tonight's game, the away team...",2);
-				_chats.push_message("the 0-6 Reds...",1);
-				_chats.push_message("are facing off against the undefeated Blues!",2);
-				_chats.push_message("(That's you, by the way...)",1);
-				_chats.push_message("For all the first time viewers, let's talk controls!",2);
-				_chats.push_message("(When you have the ball, click and hold to pass.)",1);
-				_chats.push_message("(Hold space any time to enter time out.)",1);
-				_chats.push_message("(Then, click and drag to tell your teammates what to do.)",1);
-				_chats.push_message("(The goal is to get the ball in the opposing red goal.)",1);
-				_chats.push_message("Kickoff's just about to begin.",2);
-				_chats.push_message("Can the Blues score in the first quarter?",2);
-				_chats.push_message("(You've got 5 minutes on the clock.)",1);
-				_chats.push_message("Kickoff's just about to begin, let's watch.",2);
+				_chats.push_message("Welcome back to Monday Night Monsters!",1);
+				_chats.push_message("And do we have a SPOOKY good show for you tonight.",2);
+				_chats.push_message("The hometown favorites, the Blues, face off...",1);
+				_chats.push_message("..against their division rival, the Reds!",1);
+				_chats.push_message("I'm so excited, my BONES are SHAKING!",2);
+				_chats.push_message("So for all you first time viewers, let's talk controls.",1);
+				_chats.push_message("You directly control the blue ball carrier with your mouse.",1);
+				_chats.push_message("With the ball, click and hold to throw a pass.",1);
+				_chats.push_message("If you miss, try not to get RATTLED!",2);
+				_chats.push_message("Hold space to call a timeout.",1);
+				_chats.push_message("When in timeout, click and drag a teammate to give them commands.",1);
+				_chats.push_message("You're like a modern day Napolean BONE-apart!",2);
+				_chats.push_message("Kickoff's just about to get underway.",1);
+				_chats.push_message("Can the Blues score in the first quarter?",1);
+				_chats.push_message("They've got five minutes on the clock.",1);
+				_chats.push_message("Let's see if they got the GUTS to win, cuz' I sure don't!",2);
 
 			} else if (Main._current_level == GameLevel.Level2) {
-				_chats.push_message("It's a close fought game, and we're nearing halftime.",2);
-				_chats.push_message("The score's tied, with three minutes on the clock.",2);
-				_chats.push_message("Can the Blues end the half on a strong note?",2);
-				_chats.push_message("(You've got three minutes to score a goal.)",1);
-				_chats.push_message("The players are lining back up on the field.",2);
-				_chats.push_message("Who knows what could happen next?",2);
+				_chats.push_message("It's a close fought game, and we're nearing halftime.",1);
+				_chats.push_message("And we're all tied up, with three minutes left.",1);
+				_chats.push_message("Better hold on, because this game was BONE to be WILD!",2);
+				_chats.push_message("Can either team score before the half?",1);
+				_chats.push_message("The players are lining back up on the field.",1);
+				_chats.push_message("Time for the Blue team to show a little BACK BONE!",2);
+				_chats.push_message("Can they step up to the occasion? I'm DYING to find out!",2);
 
 			} else if (Main._current_level == GameLevel.Level3) {
-				_chats.push_message("Who would have guessed? It's down to the final two minutes...",2);
-				_chats.push_message("And both teams are in a dead heat.",2);
-				_chats.push_message("Can the hometown favorites, the Blues, pull through?",2);
-				_chats.push_message("(Time to pull out all the stops.)",1);
-				_chats.push_message("The players are heading out from the sidelines.",2);
-				_chats.push_message("Everyone's at the edge of their seats!",2);
+				_chats.push_message("Who would have guessed? It's down to the final two minutes...",1);
+				_chats.push_message("And both teams are in a dead heat.",1);
+				_chats.push_message("You've gotta be pulling my leg...OFF!",2);
+				_chats.push_message("Can the hometown favorites pull through?",1);
+				_chats.push_message("If not, I think it's COFFINS for them!",2);
+				_chats.push_message("The Blues just need to score one more to claim the lead.",1);
+				_chats.push_message("What kind of formation will they go with the game on the line?",1);
+				_chats.push_message("Hmm...are they gonna try the SHORT RIB or the FULL RACK?",2);
 
 			} else {
-				_chats.push_message("And as expected, the hometown heroes...",2);
-				_chats.push_message("Pull through and win in dramatic fashion!",2);
-				_chats.push_message("Tune in next week for more Monday Night Monsters!",2);
-				_chats.push_message("And coming up next...",2);
-				_chats.push_message("The hit Emmy award-winning daytime drama, Ludum Dare!",2);
-				_chats.push_message("(Thanks for playing!)",1);
+				_chats.push_message("I can't believe it! The Blues pulled through...",1);
+				_chats.push_message("...and won in BREATHTAKING fashon!",2);
+				_chats.push_message("It didn't take Sherlock Bones to see that one coming!",2);
+				_chats.push_message("So that's it for today, tune next week for more Monday Night Monsters!",1);
+				_chats.push_message("And coming up next...",1);
+				_chats.push_message("The hit TV Emmy award-winning daytime drama, All My Monsters.",1);
+				_chats.push_message("Only on the Monster Network, where YOU are the Monster!",2);
+				_chats.push_message("Thanks for playing!",1);
 			}
 
 		} else {
 			if (Main._current_repeat_reason == RepeatReason.ScoredOn) {
-				_chats.push_message("What a shock! The Reds broke away and scored last minute!",2);
-				_chats.push_message("I can't believe it! Is this the beginning of the end for the Blues?",2);
-				_chats.push_message("(As a wise man once said...)",1);
-				_chats.push_message("(To score a touchdown, you've gotta move the ball to the endzone.)",1);
-				_chats.push_message("(Let's try that one again.)",1);
-				_chats.push_message("Let's watch an instant replay to see what just happened.",2);
+				_chats.push_message("What a shock! The Reds broke away and scored!",1);
+				_chats.push_message("Could this be the turning point of the game?",1);
+				_chats.push_message("The Blue team sure made some BONEHEADED mistakes!",2);
+				_chats.push_message("Like all scoring plays, this one's under review.",1);
+				_chats.push_message("Let's watch a replay to figure out exactly what just happened.",1);
 
 			} else {
-				_chats.push_message("In a absolutely SHOCKING turn of events...",2);
-				_chats.push_message("The Reds defense held and allowed ZERO points!",2);
-				_chats.push_message("Unbelieveable! The Red offence was first in the league in yards.",2);
-				_chats.push_message("(As a wise man once said...)",1);
-				_chats.push_message("(If a team doesn't put points on the board, I don't see how they can win.)",1);
-				_chats.push_message("(Let's try that one again.)",1);
-				_chats.push_message("Let's watch an instant replay to see what just happened.",2);
+				_chats.push_message("How dissapointing! Neither team was able to score!",1);
+				_chats.push_message("Could this be the turning point of the game?",1);
+				_chats.push_message("The Blue team sure made some BONEHEADED mistakes!",2);
+				_chats.push_message("Let's watch a replay to figure out exactly what just happened.",1);
 			}
 		}
 	}

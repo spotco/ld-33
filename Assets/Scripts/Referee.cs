@@ -74,8 +74,9 @@ public class Referee : MonoBehaviour {
 		if (do_possibly_spawn_notice_particle) {
 			_notice_particle_delay_ct -= 1;
 			if (_notice_particle_delay_ct <= 0) {
+				Main.LevelController.m_commentaryManager.notify_event(CommentaryEvent.OutOfBounds);
 				Main.LevelController.ref_notice_particle_at(transform.position + new Vector3(0,120,0));
-				_notice_particle_delay_ct = 100;
+				_notice_particle_delay_ct = 150;
 			}
 		}
 

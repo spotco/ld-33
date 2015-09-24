@@ -4,13 +4,6 @@ using UnityEngine.UI;
 using System;
 
 /*
-TODO:
-mouse into goal area but not walk in
-dialogue more skeleton puns
-commentator event system + crowd cheer
-goal bgm
-
-
 AI stuff:
 1. goalies should be able to block when ball carrier is in corner directly above/below goal
 2. defenders should chase whenever the ball carrier is anywhere on the right side of the field
@@ -76,6 +69,8 @@ public class LevelController : MonoBehaviour {
 	private TeamBase m_enemyTeam;
 
 	private Referee m_topReferee, m_bottomReferee;
+
+	public InGameCommentaryManager m_commentaryManager;
 	
 	private GameObject m_mouseTargetIcon;
 	private float m_mouseTargetIconTheta;
@@ -92,6 +87,8 @@ public class LevelController : MonoBehaviour {
 			_currentDifficulty = value;
 		}
 	}
+
+	private Team __commentary_last_team_to_own_ball = Team.None;
 		
 	public void StartLevel(StartMode startMode = StartMode.Sequence) {
 		Main.AudioController.PlayEffect("crowd");
@@ -99,14 +96,14 @@ public class LevelController : MonoBehaviour {
 		_last_mouse_position = new Vector3(0,-300,0);
 		_last_mouse_point_in_ball_bounds = new Vector3(0,0,0); //i dont even
 		_last_mouse_point_in_ball_bounds = Vector3.zero;
-		Debug.Log("Start level: " + CurrentDifficulty);
+		//Debug.Log("Start level: " + CurrentDifficulty);
+
+		m_commentaryManager = new InGameCommentaryManager();
 		
 		m_pathRenderer = this.GetComponent<PathRenderer>();
 		
 		m_playerTeam = this.CreateTeam(Team.PlayerTeam);
 		m_enemyTeam = this.CreateTeam(Team.EnemyTeam);
-
-		reset_tutorial();
 
 		this.set_time_remaining_seconds(300);
 		
@@ -127,6 +124,8 @@ public class LevelController : MonoBehaviour {
 				FieldPosition[] fps = { FieldPosition.Keeper, FieldPosition.Defender, FieldPosition.Defender };
 				SpawnTeam(10, m_enemyTeam, regions, keys, fps);
 			}
+			m_commentaryManager.notify_do_tutorial();
+
 		} else if (CurrentDifficulty == Difficulty.Normal) {
 			this.set_time_remaining_seconds(200);
 			_player_team_score = 2;
@@ -326,34 +325,11 @@ public class LevelController : MonoBehaviour {
 		team.SetPlayers(bots);
 	}
 
-	public bool _tut_has_issued_command = false;
-	public bool _tut_has_passed = false;
-	private void reset_tutorial() {
-		_tut_has_issued_command = false;
-		_tut_has_passed = false;
-	}
-
 	public void Update() {
 
 		if (Main.PanelManager.CurrentPanelId != PanelIds.Game) return;
 		this.update_mouse_point();
-
-		if (Main._current_level == GameLevel.Level1 && UiPanelGame.inst.can_take_message() && m_currentMode != LevelControllerMode.Opening) {
-			if (!_tut_has_issued_command) {
-				if (m_currentMode != LevelControllerMode.Timeout) {
-					UiPanelGame.inst._chats.push_message("Hold space to enter timeout!",2);
-
-				} else {
-					UiPanelGame.inst._chats.push_message("Click and drag teammates in timeout to give commands!",1);
-				}
-
-			} else if (!_tut_has_passed) {
-				if (get_footballer_team(nullableCurrentFootballerWithBall()) == Team.PlayerTeam) {
-					UiPanelGame.inst._chats.push_message("Click, hold and release out of timeout to pass!",2);
-				}
-				
-			}
-		}
+		m_commentaryManager.i_update();
 
 		float mouse_target_anim_speed = 0.3f;
 		if (m_currentMode == LevelControllerMode.GoalZoomOut) {
@@ -368,6 +344,11 @@ public class LevelController : MonoBehaviour {
 			}
 
 		} else if (m_currentMode == LevelControllerMode.GamePlay) {
+
+			Team ball_owner_team = this.get_footballer_team(this.nullableCurrentFootballerWithBall());
+			if (ball_owner_team != Team.None) {
+				__commentary_last_team_to_own_ball = ball_owner_team;
+			}
 
 			_time_remaining = Math.Max(0,_time_remaining-TimeSpan.FromSeconds(Time.deltaTime).Ticks);
 			if (_time_remaining <= 0) {
@@ -430,10 +411,7 @@ public class LevelController : MonoBehaviour {
 				m_currentMode = LevelControllerMode.Timeout;
 				m_timeoutSelectedFootballer = null;
 				Main.Pause(PauseFlags.TimeOut);
-
-				if (!_tut_has_issued_command) {
-					UiPanelGame.inst._chats.clear_messages();
-				}
+				m_commentaryManager.notify_tutorial_just_pressed_space();
 				Main.AudioController.PlayEffect("sfx_pause");
 				UiPanelGame.inst.bgm_audio_set_paused_mode(true);
 			}
@@ -514,7 +492,7 @@ public class LevelController : MonoBehaviour {
 				}
 			} else if (this.IsClickAndPoint(out click_pt)) {
 				if (m_timeoutSelectedFootballer != null && !this.footballer_has_ball(m_timeoutSelectedFootballer)) {
-					_tut_has_issued_command = true;
+					m_commentaryManager.notify_tutorial_command_issued();
 				
 					click_pt = this.point_to_within_goallines_point(m_timeoutSelectedFootballer.transform.position,click_pt);
 
@@ -569,7 +547,7 @@ public class LevelController : MonoBehaviour {
 					UiPanelGame.inst.show_popup_message(0);
 					Main.AudioController.PlayEffect("sfx_go");
 				}
-				
+				UiPanelGame.inst._chats.push_message("And the match is underway!",1);
 				m_enemyTeam.StartMatch();
 			}
 		}
@@ -649,7 +627,15 @@ public class LevelController : MonoBehaviour {
 			new_ball_owner.Msg_GotBall();
 			_prev_ball_owner = new_ball_owner;
 		}
-		
+
+		if (__commentary_last_team_to_own_ball == Team.PlayerTeam) {
+			if (__commentary_last_team_to_own_ball == this.get_footballer_team(tar)) {
+				m_commentaryManager.notify_event(CommentaryEvent.PassComplete);
+			} else if (__commentary_last_team_to_own_ball != this.get_footballer_team(tar) && new Vector3(looseball._vel.x,looseball._vel.y,looseball._vz).magnitude > 1) {
+				m_commentaryManager.notify_event(CommentaryEvent.Interception,true);
+			}
+		}
+
 		Destroy(looseball.gameObject);
 	}
 	

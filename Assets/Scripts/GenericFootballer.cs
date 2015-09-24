@@ -298,9 +298,7 @@ public class GenericFootballer : MonoBehaviour {
 	
 	public void throw_ball(Vector3 dir, float charge_ct) {
 		float vel = Mathf.Clamp(charge_ct/2000.0f * 10 + 6,6,18);
-		if (Main.LevelController._tut_has_issued_command) {
-			Main.LevelController._tut_has_passed = true;
-		}
+		Main.LevelController.m_commentaryManager.notify_tutorial_pass_thrown();
 		Main.AudioController.PlayEffect("sfx_throw");
 		Main.LevelController.CreateLooseBall(
 			this.transform.position,
@@ -308,6 +306,10 @@ public class GenericFootballer : MonoBehaviour {
 			);
 		Main.LevelController.m_playerTeamFootballersWithBall.Remove(this);
 		Main.LevelController.m_enemyTeamFootballersWithBall.Remove(this);
+
+		if (Main.LevelController.get_footballer_team(this) == Team.PlayerTeam && dir.x > 0.7f && this.transform.position.x > 950) {
+			Main.LevelController.m_commentaryManager.notify_event(CommentaryEvent.ShotOnGoal,true);
+		}
 	}
 
 	public float get_move_speed() { return 3.5f; }
@@ -345,6 +347,9 @@ public class GenericFootballer : MonoBehaviour {
 				(transform.position.y + tar.transform.position.y)/2,
 				(transform.position.z + tar.transform.position.z)/2
 			);
+			if (Main.LevelController.get_footballer_team(this) == Team.PlayerTeam) {
+				Main.LevelController.m_commentaryManager.notify_event(CommentaryEvent.Block);
+			}
 			this.apply_bump(Util.vec_scale(bump_vel,-1),hit_spot,true);
 			tar.apply_bump(bump_vel,hit_spot);
 		}
@@ -375,6 +380,8 @@ public class GenericFootballer : MonoBehaviour {
 			_current_mode = GenericFootballerMode.Stunned;
 			_stunned_upwards_vel = 1.5f;
 			if (Main.LevelController.footballer_has_ball(this)) {
+				Main.LevelController.m_commentaryManager.notify_event(CommentaryEvent.Fumbled,true);
+
 				Main.LevelController.CreateLooseBall(
 					this.transform.position,
 					Util.vec_rotate_rad(Util.vec_scale(vel.normalized,3.5f),Util.rand_range(-1.4f,1.4f))
